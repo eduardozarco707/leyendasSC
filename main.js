@@ -31,21 +31,20 @@ btnLeyenda2.addEventListener('click', () => {
   
   const contenidoGuajojo = `
     <div class="contenedor-3d">
-      <!-- LÍNEA OPTIMIZADA: renderer reduce la calidad gráfica extrema para que no se tranque en móviles -->
-      <a-scene embedded style="width: 100%; height: 100%;" vr-mode-ui="enabled: true" renderer="antialias: false; precision: mediump;">
+      <!-- CORRECCIÓN RAÍZ RENDIMIENTO: precision: lowp obliga al celular a no saturar su GPU -->
+      <a-scene embedded style="width: 100%; height: 100%;" vr-mode-ui="enabled: true" renderer="antialias: false; precision: lowp; logarithmicDepthBuffer: false;">
         <a-assets>
           <a-asset-item id="modelo-guajojo" src="/guajojo.glb"></a-asset-item>
         </a-assets>
 
         <a-sky color="#87CEEB"></a-sky> 
         
+        <!-- CORRECCIÓN RAÍZ RENDIMIENTO: Reducción al mínimo de cálculos de luz -->
         <a-light type="ambient" color="#ffffff" intensity="1.5"></a-light>
         <a-light type="directional" color="#ffffff" intensity="2" position="-2 4 2"></a-light>
-        <a-light type="directional" color="#ffffff" intensity="1" position="2 1 -3"></a-light>
 
         <a-gltf-model src="#modelo-guajojo" position="0 -1 -5" scale="0.2 0.2 0.2"></a-gltf-model>
 
-        <!-- LÍNEA OPTIMIZADA: forzamos el uso táctil y giroscópico avanzado -->
         <a-camera position="0 1.6 -4" look-controls="magicWindowTrackingEnabled: true; touchEnabled: true;">
           <a-cursor color="#d4af37"></a-cursor>
         </a-camera>
