@@ -49,7 +49,7 @@ body {
 .seccion-inferior {
   display: flex;
   height: 65vh;
-  position: relative; /* Necesario para que el menú flote en móviles */
+  position: relative; 
 }
 
 .sidebar-verde {
@@ -62,7 +62,7 @@ body {
   align-items: flex-start;
   padding: 10px 15px; 
   overflow: hidden; 
-  z-index: 10; /* Se asegura de estar encima de todo */
+  z-index: 10; 
 }
 
 .sidebar-verde.abierto {
@@ -203,17 +203,17 @@ body {
 /* ========================================= */
 @media screen and (max-width: 768px) {
   .seccion-superior {
-    height: 15vh; /* Cabecera más pequeña */
+    height: 15vh; 
   }
   
   .panel-izquierdo {
-    width: 100%; /* El logo ocupa todo el ancho arriba */
+    width: 100%; 
     padding: 10px;
     justify-content: center;
   }
   
   .panel-derecho-imagen {
-    display: none; /* Ocultamos la foto de fondo en celulares para ahorrar espacio */
+    display: none; 
   }
 
   .seccion-inferior {
@@ -221,34 +221,36 @@ body {
   }
 
   .sidebar-verde {
-    position: absolute; /* El menú flota encima del texto */
+    position: absolute; 
     height: 100%;
     box-shadow: 2px 0 10px rgba(0,0,0,0.5);
   }
 
   .sidebar-verde.abierto {
-    width: 85%; /* En móvil, el menú abierto ocupa casi toda la pantalla */
+    width: 85%; 
   }
 
   .area-texto {
-    padding: 20px 15px; /* Menos espacio en los bordes */
+    /* CORRECCIÓN RAÍZ: Empuja el texto exactamente 60px a la derecha para que la barra no lo tape */
+    margin-left: 60px; 
+    padding: 20px 15px; 
   }
 
   .area-texto h2 {
-    font-size: 2.2rem; /* Títulos más pequeños */
-    margin-left: 60px; /* Evita que el botón de menú tape el título */
+    font-size: 2.2rem; 
+    margin-left: 0; 
   }
 
   .contenedor-3d {
-    height: 300px; /* Visor un poco más compacto en celular */
+    height: 300px; 
   }
 
   .multimedia-leyenda {
-    flex-direction: column; /* Apila el reproductor y la foto hacia abajo */
+    flex-direction: column; 
     gap: 20px;
   }
 
   .reproductor-leyenda, .foto-leyenda {
-    width: 100%; /* Toman todo el ancho disponible */
+    width: 100%; 
   }
 }
