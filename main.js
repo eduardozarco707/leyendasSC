@@ -54,11 +54,14 @@ btnLeyenda2.addEventListener('click', () => {
 
   const contenidoGuajojo = `
 
+    <!-- =====================================================
+         ESCENARIO 3D
+         ===================================================== -->
+
     <div class="contenedor-3d">
 
       <a-scene
         embedded
-
         background="color: #87CEEB"
 
         vr-mode-ui="enabled: true"
@@ -73,9 +76,7 @@ btnLeyenda2.addEventListener('click', () => {
       >
 
         <!-- =================================================
-             MODELO
-             IMPORTANTE:
-             USAMOS EL GLB ORIGINAL
+             CARGA DEL MODELO
              ================================================= -->
 
         <a-assets>
@@ -89,15 +90,16 @@ btnLeyenda2.addEventListener('click', () => {
 
 
         <!-- =================================================
-             GUAJOJÓ
-             MANTENER EXACTAMENTE ESTAS COORDENADAS
+             MODELO DEL GUAJOJÓ
+             
+             MANTENER ESTAS COORDENADAS
              ================================================= -->
 
         <a-gltf-model
 
           src="#modelo-guajojo"
 
-          position="0 -2 -10"
+          position="0 -1 -5"
 
           scale="0.2 0.2 0.2"
 
@@ -107,12 +109,13 @@ btnLeyenda2.addEventListener('click', () => {
 
         <!-- =================================================
              CÁMARA
-             MANTENER EXACTAMENTE ESTAS COORDENADAS
+             
+             MANTENER ESTAS COORDENADAS
              ================================================= -->
 
         <a-camera
 
-          position="0 1.6 0"
+          position="0 1.6 -4"
 
           far="30"
 
@@ -131,10 +134,13 @@ btnLeyenda2.addEventListener('click', () => {
 
 
     <!-- =====================================================
-         AUDIO
+         MULTIMEDIA
          ===================================================== -->
 
     <div class="multimedia-leyenda">
+
+
+      <!-- AUDIO -->
 
       <div class="reproductor-leyenda">
 
@@ -162,6 +168,7 @@ btnLeyenda2.addEventListener('click', () => {
         class="foto-leyenda"
       />
 
+
     </div>
 
 
@@ -172,6 +179,7 @@ btnLeyenda2.addEventListener('click', () => {
     <div class="historia-leyenda">
 
       <h3>La Leyenda del Guajojó</h3>
+
 
       <p>
 
@@ -187,7 +195,9 @@ btnLeyenda2.addEventListener('click', () => {
 
       </p>
 
+
       <br>
+
 
       <p>
 
@@ -201,7 +211,9 @@ btnLeyenda2.addEventListener('click', () => {
 
       </p>
 
+
       <br>
+
 
       <p>
 
@@ -220,6 +232,7 @@ btnLeyenda2.addEventListener('click', () => {
         recordando eternamente a su amor perdido.
 
       </p>
+
 
     </div>
 
