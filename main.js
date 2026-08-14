@@ -21,6 +21,7 @@ btnMenu.addEventListener('click', () => {
 // ============================================================
 
 function mostrarLeyenda(titulo, descripcion, htmlExtra = '') {
+
   areaTexto.innerHTML = `
     <h2>${titulo}</h2>
     <p>${descripcion}</p>
@@ -36,10 +37,12 @@ function mostrarLeyenda(titulo, descripcion, htmlExtra = '') {
 // ============================================================
 
 btnLeyenda1.addEventListener('click', () => {
+
   mostrarLeyenda(
     "El Carretón de la Otra Vida",
     "Se escucha el crujir de las ruedas de madera acercándose en la oscuridad..."
   );
+
 });
 
 
@@ -50,10 +53,6 @@ btnLeyenda1.addEventListener('click', () => {
 btnLeyenda2.addEventListener('click', () => {
 
   const contenidoGuajojo = `
-    
-    <!-- =====================================================
-         ESCENARIO 3D / WEBXR
-         ===================================================== -->
 
     <div class="contenedor-3d">
 
@@ -69,23 +68,21 @@ btnLeyenda2.addEventListener('click', () => {
           precision: lowp;
           colorManagement: false;
           physicallyCorrectLights: false;
-          sortObjects: false;
-        "
-
-        webxr="
-          optionalFeatures: local-floor;
+          maxCanvasWidth: 768;
         "
       >
 
         <!-- =================================================
-             CARGA DEL MODELO
+             MODELO
+             IMPORTANTE:
+             USAMOS EL GLB ORIGINAL
              ================================================= -->
 
         <a-assets>
 
           <a-asset-item
             id="modelo-guajojo"
-            src="/guajojo-vr.glb">
+            src="/guajojo.glb">
           </a-asset-item>
 
         </a-assets>
@@ -93,6 +90,7 @@ btnLeyenda2.addEventListener('click', () => {
 
         <!-- =================================================
              GUAJOJÓ
+             MANTENER EXACTAMENTE ESTAS COORDENADAS
              ================================================= -->
 
         <a-gltf-model
@@ -109,6 +107,7 @@ btnLeyenda2.addEventListener('click', () => {
 
         <!-- =================================================
              CÁMARA
+             MANTENER EXACTAMENTE ESTAS COORDENADAS
              ================================================= -->
 
         <a-camera
@@ -155,9 +154,7 @@ btnLeyenda2.addEventListener('click', () => {
       </div>
 
 
-      <!-- ===================================================
-           FOTO
-           =================================================== -->
+      <!-- FOTO -->
 
       <img
         src="/foto-guajojo.jpg"
@@ -169,13 +166,12 @@ btnLeyenda2.addEventListener('click', () => {
 
 
     <!-- =====================================================
-         HISTORIA
+         HISTORIA DEL GUAJOJÓ
          ===================================================== -->
 
     <div class="historia-leyenda">
 
       <h3>La Leyenda del Guajojó</h3>
-
 
       <p>
 
@@ -191,9 +187,7 @@ btnLeyenda2.addEventListener('click', () => {
 
       </p>
 
-
       <br>
-
 
       <p>
 
@@ -207,9 +201,7 @@ btnLeyenda2.addEventListener('click', () => {
 
       </p>
 
-
       <br>
-
 
       <p>
 
