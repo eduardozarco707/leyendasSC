@@ -54,14 +54,12 @@ btnLeyenda2.addEventListener('click', () => {
 
   const contenidoGuajojo = `
 
-    <!-- =====================================================
-         ESCENARIO 3D
-         ===================================================== -->
-
     <div class="contenedor-3d">
 
       <a-scene
+
         embedded
+
         background="color: #87CEEB"
 
         vr-mode-ui="enabled: true"
@@ -71,12 +69,18 @@ btnLeyenda2.addEventListener('click', () => {
           precision: lowp;
           colorManagement: false;
           physicallyCorrectLights: false;
+          sortObjects: false;
           maxCanvasWidth: 768;
+          maxCanvasHeight: 768;
+          foveationLevel: 3;
+          highRefreshRate: false;
+          alpha: false;
         "
+
       >
 
         <!-- =================================================
-             CARGA DEL MODELO
+             MODELO
              ================================================= -->
 
         <a-assets>
@@ -90,16 +94,18 @@ btnLeyenda2.addEventListener('click', () => {
 
 
         <!-- =================================================
-             MODELO DEL GUAJOJÓ
-             
-             MANTENER ESTAS COORDENADAS
+             GUAJOJÓ
+
+             NO CAMBIAR ESTAS COORDENADAS
              ================================================= -->
 
         <a-gltf-model
 
+          id="guajojo"
+
           src="#modelo-guajojo"
 
-          position="0 -1 -5"
+          position="0 -2 -10"
 
           scale="0.2 0.2 0.2"
 
@@ -109,20 +115,15 @@ btnLeyenda2.addEventListener('click', () => {
 
         <!-- =================================================
              CÁMARA
-             
-             MANTENER ESTAS COORDENADAS
+
+             NO CAMBIAR ESTAS COORDENADAS
              ================================================= -->
 
         <a-camera
 
-          position="0 1.6 -4"
+          position="0 1.6 0"
 
           far="30"
-
-          look-controls="
-            magicWindowTrackingEnabled: true;
-            touchEnabled: true;
-          "
 
         >
         </a-camera>
@@ -134,13 +135,10 @@ btnLeyenda2.addEventListener('click', () => {
 
 
     <!-- =====================================================
-         MULTIMEDIA
+         AUDIO
          ===================================================== -->
 
     <div class="multimedia-leyenda">
-
-
-      <!-- AUDIO -->
 
       <div class="reproductor-leyenda">
 
@@ -160,7 +158,9 @@ btnLeyenda2.addEventListener('click', () => {
       </div>
 
 
-      <!-- FOTO -->
+      <!-- ===================================================
+           FOTO
+           =================================================== -->
 
       <img
         src="/foto-guajojo.jpg"
@@ -168,71 +168,56 @@ btnLeyenda2.addEventListener('click', () => {
         class="foto-leyenda"
       />
 
-
     </div>
 
 
     <!-- =====================================================
-         HISTORIA DEL GUAJOJÓ
+         HISTORIA
          ===================================================== -->
 
     <div class="historia-leyenda">
 
       <h3>La Leyenda del Guajojó</h3>
 
-
       <p>
-
         Cuenta la leyenda que hace muchos años, en una antigua
         tribu de la selva oriental, la hermosa hija del cacique
         se enamoró perdidamente de un joven guerrero de la misma
-        tribu, pero de menor rango.
-
-        Al enterarse de este romance prohibido, el cacique,
-        enfurecido, usó sus poderes y llevó al joven a lo más
-        espeso de la selva para quitarle la vida y separar así
-        a los amantes para siempre.
-
+        tribu, pero de menor rango. Al enterarse de este romance
+        prohibido, el cacique, enfurecido, usó sus poderes y llevó
+        al joven a lo más espeso de la selva para quitarle la vida
+        y separar así a los amantes para siempre.
       </p>
-
 
       <br>
 
-
       <p>
-
         La muchacha, al notar la prolongada ausencia de su amado,
         corrió desesperada a buscarlo por la espesura del bosque.
-
-        Tras mucho caminar, encontró su cuerpo sin vida.
-
-        Su llanto fue tan desgarrador y lleno de dolor que
-        conmovió a los espíritus mismos de la selva.
-
+        Tras mucho caminar, encontró su cuerpo sin vida. Su llanto
+        fue tan desgarrador y lleno de dolor que conmovió a los
+        espíritus mismos de la selva.
       </p>
-
 
       <br>
 
-
       <p>
-
         El cacique, al encontrar a su hija en medio de su llanto
         inconsolable y temiendo que su traición fuera descubierta,
-        intentó hechizarla.
+        intentó hechizarla. Sin embargo, los espíritus se le
+        adelantaron y, para librarla de su tormento humano,
+        transformaron a la joven en un ave de plumaje pardo,
+        que se mimetiza con las ramas secas.
+      </p>
 
-        Sin embargo, los espíritus se le adelantaron y, para
-        librarla de su tormento humano, transformaron a la joven
-        en un ave de plumaje pardo, que se mimetiza con las ramas
-        secas.
+      <br>
 
+      <p>
         Desde entonces, el Guajojó se posa en los árboles de la
         selva y su canto lúgubre, que suena como un lamento que
         repite "¡Gua... jo... jó!", se escucha en las noches,
         recordando eternamente a su amor perdido.
-
       </p>
-
 
     </div>
 
