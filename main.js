@@ -45,10 +45,10 @@ btnLeyenda2.addEventListener('click', () => {
         <a-light type="ambient" color="#ffffff" intensity="1.5"></a-light>
         <a-light type="directional" color="#ffffff" intensity="2" position="-2 4 2"></a-light>
 
-        <a-gltf-model src="#modelo-guajojo" position="0 -2 -10" scale="0.2 0.2 0.2"></a-gltf-model>
+        <a-gltf-model src="#modelo-guajojo" position="0 -1 -5" scale="0.2 0.2 0.2"></a-gltf-model>
 
         <!-- Cámara optimizada con far="30" para que no procese objetos invisibles a lo lejos -->
-        <a-camera position="0 1.6 0" far="30" look-controls="magicWindowTrackingEnabled: true; touchEnabled: true;">
+        <a-camera position="0 1.6 -4" far="30" look-controls="magicWindowTrackingEnabled: true; touchEnabled: true;">
           <a-cursor color="#d4af37"></a-cursor>
         </a-camera>
         
