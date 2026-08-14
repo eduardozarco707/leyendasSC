@@ -31,8 +31,8 @@ btnLeyenda2.addEventListener('click', () => {
   
   const contenidoGuajojo = `
     <div class="contenedor-3d">
-      <!-- SOLUCIÓN DEFINITIVA VR: Límite de resolución y foveation para evitar calentamiento y lentitud -->
-      <a-scene embedded style="width: 100%; height: 100%;" vr-mode-ui="enabled: true" renderer="antialias: false; precision: lowp; maxCanvasWidth: 1024;" webxr="foveationLevel: 1;">
+      <!-- OPCIÓN 1: Modo Ultra Gráficos Bajos (maxCanvasWidth: 768 y foveationLevel: 3) -->
+      <a-scene embedded style="width: 100%; height: 100%;" vr-mode-ui="enabled: true" renderer="antialias: false; precision: lowp; maxCanvasWidth: 768;" webxr="foveationLevel: 3;">
         
         <a-assets>
           <a-asset-item id="modelo-guajojo" src="/guajojo.glb"></a-asset-item>
