@@ -31,23 +31,27 @@ btnLeyenda2.addEventListener('click', () => {
   
   const contenidoGuajojo = `
     <div class="contenedor-3d">
-      <a-scene embedded style="width: 100%; height: 100%;" vr-mode-ui="enabled: true" renderer="antialias: false; precision: lowp; logarithmicDepthBuffer: false;">
+      <!-- SOLUCIÓN DEFINITIVA VR: Límite de resolución y foveation para evitar calentamiento y lentitud -->
+      <a-scene embedded style="width: 100%; height: 100%;" vr-mode-ui="enabled: true" renderer="antialias: false; precision: lowp; maxCanvasWidth: 1024;" webxr="foveationLevel: 1;">
+        
         <a-assets>
           <a-asset-item id="modelo-guajojo" src="/guajojo.glb"></a-asset-item>
         </a-assets>
 
-        <!-- TRUCO 1: Cielo con menos segmentos (menos cálculos para el celular) -->
+        <!-- Cielo optimizado con menos segmentos -->
         <a-sky color="#87CEEB" segments-width="16" segments-height="16"></a-sky> 
         
+        <!-- Luces reducidas al mínimo -->
         <a-light type="ambient" color="#ffffff" intensity="1.5"></a-light>
         <a-light type="directional" color="#ffffff" intensity="2" position="-2 4 2"></a-light>
 
-        <a-gltf-model src="#modelo-guajojo" position="0 -1 -5" scale="0.2 0.2 0.2"></a-gltf-model>
+        <a-gltf-model src="#modelo-guajojo" position="0 -2 -10" scale="0.2 0.2 0.2"></a-gltf-model>
 
-        <!-- TRUCO 2: far="30" le prohíbe a la cámara renderizar objetos lejanos innecesarios -->
-        <a-camera position="0 1.6 -4" far="30" look-controls="magicWindowTrackingEnabled: true; touchEnabled: true;">
+        <!-- Cámara optimizada con far="30" para que no procese objetos invisibles a lo lejos -->
+        <a-camera position="0 1.6 0" far="30" look-controls="magicWindowTrackingEnabled: true; touchEnabled: true;">
           <a-cursor color="#d4af37"></a-cursor>
         </a-camera>
+        
       </a-scene>
     </div>
 
