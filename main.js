@@ -47,7 +47,7 @@ btnLeyenda1.addEventListener('click', () => {
 });
 
 // ============================================================
-// GUAJOJÓ - AR SOLO WEB (cámara + modelo 3D)
+// GUAJOJÓ
 // ============================================================
 btnLeyenda2.addEventListener('click', () => {
   mostrarLeyenda(
@@ -58,119 +58,121 @@ btnLeyenda2.addEventListener('click', () => {
       📱 VER GUAJOJÓ EN REALIDAD AUMENTADA
     </button>
 
-    <!-- CONTENEDOR AR A PANTALLA COMPLETA -->
+    <!-- PANTALLA AR -->
     <div id="pantalla-ar" style="
       display: none;
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
+      inset: 0;
       z-index: 9999;
       background: #000;
+      overflow: hidden;
     ">
-      <!-- VIDEO DE LA CÁMARA -->
+      <!-- CÁMARA -->
       <video id="video-camara" autoplay playsinline muted style="
         position: absolute;
-        top: 0;
-        left: 0;
+        inset: 0;
         width: 100%;
         height: 100%;
         object-fit: cover;
+        z-index: 1;
       "></video>
 
-      <!-- MODELO 3D ENCIMA DE LA CÁMARA -->
-      <div id="contenedor-modelo" style="
+      <!-- CAPA DEL MODELO 3D -->
+      <div id="capa-modelo" style="
         position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
+        inset: 0;
+        z-index: 2;
         pointer-events: none;
       ">
         <a-scene
           id="escena-guajojo"
           embedded
           vr-mode-ui="enabled: false"
-          xr-mode-ui="enabled: false"
-          renderer="alpha: true; antialias: true;"
-          style="width: 100%; height: 100%; background: transparent !important;"
+          device-orientation-permission-ui="enabled: false"
+          renderer="alpha: true; antialias: true; colorManagement: true;"
+          style="width:100%; height:100%; background:transparent !important;"
         >
-          <a-assets>
+          <a-assets timeout="15000">
             <a-asset-item id="modelo-guajojo-asset" src="/guajojo.glb"></a-asset-item>
           </a-assets>
 
+          <!-- MODELO BIEN CERCA Y GRANDE PARA QUE SE VEA -->
           <a-entity
             id="modelo-guajojo"
             gltf-model="#modelo-guajojo-asset"
-            position="0 0 -2"
-            scale="0.25 0.25 0.25"
-            rotation="0 0 0"
-            animation="property: rotation; to: 0 360 0; loop: true; dur: 12000; easing: linear"
+            position="0 0 -1.2"
+            scale="0.45 0.45 0.45"
+            rotation="0 180 0"
+            animation="property: rotation; to: 0 540 0; loop: true; dur: 14000; easing: linear"
           ></a-entity>
 
-          <a-camera position="0 1.6 0" look-controls="enabled: false" wasd-controls="enabled: false"></a-camera>
-          <a-light type="ambient" color="#ffffff" intensity="1.3"></a-light>
-          <a-light type="directional" color="#ffffff" intensity="0.7" position="1 3 2"></a-light>
+          <!-- Luces fuertes -->
+          <a-light type="ambient" color="#ffffff" intensity="1.8"></a-light>
+          <a-light type="directional" color="#ffffff" intensity="1.2" position="0 3 2"></a-light>
+          <a-light type="directional" color="#ffffff" intensity="0.6" position="0 -1 -2"></a-light>
+
+          <a-camera
+            position="0 0 0"
+            look-controls="enabled: false"
+            wasd-controls="enabled: false"
+            near="0.01"
+            far="20"
+          ></a-camera>
         </a-scene>
       </div>
 
-      <!-- UI SUPERIOR -->
+      <!-- UI -->
       <div style="
         position: absolute;
-        top: 20px;
+        top: 18px;
         left: 50%;
         transform: translateX(-50%);
-        background: rgba(0,0,0,0.75);
-        color: white;
-        padding: 10px 20px;
-        border-radius: 25px;
-        font-size: 15px;
+        background: rgba(0,0,0,0.8);
+        color: #fff;
+        padding: 10px 18px;
+        border-radius: 24px;
+        font-size: 14px;
         z-index: 10;
         text-align: center;
         max-width: 90%;
       ">
-        📷 Apunta y captura al Guajojó
+        📷 El Guajojó debería verse al centro
       </div>
 
-      <!-- BOTÓN CAPTURAR -->
       <button id="btn-capturar" style="
         position: absolute;
-        bottom: 40px;
+        bottom: 36px;
         left: 50%;
         transform: translateX(-50%);
         background: #1b5e20;
         color: white;
         border: none;
-        padding: 18px 48px;
+        padding: 16px 42px;
         border-radius: 50px;
-        font-size: 18px;
+        font-size: 17px;
         font-weight: bold;
-        box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+        box-shadow: 0 4px 18px rgba(0,0,0,0.5);
         z-index: 10;
-        cursor: pointer;
       ">
         ✨ CAPTURAR
       </button>
 
-      <!-- BOTÓN CERRAR -->
       <button id="btn-cerrar-ar" style="
         position: absolute;
-        top: 16px;
-        right: 16px;
-        background: rgba(0,0,0,0.6);
+        top: 14px;
+        right: 14px;
+        background: rgba(0,0,0,0.65);
         color: white;
         border: none;
-        width: 42px;
-        height: 42px;
+        width: 40px;
+        height: 40px;
         border-radius: 50%;
-        font-size: 20px;
+        font-size: 18px;
         z-index: 10;
-        cursor: pointer;
       ">✕</button>
     </div>
 
-    <!-- CONTENIDO DESPUÉS DE CAPTURAR -->
+    <!-- DESPUÉS DE CAPTURAR -->
     <div id="contenido-capturado" style="display: none; margin-top: 20px;">
       <div style="
         background: #e8f5e9;
@@ -208,26 +210,24 @@ btnLeyenda2.addEventListener('click', () => {
   );
 
   setTimeout(() => {
-    const btnAbrir = document.getElementById('btn-abrir-ar');
-    if (btnAbrir) {
-      btnAbrir.addEventListener('click', iniciarCamaraAR);
-    }
+    const btn = document.getElementById('btn-abrir-ar');
+    if (btn) btn.addEventListener('click', iniciarCamaraAR);
   }, 100);
 });
 
 // ============================================================
-// INICIAR CÁMARA + MODELO (solo web)
+// INICIAR CÁMARA + MODELO
 // ============================================================
 async function iniciarCamaraAR() {
   const pantalla = document.getElementById('pantalla-ar');
   const video = document.getElementById('video-camara');
   const btnCapturar = document.getElementById('btn-capturar');
   const btnCerrar = document.getElementById('btn-cerrar-ar');
+  const escena = document.getElementById('escena-guajojo');
 
   if (!pantalla || !video) return;
 
   try {
-    // Pedir cámara trasera
     streamCamara = await navigator.mediaDevices.getUserMedia({
       video: {
         facingMode: { ideal: 'environment' },
@@ -239,67 +239,115 @@ async function iniciarCamaraAR() {
 
     video.srcObject = streamCamara;
     await video.play();
-
-    // Mostrar pantalla AR
     pantalla.style.display = 'block';
 
-    // Botón capturar
-    if (btnCapturar) {
-      btnCapturar.onclick = capturarGuajojo;
+    // Forzar canvas transparente (clave para ver el modelo sobre la cámara)
+    const hacerTransparente = () => {
+      const canvas = escena?.querySelector('canvas');
+      if (canvas) {
+        canvas.style.background = 'transparent';
+        canvas.style.backgroundColor = 'transparent';
+      }
+      // También el contenedor de A-Frame
+      if (escena) {
+        escena.style.background = 'transparent';
+        const body = escena.querySelector('.a-body, .a-canvas');
+        if (body) body.style.background = 'transparent';
+      }
+    };
+
+    if (escena) {
+      if (escena.hasLoaded) {
+        hacerTransparente();
+        forzarModeloVisible();
+      } else {
+        escena.addEventListener('loaded', () => {
+          hacerTransparente();
+          forzarModeloVisible();
+        }, { once: true });
+      }
+      // Por si acaso, repetir un par de veces
+      setTimeout(hacerTransparente, 500);
+      setTimeout(hacerTransparente, 1500);
+      setTimeout(forzarModeloVisible, 800);
     }
 
-    // Botón cerrar
-    if (btnCerrar) {
-      btnCerrar.onclick = cerrarCamaraAR;
-    }
+    if (btnCapturar) btnCapturar.onclick = capturarGuajojo;
+    if (btnCerrar) btnCerrar.onclick = cerrarCamaraAR;
 
   } catch (err) {
-    console.error('Error al acceder a la cámara:', err);
-    alert('No se pudo acceder a la cámara.\n\nRevisa que hayas dado permiso a la cámara en el navegador.');
+    console.error(err);
+    alert('No se pudo abrir la cámara.\n\n' + err.message);
   }
+}
+
+// ============================================================
+// FORZAR QUE EL MODELO SE VEA
+// ============================================================
+function forzarModeloVisible() {
+  const modelo = document.getElementById('modelo-guajojo');
+  if (!modelo) {
+    console.error('No se encontró #modelo-guajojo');
+    return;
+  }
+
+  // Posición y escala seguras
+  modelo.setAttribute('position', '0 0 -1.2');
+  modelo.setAttribute('scale', '0.45 0.45 0.45');
+  modelo.setAttribute('visible', true);
+
+  // Si el glb no carga, mostrar un cubo de prueba para saber que la escena funciona
+  modelo.addEventListener('model-error', () => {
+    console.error('Error cargando guajojo.glb');
+    // Cubo de emergencia (para probar que se ve algo)
+    const escena = document.getElementById('escena-guajojo');
+    if (escena && !document.getElementById('cubo-prueba')) {
+      const cubo = document.createElement('a-box');
+      cubo.id = 'cubo-prueba';
+      cubo.setAttribute('position', '0 0 -1.2');
+      cubo.setAttribute('color', '#00ff88');
+      cubo.setAttribute('width', '0.5');
+      cubo.setAttribute('height', '0.5');
+      cubo.setAttribute('depth', '0.5');
+      escena.appendChild(cubo);
+      alert('El archivo /guajojo.glb no se pudo cargar.\nSe muestra un cubo de prueba.\nRevisa que el archivo exista en tu servidor.');
+    }
+  });
+
+  modelo.addEventListener('model-loaded', () => {
+    console.log('Modelo Guajojó cargado correctamente');
+  });
 }
 
 // ============================================================
 // CAPTURAR
 // ============================================================
 function capturarGuajojo() {
-  // Cerrar cámara
   cerrarCamaraAR();
 
-  // Ocultar botón de entrar
   const btnAbrir = document.getElementById('btn-abrir-ar');
   if (btnAbrir) btnAbrir.style.display = 'none';
 
-  // Mostrar contenido capturado
   const contenido = document.getElementById('contenido-capturado');
   if (contenido) contenido.style.display = 'block';
 
-  // Reproducir audio
   const audio = document.getElementById('audio-guajojo');
   if (audio) {
-    audio.play().catch(() => {
-      console.log('El usuario debe tocar play');
-    });
+    audio.play().catch(() => {});
   }
 }
 
 // ============================================================
-// CERRAR CÁMARA
+// CERRAR
 // ============================================================
 function cerrarCamaraAR() {
-  // Detener stream de cámara
   if (streamCamara) {
-    streamCamara.getTracks().forEach(track => track.stop());
+    streamCamara.getTracks().forEach(t => t.stop());
     streamCamara = null;
   }
-
   const video = document.getElementById('video-camara');
-  if (video) {
-    video.srcObject = null;
-  }
+  if (video) video.srcObject = null;
 
   const pantalla = document.getElementById('pantalla-ar');
-  if (pantalla) {
-    pantalla.style.display = 'none';
-  }
+  if (pantalla) pantalla.style.display = 'none';
 }
