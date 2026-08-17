@@ -2,7 +2,7 @@ import './style.css';
 
 
 // ============================================================
-// CONFIGURACIÓN GENERAL
+// CONFIGURACIÓN GENERAL DEL AR
 // ============================================================
 
 const CONFIG_AR = {
@@ -13,22 +13,21 @@ const CONFIG_AR = {
   // Tamaño del modelo
   escala: 0.55,
 
-  // El Guajojó aparecerá a esta cantidad de grados
-  // respecto a donde estabas mirando al abrir AR.
+  // El ave aparecerá inicialmente entre 55 y 70 grados
+  // respecto a donde estás mirando.
   anguloMin: 55,
   anguloMax: 70,
 
-  // A partir de aquí debería empezar a verse
+  // A esta distancia angular debería comenzar a verse
   anguloVisible: 38,
 
-  // A partir de aquí se habilita capturar
+  // A esta distancia angular se habilita CAPTURAR
   anguloCaptura: 9
-
 };
 
 
 // ============================================================
-// ELEMENTOS PRINCIPALES
+// ELEMENTOS PRINCIPALES DE LA WEB
 // ============================================================
 
 const btnMenu =
@@ -48,7 +47,7 @@ const areaTexto =
 
 
 // ============================================================
-// VARIABLES AR
+// VARIABLES GENERALES AR
 // ============================================================
 
 let streamCamara = null;
@@ -60,26 +59,70 @@ let modeloCargado = false;
 
 
 // ============================================================
-// VARIABLES SENSOR
+// VARIABLES DE ORIENTACIÓN
 // ============================================================
-
-let sensorDetectado = false;
 
 let orientacionInicialLista = false;
 
 let headingInicial = 0;
-
 let headingObjetivo = 0;
+let ultimoHeading = null;
 
-let ultimaFuenteSensor = '';
+let fuenteHeadingActiva = null;
+
+let sensorDetectado = false;
 
 
-// Sensor Generic Sensor API
-let sensorRelativo = null;
+// ============================================================
+// SENSORES GENERIC SENSOR
+// ============================================================
+
+let sensorAcelerometro = null;
+let sensorGiroscopio = null;
+let sensorOrientacionRelativa = null;
 
 
-// Timeout para comprobar sensores
-let timeoutSensor = null;
+// ============================================================
+// TEMPORIZADORES
+// ============================================================
+
+let timeoutDiagnostico = null;
+
+
+// ============================================================
+// ESTADO DEL DIAGNÓSTICO
+// ============================================================
+
+const diagnostico = {
+
+  contextoSeguro: 'pendiente',
+
+  deviceOrientationAPI: 'pendiente',
+
+  deviceMotionAPI: 'pendiente',
+
+  requestOrientation: 'pendiente',
+
+  requestMotion: 'pendiente',
+
+  permisoAcelerometro: 'pendiente',
+
+  permisoGiroscopio: 'pendiente',
+
+  permisoMagnetometro: 'pendiente',
+
+  eventoOrientacion: 'esperando',
+
+  eventoMovimiento: 'esperando',
+
+  acelerometroAPI: 'pendiente',
+
+  giroscopioAPI: 'pendiente',
+
+  relativeOrientationAPI: 'pendiente',
+
+  modelo: 'pendiente'
+};
 
 
 // ============================================================
@@ -116,7 +159,9 @@ function mostrarLeyenda(
   contenido = ''
 ) {
 
-  if (!areaTexto) return;
+  if (!areaTexto) {
+    return;
+  }
 
 
   areaTexto.innerHTML = `
@@ -146,7 +191,7 @@ function mostrarLeyenda(
 
 
 // ============================================================
-// CARRETÓN
+// LEYENDA 1: CARRETÓN
 // ============================================================
 
 if (btnLeyenda1) {
@@ -191,7 +236,7 @@ if (btnLeyenda1) {
 
 
 // ============================================================
-// GUAJOJÓ
+// LEYENDA 2: GUAJOJÓ
 // ============================================================
 
 if (btnLeyenda2) {
@@ -212,7 +257,7 @@ if (btnLeyenda2) {
         `
 
         <!-- ================================================= -->
-        <!-- BOTÓN ABRIR AR                                    -->
+        <!-- BOTÓN PARA ABRIR AR                               -->
         <!-- ================================================= -->
 
         <button
@@ -244,7 +289,7 @@ if (btnLeyenda2) {
             inset: 0;
             width: 100%;
             height: 100%;
-            background: #000;
+            background: #000000;
             z-index: 9999;
             overflow: hidden;
           "
@@ -270,7 +315,7 @@ if (btnLeyenda2) {
               width: 100%;
               height: 100%;
               object-fit: cover;
-              background: #000;
+              background: #000000;
               z-index: 1;
             "
 
@@ -278,7 +323,7 @@ if (btnLeyenda2) {
 
 
           <!-- =============================================== -->
-          <!-- ESCENA 3D                                       -->
+          <!-- CAPA 3D                                         -->
           <!-- =============================================== -->
 
           <div
@@ -290,8 +335,9 @@ if (btnLeyenda2) {
               inset: 0;
               width: 100%;
               height: 100%;
-              pointer-events: none;
               z-index: 2;
+              pointer-events: none;
+              overflow: hidden;
             "
 
           >
@@ -325,7 +371,7 @@ if (btnLeyenda2) {
 
 
               <!-- =========================================== -->
-              <!-- RECURSOS                                    -->
+              <!-- ARCHIVOS                                    -->
               <!-- =========================================== -->
 
               <a-assets timeout="20000">
@@ -342,7 +388,7 @@ if (btnLeyenda2) {
 
 
               <!-- =========================================== -->
-              <!-- GUAJOJÓ                                     -->
+              <!-- MODELO GUAJOJÓ                              -->
               <!-- =========================================== -->
 
               <a-entity
@@ -367,7 +413,7 @@ if (btnLeyenda2) {
 
 
               <!-- =========================================== -->
-              <!-- LUCES                                       -->
+              <!-- ILUMINACIÓN                                 -->
               <!-- =========================================== -->
 
               <a-light
@@ -376,7 +422,7 @@ if (btnLeyenda2) {
 
                 color="#ffffff"
 
-                intensity="2.4"
+                intensity="2.5"
 
               ></a-light>
 
@@ -408,7 +454,11 @@ if (btnLeyenda2) {
 
 
               <!-- =========================================== -->
-              <!-- CÁMARA 3D FIJA                              -->
+              <!-- CÁMARA VIRTUAL FIJA                         -->
+              <!-- =========================================== -->
+              <!--                                            -->
+              <!-- NO usamos look-controls.                   -->
+              <!-- Nosotros calculamos el giro manualmente.   -->
               <!-- =========================================== -->
 
               <a-camera
@@ -451,79 +501,115 @@ if (btnLeyenda2) {
 
             style="
               position: absolute;
-              top: 24px;
+              top: 18px;
               left: 50%;
               transform: translateX(-50%);
-              background: rgba(0,0,0,0.82);
+              background: rgba(0,0,0,0.85);
               color: #ffffff;
-              padding: 12px 20px;
-              border-radius: 30px;
-              font-size: 16px;
+              padding: 11px 18px;
+              border-radius: 28px;
+              font-size: 15px;
               font-weight: bold;
               text-align: center;
               width: max-content;
-              max-width: 72%;
-              z-index: 30;
+              max-width: 68%;
+              z-index: 50;
               pointer-events: none;
-              box-shadow: 0 4px 14px rgba(0,0,0,0.35);
+              box-shadow: 0 4px 14px rgba(0,0,0,0.4);
             "
 
           >
 
-            ⏳ Preparando AR...
+            ⏳ Iniciando realidad aumentada...
 
           </div>
 
 
           <!-- =============================================== -->
-          <!-- ESTADO DEL SENSOR                               -->
+          <!-- BOTÓN CERRAR                                    -->
           <!-- =============================================== -->
 
-          <div
+          <button
 
-            id="estado-sensor"
+            id="btn-cerrar-ar"
+
+            type="button"
+
+            aria-label="Cerrar realidad aumentada"
 
             style="
               position: absolute;
-              top: 90px;
-              left: 50%;
-              transform: translateX(-50%);
-              background: rgba(0,0,0,0.60);
+              top: 14px;
+              right: 14px;
+              width: 48px;
+              height: 48px;
+              background: rgba(0,0,0,0.78);
               color: #ffffff;
-              padding: 7px 13px;
-              border-radius: 20px;
-              font-size: 12px;
-              text-align: center;
-              white-space: nowrap;
-              z-index: 30;
-              pointer-events: none;
+              border: none;
+              border-radius: 50%;
+              font-size: 27px;
+              z-index: 80;
             "
 
           >
 
-            📡 Solicitando sensores...
+            ✕
+
+          </button>
+
+
+          <!-- =============================================== -->
+          <!-- PANEL DE DIAGNÓSTICO                            -->
+          <!-- =============================================== -->
+
+          <div
+
+            id="panel-diagnostico"
+
+            style="
+              position: absolute;
+              top: 78px;
+              left: 12px;
+              right: 12px;
+              background: rgba(0,0,0,0.72);
+              color: #ffffff;
+              border-radius: 14px;
+              padding: 10px 12px;
+              font-family: monospace;
+              font-size: 11px;
+              line-height: 1.45;
+              z-index: 45;
+              pointer-events: none;
+              max-height: 195px;
+              overflow: hidden;
+              box-sizing: border-box;
+            "
+
+          >
+
+            🔬 Diagnóstico iniciando...
 
           </div>
 
 
           <!-- =============================================== -->
-          <!-- MIRA                                            -->
+          <!-- MIRA CENTRAL                                    -->
           <!-- =============================================== -->
 
           <div
 
             style="
               position: absolute;
-              top: 50%;
               left: 50%;
-              width: 74px;
-              height: 74px;
+              top: 50%;
+              width: 72px;
+              height: 72px;
               transform: translate(-50%, -50%);
               border: 2px solid rgba(255,255,255,0.75);
               border-radius: 50%;
-              box-sizing: border-box;
-              pointer-events: none;
               z-index: 20;
+              pointer-events: none;
+              box-sizing: border-box;
             "
 
           ></div>
@@ -533,31 +619,31 @@ if (btnLeyenda2) {
 
             style="
               position: absolute;
-              top: 50%;
               left: 50%;
+              top: 50%;
               width: 7px;
               height: 7px;
               transform: translate(-50%, -50%);
               background: #ffffff;
               border-radius: 50%;
-              pointer-events: none;
               z-index: 20;
+              pointer-events: none;
             "
 
           ></div>
 
 
           <!-- =============================================== -->
-          <!-- CAPTURAR                                        -->
+          <!-- BOTÓN CAPTURAR                                  -->
           <!-- =============================================== -->
 
           <button
 
             id="btn-capturar"
 
-            disabled
-
             type="button"
+
+            disabled
 
             style="
               position: absolute;
@@ -571,7 +657,7 @@ if (btnLeyenda2) {
               border-radius: 50px;
               font-size: 17px;
               font-weight: bold;
-              z-index: 40;
+              z-index: 60;
               opacity: 0.6;
               white-space: nowrap;
               box-shadow: 0 5px 18px rgba(0,0,0,0.5);
@@ -585,44 +671,11 @@ if (btnLeyenda2) {
           </button>
 
 
-          <!-- =============================================== -->
-          <!-- CERRAR                                          -->
-          <!-- =============================================== -->
-
-          <button
-
-            id="btn-cerrar-ar"
-
-            type="button"
-
-            aria-label="Cerrar AR"
-
-            style="
-              position: absolute;
-              top: 18px;
-              right: 16px;
-              width: 48px;
-              height: 48px;
-              background: rgba(0,0,0,0.75);
-              color: #ffffff;
-              border: none;
-              border-radius: 50%;
-              font-size: 27px;
-              z-index: 50;
-            "
-
-          >
-
-            ✕
-
-          </button>
-
-
         </div>
 
 
         <!-- ================================================= -->
-        <!-- CONTENIDO CAPTURADO                               -->
+        <!-- CONTENIDO DESPUÉS DE CAPTURAR                     -->
         <!-- ================================================= -->
 
         <div
@@ -665,10 +718,12 @@ if (btnLeyenda2) {
 
 
             <p
+
               style="
                 margin: 0;
-                color: #333;
+                color: #333333;
               "
+
             >
 
               Has descubierto al Guajojó
@@ -677,6 +732,8 @@ if (btnLeyenda2) {
 
           </div>
 
+
+          <!-- MULTIMEDIA -->
 
           <div class="multimedia-leyenda">
 
@@ -724,8 +781,9 @@ if (btnLeyenda2) {
           </div>
 
 
-          <div class="historia-leyenda">
+          <!-- HISTORIA -->
 
+          <div class="historia-leyenda">
 
             <h3>
               La Leyenda del Guajojó
@@ -789,6 +847,7 @@ if (btnLeyenda2) {
       );
 
 
+      // Esperamos a que el HTML dinámico exista.
       setTimeout(
         configurarGuajojo,
         100
@@ -801,7 +860,7 @@ if (btnLeyenda2) {
 
 
 // ============================================================
-// CONFIGURAR MODELO Y BOTONES
+// CONFIGURAR BOTONES Y MODELO
 // ============================================================
 
 function configurarGuajojo() {
@@ -842,6 +901,9 @@ function configurarGuajojo() {
 
   if (modelo) {
 
+    // ========================================================
+    // MODELO CARGADO
+    // ========================================================
 
     modelo.addEventListener(
       'model-loaded',
@@ -856,12 +918,24 @@ function configurarGuajojo() {
           true;
 
 
+        diagnostico.modelo =
+          'OK';
+
+
+        actualizarPanelDiagnostico();
+
+
         if (
           arActivo &&
-          orientacionInicialLista
+          orientacionInicialLista &&
+          ultimoHeading !== null
         ) {
 
           mostrarModelo();
+
+          actualizarGuajojo(
+            ultimoHeading
+          );
 
         }
 
@@ -869,18 +943,29 @@ function configurarGuajojo() {
     );
 
 
+    // ========================================================
+    // ERROR CARGANDO MODELO
+    // ========================================================
+
     modelo.addEventListener(
       'model-error',
       error => {
 
         console.error(
-          '❌ Error modelo:',
+          '❌ Error cargando guajojo.glb:',
           error
         );
 
 
         modeloCargado =
           false;
+
+
+        diagnostico.modelo =
+          'ERROR';
+
+
+        actualizarPanelDiagnostico();
 
 
         const mensaje =
@@ -900,7 +985,10 @@ function configurarGuajojo() {
     );
 
 
-    // Puede haber cargado antes del listener.
+    // ========================================================
+    // COMPROBAR SI YA CARGÓ ANTES DEL LISTENER
+    // ========================================================
+
     setTimeout(
       () => {
 
@@ -913,10 +1001,15 @@ function configurarGuajojo() {
           modeloCargado =
             true;
 
+          diagnostico.modelo =
+            'OK';
+
+          actualizarPanelDiagnostico();
+
         }
 
       },
-      800
+      1000
     );
 
   }
@@ -925,39 +1018,400 @@ function configurarGuajojo() {
 
 
 // ============================================================
-// MOSTRAR MODELO
+// REINICIAR DIAGNÓSTICO
 // ============================================================
 
-function mostrarModelo() {
+function reiniciarDiagnostico() {
 
-  const modelo =
-    document.getElementById(
-      'modelo-guajojo'
-    );
+  diagnostico.contextoSeguro =
+    window.isSecureContext
+      ? 'OK'
+      : 'NO';
+
+
+  diagnostico.deviceOrientationAPI =
+    typeof DeviceOrientationEvent !== 'undefined'
+      ? 'SÍ'
+      : 'NO';
+
+
+  diagnostico.deviceMotionAPI =
+    typeof DeviceMotionEvent !== 'undefined'
+      ? 'SÍ'
+      : 'NO';
+
+
+  diagnostico.requestOrientation =
+    'pendiente';
+
+
+  diagnostico.requestMotion =
+    'pendiente';
+
+
+  diagnostico.permisoAcelerometro =
+    'pendiente';
+
+
+  diagnostico.permisoGiroscopio =
+    'pendiente';
+
+
+  diagnostico.permisoMagnetometro =
+    'pendiente';
+
+
+  diagnostico.eventoOrientacion =
+    'esperando';
+
+
+  diagnostico.eventoMovimiento =
+    'esperando';
+
+
+  diagnostico.acelerometroAPI =
+    'pendiente';
+
+
+  diagnostico.giroscopioAPI =
+    'pendiente';
+
+
+  diagnostico.relativeOrientationAPI =
+    'pendiente';
+
+
+  diagnostico.modelo =
+    modeloCargado
+      ? 'OK'
+      : 'cargando';
+
+
+  actualizarPanelDiagnostico();
+
+}
+
+
+// ============================================================
+// EMOJI SEGÚN ESTADO
+// ============================================================
+
+function iconoEstado(
+  valor
+) {
+
+  const texto =
+    String(valor).toLowerCase();
 
 
   if (
-    !modelo ||
-    !modeloCargado
+    texto === 'ok' ||
+    texto === 'sí' ||
+    texto === 'granted' ||
+    texto === 'lecturas' ||
+    texto.includes('activo')
   ) {
+
+    return '✅';
+
+  }
+
+
+  if (
+    texto === 'no' ||
+    texto === 'denied' ||
+    texto === 'error' ||
+    texto.includes('bloqueado') ||
+    texto.includes('no soportado')
+  ) {
+
+    return '❌';
+
+  }
+
+
+  return '⏳';
+
+}
+
+
+// ============================================================
+// ACTUALIZAR PANEL DE DIAGNÓSTICO
+// ============================================================
+
+function actualizarPanelDiagnostico() {
+
+  const panel =
+    document.getElementById(
+      'panel-diagnostico'
+    );
+
+
+  if (!panel) {
     return;
   }
 
 
-  modelo.setAttribute(
-    'visible',
-    true
-  );
+  panel.innerHTML = `
+
+    <div>
+      🔬 <strong>DIAGNÓSTICO DE SENSORES</strong>
+    </div>
+
+    <div>
+      ${iconoEstado(diagnostico.contextoSeguro)}
+      HTTPS:
+      ${diagnostico.contextoSeguro}
+    </div>
+
+    <div>
+      ${iconoEstado(diagnostico.requestOrientation)}
+      Orientation permiso:
+      ${diagnostico.requestOrientation}
+    </div>
+
+    <div>
+      ${iconoEstado(diagnostico.permisoAcelerometro)}
+      Acelerómetro:
+      ${diagnostico.permisoAcelerometro}
+    </div>
+
+    <div>
+      ${iconoEstado(diagnostico.permisoGiroscopio)}
+      Giroscopio:
+      ${diagnostico.permisoGiroscopio}
+    </div>
+
+    <div>
+      ${iconoEstado(diagnostico.eventoOrientacion)}
+      deviceorientation:
+      ${diagnostico.eventoOrientacion}
+    </div>
+
+    <div>
+      ${iconoEstado(diagnostico.eventoMovimiento)}
+      devicemotion:
+      ${diagnostico.eventoMovimiento}
+    </div>
+
+    <div>
+      ${iconoEstado(diagnostico.giroscopioAPI)}
+      Gyroscope API:
+      ${diagnostico.giroscopioAPI}
+    </div>
+
+    <div>
+      ${iconoEstado(diagnostico.relativeOrientationAPI)}
+      RelativeOrientation:
+      ${diagnostico.relativeOrientationAPI}
+    </div>
+
+    <div>
+      ${iconoEstado(diagnostico.modelo)}
+      guajojo.glb:
+      ${diagnostico.modelo}
+    </div>
+
+  `;
+
+}
 
 
-  modelo.object3D.visible =
-    true;
+// ============================================================
+// CONSULTAR UN PERMISO CON PERMISSIONS API
+// ============================================================
+
+async function consultarPermiso(
+  nombre
+) {
+
+  try {
+
+    if (
+      !navigator.permissions ||
+      !navigator.permissions.query
+    ) {
+
+      return 'no soportado';
+
+    }
 
 
-  modelo.object3D
-    .updateMatrixWorld(
-      true
+    const resultado =
+      await navigator.permissions.query({
+
+        name: nombre
+
+      });
+
+
+    return resultado.state;
+
+
+  } catch (error) {
+
+    console.warn(
+      `No se pudo consultar permiso ${nombre}:`,
+      error
     );
+
+
+    return 'no consultable';
+
+  }
+
+}
+
+
+// ============================================================
+// SOLICITAR PERMISOS DE DEVICE ORIENTATION
+// ============================================================
+//
+// IMPORTANTE:
+//
+// Esta función NO hace await entre las dos solicitudes.
+//
+// Ambas requestPermission() se ejecutan inmediatamente
+// mientras todavía existe el toque del usuario.
+// ============================================================
+
+function lanzarSolicitudesPermisos() {
+
+  let promesaOrientacion =
+    Promise.resolve(
+      'no requerida'
+    );
+
+
+  let promesaMovimiento =
+    Promise.resolve(
+      'no requerida'
+    );
+
+
+  // ==========================================================
+  // DEVICE ORIENTATION
+  // ==========================================================
+
+  try {
+
+    if (
+
+      typeof DeviceOrientationEvent !==
+        'undefined' &&
+
+      typeof DeviceOrientationEvent
+        .requestPermission ===
+        'function'
+
+    ) {
+
+      promesaOrientacion =
+        DeviceOrientationEvent
+          .requestPermission(false);
+
+    }
+
+  } catch (error) {
+
+    console.error(
+      'Error solicitando DeviceOrientation:',
+      error
+    );
+
+
+    promesaOrientacion =
+      Promise.resolve(
+        'error'
+      );
+
+  }
+
+
+  // ==========================================================
+  // DEVICE MOTION
+  // ==========================================================
+
+  try {
+
+    if (
+
+      typeof DeviceMotionEvent !==
+        'undefined' &&
+
+      typeof DeviceMotionEvent
+        .requestPermission ===
+        'function'
+
+    ) {
+
+      promesaMovimiento =
+        DeviceMotionEvent
+          .requestPermission();
+
+    }
+
+  } catch (error) {
+
+    console.error(
+      'Error solicitando DeviceMotion:',
+      error
+    );
+
+
+    promesaMovimiento =
+      Promise.resolve(
+        'error'
+      );
+
+  }
+
+
+  return {
+
+    orientacion:
+      promesaOrientacion,
+
+    movimiento:
+      promesaMovimiento
+
+  };
+
+}
+
+
+// ============================================================
+// PROCESAR RESULTADO DE PROMESA
+// ============================================================
+
+function resultadoPromesa(
+  resultado
+) {
+
+  if (
+    resultado.status ===
+    'fulfilled'
+  ) {
+
+    return String(
+      resultado.value
+    );
+
+  }
+
+
+  if (
+    resultado.reason &&
+    resultado.reason.name
+  ) {
+
+    return 'ERROR ' +
+      resultado.reason.name;
+
+  }
+
+
+  return 'ERROR';
 
 }
 
@@ -994,7 +1448,7 @@ function normalizarAngulo(
 
 
 // ============================================================
-// RADIANES
+// GRADOS A RADIANES
 // ============================================================
 
 function rad(
@@ -1009,15 +1463,18 @@ function rad(
 
 
 // ============================================================
-// OBTENER ORIENTACIÓN DE PANTALLA
+// ORIENTACIÓN ACTUAL DE PANTALLA
 // ============================================================
 
-function anguloPantalla() {
+function obtenerAnguloPantalla() {
 
   if (
+
     screen.orientation &&
+
     typeof screen.orientation.angle ===
       'number'
+
   ) {
 
     return screen.orientation.angle;
@@ -1041,7 +1498,7 @@ function anguloPantalla() {
 
 
 // ============================================================
-// HEADING DESDE DEVICEORIENTATION
+// CONVERTIR ALPHA/BETA/GAMMA A HEADING
 // ============================================================
 
 function headingDesdeEuler(
@@ -1051,9 +1508,16 @@ function headingDesdeEuler(
 ) {
 
   if (
-    typeof alpha !== 'number' ||
-    typeof beta !== 'number' ||
-    typeof gamma !== 'number'
+
+    typeof alpha !==
+      'number' ||
+
+    typeof beta !==
+      'number' ||
+
+    typeof gamma !==
+      'number'
+
   ) {
 
     return null;
@@ -1073,7 +1537,7 @@ function headingDesdeEuler(
     new THREE.Quaternion();
 
 
-  const pantallaQuaternion =
+  const qPantalla =
     new THREE.Quaternion();
 
 
@@ -1085,14 +1549,23 @@ function headingDesdeEuler(
     );
 
 
-  const qCorreccion =
+  const qCorreccionCamara =
     new THREE.Quaternion(
+
       -Math.sqrt(0.5),
+
       0,
+
       0,
+
       Math.sqrt(0.5)
+
     );
 
+
+  // ==========================================================
+  // CONVERSIÓN DEVICEORIENTATION -> THREE.JS
+  // ==========================================================
 
   euler.set(
 
@@ -1113,24 +1586,23 @@ function headingDesdeEuler(
 
 
   quaternion.multiply(
-    qCorreccion
+    qCorreccionCamara
   );
 
 
-  pantallaQuaternion
-    .setFromAxisAngle(
+  qPantalla.setFromAxisAngle(
 
-      ejeZ,
+    ejeZ,
 
-      -rad(
-        anguloPantalla()
-      )
+    -rad(
+      obtenerAnguloPantalla()
+    )
 
-    );
+  );
 
 
   quaternion.multiply(
-    pantallaQuaternion
+    qPantalla
   );
 
 
@@ -1142,7 +1614,7 @@ function headingDesdeEuler(
 
 
 // ============================================================
-// HEADING DESDE QUATERNION
+// OBTENER HEADING DESDE QUATERNION
 // ============================================================
 
 function headingDesdeQuaternion(
@@ -1162,6 +1634,7 @@ function headingDesdeQuaternion(
   );
 
 
+  // Ignoramos componente vertical.
   frente.y =
     0;
 
@@ -1182,8 +1655,11 @@ function headingDesdeQuaternion(
   const grados =
 
     Math.atan2(
+
       frente.x,
+
       -frente.z
+
     ) *
 
     180 /
@@ -1199,7 +1675,7 @@ function headingDesdeQuaternion(
 
 
 // ============================================================
-// RECIBIR HEADING DESDE CUALQUIER SENSOR
+// PROCESAR HEADING
 // ============================================================
 
 function procesarHeading(
@@ -1209,7 +1685,7 @@ function procesarHeading(
 
   if (
     !arActivo ||
-    typeof heading !== 'number' ||
+    heading === null ||
     Number.isNaN(heading)
   ) {
 
@@ -1222,8 +1698,40 @@ function procesarHeading(
     true;
 
 
-  ultimaFuenteSensor =
-    fuente;
+  ultimoHeading =
+    heading;
+
+
+  // ==========================================================
+  // FIJAR FUENTE PRINCIPAL
+  // ==========================================================
+
+  if (
+    fuenteHeadingActiva ===
+    null
+  ) {
+
+    fuenteHeadingActiva =
+      fuente;
+
+
+    console.log(
+      '📡 Fuente de orientación seleccionada:',
+      fuenteHeadingActiva
+    );
+
+  }
+
+
+  // No mezclar sensores diferentes.
+  if (
+    fuente !==
+    fuenteHeadingActiva
+  ) {
+
+    return;
+
+  }
 
 
   // ==========================================================
@@ -1233,7 +1741,6 @@ function procesarHeading(
   if (
     !orientacionInicialLista
   ) {
-
 
     orientacionInicialLista =
       true;
@@ -1249,7 +1756,8 @@ function procesarHeading(
         : -1;
 
 
-    const angulo =
+    const desplazamiento =
+
       CONFIG_AR.anguloMin +
 
       Math.random() *
@@ -1265,22 +1773,39 @@ function procesarHeading(
 
         headingInicial +
 
-        angulo *
-
+        desplazamiento *
         lado
 
       );
 
 
     console.log(
-      '📱 Dirección inicial:',
+      '=============================='
+    );
+
+
+    console.log(
+      '📱 Heading inicial:',
       headingInicial
     );
 
 
     console.log(
-      '🦉 Dirección Guajojó:',
+      '🦉 Heading objetivo:',
       headingObjetivo
+    );
+
+
+    console.log(
+      'Dirección:',
+      lado > 0
+        ? 'derecha'
+        : 'izquierda'
+    );
+
+
+    console.log(
+      '=============================='
     );
 
 
@@ -1297,15 +1822,95 @@ function procesarHeading(
 
 
 // ============================================================
-// DEVICEORIENTATION NORMAL
+// EVENTO DEVICEORIENTATION
 // ============================================================
 
-function eventoOrientacion(
+function manejarDeviceOrientation(
   event
 ) {
 
   if (!arActivo) {
     return;
+  }
+
+
+  // El evento llegó.
+  if (
+
+    event.alpha === null ||
+    event.beta === null ||
+    event.gamma === null
+
+  ) {
+
+    diagnostico.eventoOrientacion =
+      'evento sin datos';
+
+
+    actualizarPanelDiagnostico();
+
+
+    return;
+
+  }
+
+
+  diagnostico.eventoOrientacion =
+    'activo';
+
+
+  actualizarPanelDiagnostico();
+
+
+  const heading =
+    headingDesdeEuler(
+
+      event.alpha,
+
+      event.beta,
+
+      event.gamma
+
+    );
+
+
+  if (
+    heading !== null
+  ) {
+
+    procesarHeading(
+      heading,
+      'deviceorientation'
+    );
+
+  }
+
+}
+
+
+// ============================================================
+// EVENTO DEVICEORIENTATIONABSOLUTE
+// ============================================================
+
+function manejarDeviceOrientationAbsolute(
+  event
+) {
+
+  if (!arActivo) {
+    return;
+  }
+
+
+  if (
+
+    event.alpha === null ||
+    event.beta === null ||
+    event.gamma === null
+
+  ) {
+
+    return;
+
   }
 
 
@@ -1327,7 +1932,7 @@ function eventoOrientacion(
 
     procesarHeading(
       heading,
-      'DeviceOrientation'
+      'deviceorientationabsolute'
     );
 
   }
@@ -1336,10 +1941,10 @@ function eventoOrientacion(
 
 
 // ============================================================
-// DEVICEORIENTATION ABSOLUTO
+// EVENTO DEVICEMOTION
 // ============================================================
 
-function eventoOrientacionAbsoluta(
+function manejarDeviceMotion(
   event
 ) {
 
@@ -1348,167 +1953,45 @@ function eventoOrientacionAbsoluta(
   }
 
 
-  const heading =
-    headingDesdeEuler(
+  const tieneRotacion =
 
-      event.alpha,
+    event.rotationRate &&
 
-      event.beta,
+    (
+      event.rotationRate.alpha !== null ||
+      event.rotationRate.beta !== null ||
+      event.rotationRate.gamma !== null
+    );
 
-      event.gamma
 
+  const tieneAceleracion =
+
+    event.accelerationIncludingGravity &&
+
+    (
+      event.accelerationIncludingGravity.x !== null ||
+      event.accelerationIncludingGravity.y !== null ||
+      event.accelerationIncludingGravity.z !== null
     );
 
 
   if (
-    heading !== null
+    tieneRotacion ||
+    tieneAceleracion
   ) {
 
-    procesarHeading(
-      heading,
-      'DeviceOrientationAbsolute'
-    );
+    diagnostico.eventoMovimiento =
+      'activo';
 
-  }
+  } else {
 
-}
-
-
-// ============================================================
-// SOLICITAR PERMISOS DEL SENSOR
-// ============================================================
-
-async function solicitarPermisosSensores() {
-
-  const solicitudes = [];
-
-
-  // ==========================================================
-  // CHROME 151 / iOS / NAVEGADORES CON REQUESTPERMISSION
-  // ==========================================================
-
-  try {
-
-    if (
-      typeof DeviceOrientationEvent !==
-        'undefined' &&
-      typeof DeviceOrientationEvent
-        .requestPermission ===
-        'function'
-    ) {
-
-      solicitudes.push(
-
-        DeviceOrientationEvent
-          .requestPermission()
-          .then(
-            resultado => {
-
-              console.log(
-                'Permiso DeviceOrientation:',
-                resultado
-              );
-
-
-              return resultado;
-
-            }
-          )
-
-      );
-
-    }
-
-  } catch (error) {
-
-    console.warn(
-      'DeviceOrientation permiso:',
-      error
-    );
+    diagnostico.eventoMovimiento =
+      'evento sin datos';
 
   }
 
 
-  try {
-
-    if (
-      typeof DeviceMotionEvent !==
-        'undefined' &&
-      typeof DeviceMotionEvent
-        .requestPermission ===
-        'function'
-    ) {
-
-      solicitudes.push(
-
-        DeviceMotionEvent
-          .requestPermission()
-          .then(
-            resultado => {
-
-              console.log(
-                'Permiso DeviceMotion:',
-                resultado
-              );
-
-
-              return resultado;
-
-            }
-          )
-
-      );
-
-    }
-
-  } catch (error) {
-
-    console.warn(
-      'DeviceMotion permiso:',
-      error
-    );
-
-  }
-
-
-  if (
-    solicitudes.length === 0
-  ) {
-
-    return true;
-
-  }
-
-
-  try {
-
-    const resultados =
-      await Promise.all(
-        solicitudes
-      );
-
-
-    const algunoConcedido =
-      resultados.some(
-        resultado =>
-          resultado ===
-          'granted'
-      );
-
-
-    return algunoConcedido;
-
-  } catch (error) {
-
-    console.error(
-      'Error solicitando permisos:',
-      error
-    );
-
-
-    return false;
-
-  }
+  actualizarPanelDiagnostico();
 
 }
 
@@ -1517,94 +2000,75 @@ async function solicitarPermisosSensores() {
 // ACTIVAR EVENTOS CLÁSICOS
 // ============================================================
 
-function activarEventosOrientacion() {
+function activarEventosClasicos() {
 
-  window.removeEventListener(
-    'deviceorientation',
-    eventoOrientacion
-  );
-
-
-  window.removeEventListener(
-    'deviceorientationabsolute',
-    eventoOrientacionAbsoluta
-  );
+  desactivarEventosClasicos();
 
 
   window.addEventListener(
     'deviceorientation',
-    eventoOrientacion
+    manejarDeviceOrientation
   );
 
 
   window.addEventListener(
     'deviceorientationabsolute',
-    eventoOrientacionAbsoluta
+    manejarDeviceOrientationAbsolute
+  );
+
+
+  window.addEventListener(
+    'devicemotion',
+    manejarDeviceMotion
   );
 
 }
 
 
 // ============================================================
-// DESACTIVAR EVENTOS
+// DESACTIVAR EVENTOS CLÁSICOS
 // ============================================================
 
-function desactivarEventosOrientacion() {
+function desactivarEventosClasicos() {
 
   window.removeEventListener(
     'deviceorientation',
-    eventoOrientacion
+    manejarDeviceOrientation
   );
 
 
   window.removeEventListener(
     'deviceorientationabsolute',
-    eventoOrientacionAbsoluta
+    manejarDeviceOrientationAbsolute
+  );
+
+
+  window.removeEventListener(
+    'devicemotion',
+    manejarDeviceMotion
   );
 
 }
 
 
 // ============================================================
-// GENERIC SENSOR API
-// ============================================================
-//
-// Si DeviceOrientation no entrega datos,
-// intentamos RelativeOrientationSensor.
-//
+// PROBAR ACELERÓMETRO
 // ============================================================
 
-function iniciarSensorRelativo() {
-
-  if (
-    sensorDetectado ||
-    !arActivo
-  ) {
-
-    return;
-
-  }
-
-
-  const estado =
-    document.getElementById(
-      'estado-sensor'
-    );
-
+function probarAcelerometro() {
 
   if (
     !(
-      'RelativeOrientationSensor'
+      'Accelerometer'
       in window
     )
   ) {
 
-    console.warn(
-      'RelativeOrientationSensor no disponible.'
-    );
+    diagnostico.acelerometroAPI =
+      'no soportado';
 
 
-    mostrarErrorSensores();
+    actualizarPanelDiagnostico();
 
 
     return;
@@ -1614,15 +2078,203 @@ function iniciarSensorRelativo() {
 
   try {
 
-    if (estado) {
+    sensorAcelerometro =
+      new Accelerometer({
 
-      estado.innerText =
-        '🔄 Probando sensor alternativo...';
+        frequency: 20
 
-    }
+      });
 
 
-    sensorRelativo =
+    sensorAcelerometro.onreading =
+      () => {
+
+        diagnostico.acelerometroAPI =
+          'lecturas';
+
+
+        actualizarPanelDiagnostico();
+
+      };
+
+
+    sensorAcelerometro.onerror =
+      event => {
+
+        const nombre =
+          event.error?.name ||
+          'Error';
+
+
+        diagnostico.acelerometroAPI =
+          'ERROR ' +
+          nombre;
+
+
+        actualizarPanelDiagnostico();
+
+
+        console.error(
+          'Accelerometer:',
+          event.error
+        );
+
+      };
+
+
+    sensorAcelerometro.start();
+
+
+    diagnostico.acelerometroAPI =
+      'iniciado';
+
+
+  } catch (error) {
+
+    diagnostico.acelerometroAPI =
+      'ERROR ' +
+      error.name;
+
+
+    console.error(
+      'Accelerometer constructor:',
+      error
+    );
+
+  }
+
+
+  actualizarPanelDiagnostico();
+
+}
+
+
+// ============================================================
+// PROBAR GIROSCOPIO
+// ============================================================
+
+function probarGiroscopio() {
+
+  if (
+    !(
+      'Gyroscope'
+      in window
+    )
+  ) {
+
+    diagnostico.giroscopioAPI =
+      'no soportado';
+
+
+    actualizarPanelDiagnostico();
+
+
+    return;
+
+  }
+
+
+  try {
+
+    sensorGiroscopio =
+      new Gyroscope({
+
+        frequency: 20
+
+      });
+
+
+    sensorGiroscopio.onreading =
+      () => {
+
+        diagnostico.giroscopioAPI =
+          'lecturas';
+
+
+        actualizarPanelDiagnostico();
+
+      };
+
+
+    sensorGiroscopio.onerror =
+      event => {
+
+        const nombre =
+          event.error?.name ||
+          'Error';
+
+
+        diagnostico.giroscopioAPI =
+          'ERROR ' +
+          nombre;
+
+
+        actualizarPanelDiagnostico();
+
+
+        console.error(
+          'Gyroscope:',
+          event.error
+        );
+
+      };
+
+
+    sensorGiroscopio.start();
+
+
+    diagnostico.giroscopioAPI =
+      'iniciado';
+
+
+  } catch (error) {
+
+    diagnostico.giroscopioAPI =
+      'ERROR ' +
+      error.name;
+
+
+    console.error(
+      'Gyroscope constructor:',
+      error
+    );
+
+  }
+
+
+  actualizarPanelDiagnostico();
+
+}
+
+
+// ============================================================
+// PROBAR RELATIVE ORIENTATION SENSOR
+// ============================================================
+
+function probarRelativeOrientationSensor() {
+
+  if (
+    !(
+      'RelativeOrientationSensor'
+      in window
+    )
+  ) {
+
+    diagnostico.relativeOrientationAPI =
+      'no soportado';
+
+
+    actualizarPanelDiagnostico();
+
+
+    return;
+
+  }
+
+
+  try {
+
+    sensorOrientacionRelativa =
       new RelativeOrientationSensor({
 
         frequency: 30,
@@ -1632,14 +2284,21 @@ function iniciarSensorRelativo() {
       });
 
 
-    sensorRelativo.onreading =
+    sensorOrientacionRelativa.onreading =
       () => {
+
+        diagnostico.relativeOrientationAPI =
+          'lecturas';
+
+
+        actualizarPanelDiagnostico();
 
 
         if (
-          !arActivo ||
-          !sensorRelativo ||
-          !sensorRelativo.quaternion
+
+          !sensorOrientacionRelativa ||
+          !sensorOrientacionRelativa.quaternion
+
         ) {
 
           return;
@@ -1647,17 +2306,27 @@ function iniciarSensorRelativo() {
         }
 
 
-        const q =
-          new AFRAME.THREE
-            .Quaternion()
-            .fromArray(
-              sensorRelativo.quaternion
-            );
+        const datos =
+          sensorOrientacionRelativa.quaternion;
+
+
+        const quaternion =
+          new AFRAME.THREE.Quaternion(
+
+            datos[0],
+
+            datos[1],
+
+            datos[2],
+
+            datos[3]
+
+          );
 
 
         const heading =
           headingDesdeQuaternion(
-            q
+            quaternion
           );
 
 
@@ -1675,143 +2344,190 @@ function iniciarSensorRelativo() {
       };
 
 
-    sensorRelativo.onerror =
+    sensorOrientacionRelativa.onerror =
       event => {
+
+        const nombre =
+          event.error?.name ||
+          'Error';
+
+
+        diagnostico.relativeOrientationAPI =
+          'ERROR ' +
+          nombre;
+
+
+        actualizarPanelDiagnostico();
 
 
         console.error(
-          'Sensor alternativo:',
+          'RelativeOrientationSensor:',
           event.error
         );
-
-
-        if (
-          !sensorDetectado
-        ) {
-
-          mostrarErrorSensores(
-            event.error
-          );
-
-        }
 
       };
 
 
-    sensorRelativo.start();
+    sensorOrientacionRelativa.start();
 
 
-    console.log(
-      '📡 RelativeOrientationSensor iniciado.'
-    );
-
-
-    setTimeout(
-      () => {
-
-        if (
-          arActivo &&
-          !sensorDetectado
-        ) {
-
-          mostrarErrorSensores();
-
-        }
-
-      },
-      2500
-    );
+    diagnostico.relativeOrientationAPI =
+      'iniciado';
 
 
   } catch (error) {
 
+    diagnostico.relativeOrientationAPI =
+      'ERROR ' +
+      error.name;
+
+
     console.error(
-      'No se pudo iniciar RelativeOrientationSensor:',
-      error
-    );
-
-
-    mostrarErrorSensores(
+      'RelativeOrientationSensor constructor:',
       error
     );
 
   }
+
+
+  actualizarPanelDiagnostico();
 
 }
 
 
 // ============================================================
-// MENSAJE DE ERROR DE SENSORES
+// INICIAR SENSORES GENERIC SENSOR
 // ============================================================
 
-function mostrarErrorSensores(
-  error = null
-) {
+function iniciarSensoresGenericos() {
 
-  if (!arActivo) {
-    return;
-  }
+  detenerSensoresGenericos();
 
 
-  const mensaje =
-    document.getElementById(
-      'mensaje-ar'
-    );
+  probarAcelerometro();
+
+  probarGiroscopio();
+
+  probarRelativeOrientationSensor();
+
+}
 
 
-  const estado =
-    document.getElementById(
-      'estado-sensor'
-    );
+// ============================================================
+// DETENER SENSORES GENERIC SENSOR
+// ============================================================
 
+function detenerSensoresGenericos() {
 
-  if (mensaje) {
+  if (sensorAcelerometro) {
 
-    mensaje.innerText =
-      '⚠️ Chrome bloquea el sensor de movimiento';
+    try {
 
-  }
+      sensorAcelerometro.stop();
 
+    } catch (error) {
 
-  if (estado) {
-
-    if (
-      error &&
-      error.name ===
-        'NotAllowedError'
-    ) {
-
-      estado.innerText =
-        '❌ Permiso de sensores bloqueado';
-
-    } else if (
-      error &&
-      error.name ===
-        'SecurityError'
-    ) {
-
-      estado.innerText =
-        '❌ Sensores bloqueados por seguridad';
-
-    } else {
-
-      estado.innerText =
-        '❌ Activa “Sensores de movimiento” en Chrome';
+      console.warn(
+        error
+      );
 
     }
 
+
+    sensorAcelerometro =
+      null;
+
   }
 
 
-  console.warn(
-    'No llegan datos de orientación.'
-  );
+  if (sensorGiroscopio) {
+
+    try {
+
+      sensorGiroscopio.stop();
+
+    } catch (error) {
+
+      console.warn(
+        error
+      );
+
+    }
+
+
+    sensorGiroscopio =
+      null;
+
+  }
+
+
+  if (
+    sensorOrientacionRelativa
+  ) {
+
+    try {
+
+      sensorOrientacionRelativa.stop();
+
+    } catch (error) {
+
+      console.warn(
+        error
+      );
+
+    }
+
+
+    sensorOrientacionRelativa =
+      null;
+
+  }
 
 }
 
 
 // ============================================================
-// ACTUALIZAR POSICIÓN DEL GUAJOJÓ
+// MOSTRAR MODELO
+// ============================================================
+
+function mostrarModelo() {
+
+  const modelo =
+    document.getElementById(
+      'modelo-guajojo'
+    );
+
+
+  if (
+    !modelo ||
+    !modeloCargado
+  ) {
+
+    return;
+
+  }
+
+
+  modelo.setAttribute(
+    'visible',
+    true
+  );
+
+
+  modelo.object3D.visible =
+    true;
+
+
+  modelo.object3D
+    .updateMatrixWorld(
+      true
+    );
+
+}
+
+
+// ============================================================
+// ACTUALIZAR POSICIÓN GUAJOJÓ
 // ============================================================
 
 function actualizarGuajojo(
@@ -1830,12 +2546,6 @@ function actualizarGuajojo(
     );
 
 
-  const estado =
-    document.getElementById(
-      'estado-sensor'
-    );
-
-
   const btnCapturar =
     document.getElementById(
       'btn-capturar'
@@ -1843,11 +2553,12 @@ function actualizarGuajojo(
 
 
   if (
+
     !modelo ||
     !mensaje ||
-    !estado ||
     !btnCapturar ||
     !orientacionInicialLista
+
   ) {
 
     return;
@@ -1856,7 +2567,7 @@ function actualizarGuajojo(
 
 
   // ==========================================================
-  // DIFERENCIA ENTRE DIRECCIÓN ACTUAL Y GUAJOJÓ
+  // DIFERENCIA ANGULAR
   // ==========================================================
 
   const diferencia =
@@ -1868,43 +2579,49 @@ function actualizarGuajojo(
     );
 
 
-  const restantes =
+  const gradosRestantes =
     Math.abs(
       diferencia
     );
 
 
   // ==========================================================
-  // MOVER MODELO ALREDEDOR DE LA CÁMARA
+  // POSICIÓN DEL GUAJOJÓ ALREDEDOR DE LA CÁMARA
   // ==========================================================
 
-  const a =
+  const angulo =
     rad(
       diferencia
     );
 
 
   const x =
-    Math.sin(a) *
+
+    Math.sin(
+      angulo
+    ) *
+
     CONFIG_AR.distancia;
 
 
   const z =
-    -Math.cos(a) *
+
+    -Math.cos(
+      angulo
+    ) *
+
     CONFIG_AR.distancia;
 
 
-  modelo.object3D
-    .position
-    .set(
+  modelo.object3D.position.set(
 
-      x,
+    x,
 
-      0,
+    0,
 
-      z
+    z
 
-    );
+  );
 
 
   modelo.object3D
@@ -1922,33 +2639,13 @@ function actualizarGuajojo(
 
 
   // ==========================================================
-  // MOSTRAR SENSOR QUE ESTÁ FUNCIONANDO
-  // ==========================================================
-
-  estado.innerText =
-
-    '✅ ' +
-
-    ultimaFuenteSensor +
-
-    ' · faltan ' +
-
-    Math.round(
-      restantes
-    ) +
-
-    '°';
-
-
-  // ==========================================================
-  // CAPTURA
+  // ENCONTRADO
   // ==========================================================
 
   if (
-    restantes <=
+    gradosRestantes <=
     CONFIG_AR.anguloCaptura
   ) {
-
 
     mensaje.innerText =
       '🦉 ¡Encontraste al Guajojó!';
@@ -1975,18 +2672,17 @@ function actualizarGuajojo(
   }
 
 
-  btnCapturar.disabled =
-    true;
-
-
   // ==========================================================
   // CERCA
   // ==========================================================
 
   if (
-    restantes <=
+    gradosRestantes <=
     CONFIG_AR.anguloVisible
   ) {
+
+    btnCapturar.disabled =
+      true;
 
 
     btnCapturar.style.background =
@@ -2010,7 +2706,7 @@ function actualizarGuajojo(
         '🦉 Un poco más a la derecha · ' +
 
         Math.round(
-          restantes
+          gradosRestantes
         ) +
 
         '°';
@@ -2022,7 +2718,7 @@ function actualizarGuajojo(
         '🦉 Un poco más a la izquierda · ' +
 
         Math.round(
-          restantes
+          gradosRestantes
         ) +
 
         '°';
@@ -2038,6 +2734,10 @@ function actualizarGuajojo(
   // ==========================================================
   // LEJOS
   // ==========================================================
+
+  btnCapturar.disabled =
+    true;
+
 
   btnCapturar.style.background =
     '#555555';
@@ -2060,7 +2760,7 @@ function actualizarGuajojo(
       '➡️ Gira a la derecha · ' +
 
       Math.round(
-        restantes
+        gradosRestantes
       ) +
 
       '°';
@@ -2072,7 +2772,7 @@ function actualizarGuajojo(
       '⬅️ Gira a la izquierda · ' +
 
       Math.round(
-        restantes
+        gradosRestantes
       ) +
 
       '°';
@@ -2096,7 +2796,6 @@ function esperarVideoListo(
       reject
     ) => {
 
-
       if (
         video.readyState >= 1
       ) {
@@ -2114,7 +2813,6 @@ function esperarVideoListo(
 
       const limpiar =
         () => {
-
 
           video.removeEventListener(
             'loadedmetadata',
@@ -2139,8 +2837,9 @@ function esperarVideoListo(
       const listo =
         () => {
 
-
-          if (terminado) return;
+          if (terminado) {
+            return;
+          }
 
 
           terminado =
@@ -2158,8 +2857,9 @@ function esperarVideoListo(
       const errorVideo =
         () => {
 
-
-          if (terminado) return;
+          if (terminado) {
+            return;
+          }
 
 
           terminado =
@@ -2170,9 +2870,11 @@ function esperarVideoListo(
 
 
           reject(
+
             new Error(
-              'No se pudo preparar el video.'
+              'No se pudo preparar el video de la cámara.'
             )
+
           );
 
         };
@@ -2209,8 +2911,11 @@ function esperarVideoListo(
         () => {
 
           if (
+
             !terminado &&
+
             video.readyState >= 1
+
           ) {
 
             listo();
@@ -2228,7 +2933,7 @@ function esperarVideoListo(
 
 
 // ============================================================
-// REPRODUCIR VIDEO
+// REPRODUCIR VIDEO DE FORMA SEGURA
 // ============================================================
 
 async function reproducirVideoSeguro(
@@ -2237,11 +2942,24 @@ async function reproducirVideoSeguro(
 
   try {
 
+    const promesa =
+      video.play();
 
-    await video.play();
 
+    if (
+      promesa !== undefined
+    ) {
+
+      await promesa;
+
+    }
 
   } catch (error) {
+
+    console.warn(
+      'Primer play():',
+      error
+    );
 
 
     if (
@@ -2256,7 +2974,6 @@ async function reproducirVideoSeguro(
       )
 
     ) {
-
 
       await new Promise(
         resolve =>
@@ -2289,7 +3006,7 @@ async function reproducirVideoSeguro(
 
 
 // ============================================================
-// INICIAR AR
+// ABRIR REALIDAD AUMENTADA
 // ============================================================
 
 async function iniciarCamaraAR() {
@@ -2338,12 +3055,6 @@ async function iniciarCamaraAR() {
     );
 
 
-  const estado =
-    document.getElementById(
-      'estado-sensor'
-    );
-
-
   const btnAbrir =
     document.getElementById(
       'btn-abrir-ar'
@@ -2371,7 +3082,6 @@ async function iniciarCamaraAR() {
     arIniciando =
       false;
 
-
     return;
 
   }
@@ -2385,29 +3095,33 @@ async function iniciarCamaraAR() {
   }
 
 
+  // ==========================================================
+  // MUY IMPORTANTE
+  //
+  // Estas solicitudes se lanzan ANTES de cualquier await.
+  // Así todavía estamos dentro del clic del usuario.
+  // ==========================================================
+
+  const solicitudesPermiso =
+    lanzarSolicitudesPermisos();
+
+
   try {
 
-
     // ========================================================
-    // 1. SOLICITAR PERMISOS INMEDIATAMENTE DESDE EL CLIC
+    // 1. MOSTRAR PANTALLA AR
     // ========================================================
 
-    if (mensaje) {
-
-      mensaje.innerText =
-        '🔐 Solicitando permiso de movimiento...';
-
-    }
+    pantalla.style.display =
+      'block';
 
 
-    const permisoSensor =
-      await solicitarPermisosSensores();
+    document.body.style.overflow =
+      'hidden';
 
 
-    console.log(
-      'Permiso sensor:',
-      permisoSensor
-    );
+    arActivo =
+      true;
 
 
     // ========================================================
@@ -2430,16 +3144,30 @@ async function iniciarCamaraAR() {
       0;
 
 
-    ultimaFuenteSensor =
-      '';
+    ultimoHeading =
+      null;
+
+
+    fuenteHeadingActiva =
+      null;
+
+
+    reiniciarDiagnostico();
+
+
+    if (mensaje) {
+
+      mensaje.innerText =
+        '🔐 Comprobando permisos de sensores...';
+
+    }
 
 
     // ========================================================
-    // 3. MODELO
+    // 3. OCULTAR MODELO
     // ========================================================
 
     if (modelo) {
-
 
       modelo.setAttribute(
         'visible',
@@ -2451,121 +3179,154 @@ async function iniciarCamaraAR() {
         false;
 
 
-      modelo.object3D
-        .position
-        .set(
-          0,
-          0,
-          -3
-        );
+      modelo.object3D.position.set(
 
-    }
+        0,
 
+        0,
 
-    // ========================================================
-    // 4. MOSTRAR AR
-    // ========================================================
+        -CONFIG_AR.distancia
 
-    pantalla.style.display =
-      'block';
-
-
-    document.body.style.overflow =
-      'hidden';
-
-
-    arActivo =
-      true;
-
-
-    if (mensaje) {
-
-      mensaje.innerText =
-        '📡 Detectando movimiento...';
-
-    }
-
-
-    if (estado) {
-
-      estado.innerText =
-        '📡 Esperando sensor...';
-
-    }
-
-
-    if (btnCapturar) {
-
-
-      btnCapturar.disabled =
-        true;
-
-
-      btnCapturar.style.background =
-        '#555555';
-
-
-      btnCapturar.style.opacity =
-        '0.6';
-
-
-      btnCapturar.innerText =
-        '👀 Busca al Guajojó...';
-
-    }
-
-
-    // ========================================================
-    // 5. ACTIVAR EVENTOS INMEDIATAMENTE
-    // ========================================================
-
-    activarEventosOrientacion();
-
-
-    // ========================================================
-    // 6. SI LOS EVENTOS NORMALES NO RESPONDEN,
-    // PROBAR GENERIC SENSOR
-    // ========================================================
-
-    if (timeoutSensor) {
-
-      clearTimeout(
-        timeoutSensor
       );
 
     }
 
 
-    timeoutSensor =
+    // ========================================================
+    // 4. ESPERAR RESULTADOS requestPermission
+    // ========================================================
+
+    const resultadosPermiso =
+      await Promise.allSettled([
+
+        solicitudesPermiso.orientacion,
+
+        solicitudesPermiso.movimiento
+
+      ]);
+
+
+    diagnostico.requestOrientation =
+      resultadoPromesa(
+        resultadosPermiso[0]
+      );
+
+
+    diagnostico.requestMotion =
+      resultadoPromesa(
+        resultadosPermiso[1]
+      );
+
+
+    actualizarPanelDiagnostico();
+
+
+    // ========================================================
+    // 5. CONSULTAR PERMISSIONS API
+    // ========================================================
+
+    const permisos =
+      await Promise.all([
+
+        consultarPermiso(
+          'accelerometer'
+        ),
+
+        consultarPermiso(
+          'gyroscope'
+        ),
+
+        consultarPermiso(
+          'magnetometer'
+        )
+
+      ]);
+
+
+    diagnostico.permisoAcelerometro =
+      permisos[0];
+
+
+    diagnostico.permisoGiroscopio =
+      permisos[1];
+
+
+    diagnostico.permisoMagnetometro =
+      permisos[2];
+
+
+    actualizarPanelDiagnostico();
+
+
+    // ========================================================
+    // 6. ACTIVAR EVENTOS DEVICEORIENTATION / DEVICEMOTION
+    // ========================================================
+
+    activarEventosClasicos();
+
+
+    // ========================================================
+    // 7. PROBAR GENERIC SENSOR
+    // ========================================================
+
+    iniciarSensoresGenericos();
+
+
+    // ========================================================
+    // 8. REVISAR SI ALGÚN SENSOR RESPONDE
+    // ========================================================
+
+    if (timeoutDiagnostico) {
+
+      clearTimeout(
+        timeoutDiagnostico
+      );
+
+    }
+
+
+    timeoutDiagnostico =
       setTimeout(
         () => {
 
+          if (
+            !arActivo
+          ) {
+
+            return;
+
+          }
+
 
           if (
-            arActivo &&
             !sensorDetectado
           ) {
 
-            console.log(
-              '⚠️ DeviceOrientation no respondió. Probando sensor alternativo.'
-            );
+            const mensajeActual =
+              document.getElementById(
+                'mensaje-ar'
+              );
 
 
-            iniciarSensorRelativo();
+            if (mensajeActual) {
+
+              mensajeActual.innerText =
+                '⚠️ No hay orientación utilizable · revisa diagnóstico';
+
+            }
 
           }
 
         },
-        1500
+        4500
       );
 
 
     // ========================================================
-    // 7. CÁMARA
+    // 9. ABRIR CÁMARA
     // ========================================================
 
     if (streamCamara) {
-
 
       streamCamara
         .getTracks()
@@ -2646,12 +3407,11 @@ async function iniciarCamaraAR() {
 
 
     // ========================================================
-    // 8. TRANSPARENCIA
+    // 10. HACER TRANSPARENTE EL CANVAS DE A-FRAME
     // ========================================================
 
-    const transparencia =
+    const hacerTransparente =
       () => {
-
 
         const canvas =
           escena.querySelector(
@@ -2660,7 +3420,6 @@ async function iniciarCamaraAR() {
 
 
         if (canvas) {
-
 
           canvas.style.background =
             'transparent';
@@ -2682,16 +3441,17 @@ async function iniciarCamaraAR() {
       };
 
 
-    if (escena.hasLoaded) {
+    if (
+      escena.hasLoaded
+    ) {
 
-      transparencia();
+      hacerTransparente();
 
     } else {
 
-
       escena.addEventListener(
         'loaded',
-        transparencia,
+        hacerTransparente,
         {
           once: true
         }
@@ -2701,13 +3461,13 @@ async function iniciarCamaraAR() {
 
 
     setTimeout(
-      transparencia,
+      hacerTransparente,
       300
     );
 
 
     setTimeout(
-      transparencia,
+      hacerTransparente,
       900
     );
 
@@ -2720,7 +3480,7 @@ async function iniciarCamaraAR() {
 
 
     // ========================================================
-    // 9. BOTONES
+    // 11. CONFIGURAR BOTONES
     // ========================================================
 
     if (btnCerrar) {
@@ -2739,8 +3499,15 @@ async function iniciarCamaraAR() {
     }
 
 
-  } catch (error) {
+    if (mensaje) {
 
+      mensaje.innerText =
+        '📡 Mueve y gira el celular';
+
+    }
+
+
+  } catch (error) {
 
     console.error(
       '❌ ERROR AR:',
@@ -2753,7 +3520,7 @@ async function iniciarCamaraAR() {
 
     alert(
 
-      'No se pudo iniciar AR.\n\n' +
+      'No se pudo iniciar la realidad aumentada.\n\n' +
 
       error.message
 
@@ -2761,7 +3528,6 @@ async function iniciarCamaraAR() {
 
 
   } finally {
-
 
     arIniciando =
       false;
@@ -2780,7 +3546,7 @@ async function iniciarCamaraAR() {
 
 
 // ============================================================
-// CAPTURAR
+// CAPTURAR GUAJOJÓ
 // ============================================================
 
 function capturarGuajojo() {
@@ -2792,8 +3558,11 @@ function capturarGuajojo() {
 
 
   if (
+
     !btnCapturar ||
+
     btnCapturar.disabled
+
   ) {
 
     return;
@@ -2803,6 +3572,10 @@ function capturarGuajojo() {
 
   cerrarCamaraAR();
 
+
+  // ==========================================================
+  // OCULTAR BOTÓN AR
+  // ==========================================================
 
   const btnAbrir =
     document.getElementById(
@@ -2818,6 +3591,10 @@ function capturarGuajojo() {
   }
 
 
+  // ==========================================================
+  // MOSTRAR CONTENIDO
+  // ==========================================================
+
   const contenido =
     document.getElementById(
       'contenido-capturado'
@@ -2832,6 +3609,10 @@ function capturarGuajojo() {
   }
 
 
+  // ==========================================================
+  // REPRODUCIR AUDIO
+  // ==========================================================
+
   const audio =
     document.getElementById(
       'audio-guajojo'
@@ -2840,15 +3621,13 @@ function capturarGuajojo() {
 
   if (audio) {
 
-
     audio
       .play()
       .catch(
         error => {
 
-
           console.warn(
-            'Audio:',
+            'No se pudo reproducir el audio:',
             error
           );
 
@@ -2861,7 +3640,7 @@ function capturarGuajojo() {
 
 
 // ============================================================
-// CERRAR AR
+// CERRAR REALIDAD AUMENTADA
 // ============================================================
 
 function cerrarCamaraAR() {
@@ -2882,55 +3661,43 @@ function cerrarCamaraAR() {
     false;
 
 
+  fuenteHeadingActiva =
+    null;
+
+
+  ultimoHeading =
+    null;
+
+
   // ==========================================================
-  // TIMEOUT
+  // DETENER TIMEOUT
   // ==========================================================
 
-  if (timeoutSensor) {
-
+  if (timeoutDiagnostico) {
 
     clearTimeout(
-      timeoutSensor
+      timeoutDiagnostico
     );
 
 
-    timeoutSensor =
+    timeoutDiagnostico =
       null;
 
   }
 
 
   // ==========================================================
-  // EVENTOS
+  // QUITAR EVENTOS
   // ==========================================================
 
-  desactivarEventosOrientacion();
+  desactivarEventosClasicos();
 
 
   // ==========================================================
-  // GENERIC SENSOR
+  // DETENER SENSORES
   // ==========================================================
 
-  if (sensorRelativo) {
-
-
-    try {
-
-      sensorRelativo.stop();
-
-    } catch (error) {
-
-      console.warn(
-        error
-      );
-
-    }
-
-
-    sensorRelativo =
-      null;
-
-  }
+  detenerSensoresGenericos();
 
 
   // ==========================================================
@@ -2956,11 +3723,10 @@ function cerrarCamaraAR() {
 
 
   // ==========================================================
-  // MODELO
+  // OCULTAR MODELO
   // ==========================================================
 
   if (modelo) {
-
 
     modelo.setAttribute(
       'visible',
@@ -2975,7 +3741,7 @@ function cerrarCamaraAR() {
 
 
   // ==========================================================
-  // PANTALLA
+  // OCULTAR AR
   // ==========================================================
 
   if (pantalla) {
@@ -2987,17 +3753,19 @@ function cerrarCamaraAR() {
 
 
   // ==========================================================
-  // CÁMARA
+  // DETENER CÁMARA
   // ==========================================================
 
   if (streamCamara) {
 
-
     streamCamara
       .getTracks()
       .forEach(
-        track =>
-          track.stop()
+        track => {
+
+          track.stop();
+
+        }
       );
 
 
@@ -3007,6 +3775,10 @@ function cerrarCamaraAR() {
   }
 
 
+  // ==========================================================
+  // DESCONECTAR VIDEO
+  // ==========================================================
+
   if (video) {
 
     video.srcObject =
@@ -3015,6 +3787,10 @@ function cerrarCamaraAR() {
   }
 
 
+  // ==========================================================
+  // RESTAURAR SCROLL
+  // ==========================================================
+
   document.body.style.overflow =
     '';
 
@@ -3022,7 +3798,7 @@ function cerrarCamaraAR() {
 
 
 // ============================================================
-// CERRAR CÁMARA AL SALIR
+// CERRAR CÁMARA Y SENSORES AL ABANDONAR LA PÁGINA
 // ============================================================
 
 window.addEventListener(
@@ -3030,7 +3806,6 @@ window.addEventListener(
   () => {
 
     if (streamCamara) {
-
 
       streamCamara
         .getTracks()
@@ -3040,6 +3815,9 @@ window.addEventListener(
         );
 
     }
+
+
+    detenerSensoresGenericos();
 
   }
 );
