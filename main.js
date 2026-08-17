@@ -12,16 +12,19 @@ AFRAME.registerComponent('detector-enfoque', {
     const camera = this.el.sceneEl.camera;
     if (!camera) return;
 
-    // Calcular posición del modelo en la pantalla
+    // Posición del modelo en coordenadas de pantalla (-1 a 1)
     const pos = new AFRAME.THREE.Vector3();
     this.el.object3D.getWorldPosition(pos);
     pos.project(camera);
 
-    // Z < 1 significa que está frente a la cámara. 
-    // X e Y entre -0.7 y 0.7 significa que está casi al centro de la pantalla.
-    const enfocado = (pos.z < 1 && pos.x >= -0.7 && pos.x <= 0.7 && pos.y >= -0.7 && pos.y <= 0.7);
+    // Está frente a la cámara y cerca del centro de la pantalla
+    const enfocado =
+      pos.z < 1 &&
+      pos.x >= -0.55 &&
+      pos.x <= 0.55 &&
+      pos.y >= -0.55 &&
+      pos.y <= 0.55;
 
-    // Cambiar el diseño del botón según el enfoque
     if (enfocado) {
       if (btn.disabled) {
         btn.style.background = '#1b5e20';
@@ -48,7 +51,6 @@ const sidebar = document.getElementById('sidebar');
 const btnLeyenda1 = document.getElementById('btn-leyenda-1');
 const btnLeyenda2 = document.getElementById('btn-leyenda-2');
 const areaTexto = document.getElementById('contenido-dinamico');
-
 let streamCamara = null;
 
 // ============================================================
@@ -125,6 +127,7 @@ btnLeyenda2.addEventListener('click', () => {
           id="escena-guajojo"
           embedded
           vr-mode-ui="enabled: false"
+          device-orientation-permission-ui="enabled: false"
           renderer="alpha: true; antialias: true; colorManagement: true;"
           style="width:100%; height:100%; background:transparent !important;"
         >
@@ -132,28 +135,38 @@ btnLeyenda2.addEventListener('click', () => {
             <a-asset-item id="modelo-guajojo-asset" src="/guajojo.glb"></a-asset-item>
           </a-assets>
 
-          <!-- MODELO GUAJOJÓ: Estático, rotado y con detector de enfoque -->
+          <!--
+            MODELO FIJO EN EL MUNDO 3D (no en el centro de la pantalla)
+            Al girar el celular, la cámara se mueve y el ave se queda en su lugar.
+            Así tienes que buscarlo.
+          -->
           <a-entity
             id="modelo-guajojo"
             detector-enfoque
             gltf-model="#modelo-guajojo-asset"
-            position="0 0 -2"
+            position="1.5 0.4 -2.2"
             scale="0.45 0.45 0.45"
-            rotation="90 0 0" 
+            rotation="0 200 0"
           ></a-entity>
 
-          <!-- Luces fuertes -->
+          <!-- Luces -->
           <a-light type="ambient" color="#ffffff" intensity="1.8"></a-light>
           <a-light type="directional" color="#ffffff" intensity="1.2" position="0 3 2"></a-light>
           <a-light type="directional" color="#ffffff" intensity="0.6" position="0 -1 -2"></a-light>
 
-          <!-- CÁMARA VIRTUAL CON GIROSCOPIO -->
+          <!-- CÁMARA CON GIROSCOPIO (se mueve con el celular) -->
           <a-camera
+            id="camara-ar"
             position="0 0 0"
-            look-controls="enabled: true; magicWindowTrackingEnabled: true;"
+            look-controls="
+              enabled: true;
+              magicWindowTrackingEnabled: true;
+              touchEnabled: false;
+              mouseEnabled: false;
+            "
             wasd-controls="enabled: false"
             near="0.01"
-            far="20"
+            far="30"
           ></a-camera>
         </a-scene>
       </div>
@@ -173,7 +186,7 @@ btnLeyenda2.addEventListener('click', () => {
         text-align: center;
         max-width: 90%;
       ">
-        📷 Busca al Guajojó girando tu celular
+        📷 Gira el celular para buscar al Guajojó
       </div>
 
       <!-- BOTÓN CAPTURAR -->
@@ -282,23 +295,28 @@ async function iniciarCamaraAR() {
     await video.play();
     pantalla.style.display = 'block';
 
-    // ¡EL TRUCO PARA DESPERTAR EL GIROSCOPIO!
+    // Posición FIJA del ave en el mundo (un poco a un lado para que no salga centrado)
+    // Cada vez que entras, puede variar un poco para que no siempre esté en el mismo sitio
+    colocarModeloEnMundo();
+
+    // Activar giroscopio
     setTimeout(() => {
-      // 1. Forzar redibujado de la ventana
       window.dispatchEvent(new Event('resize'));
 
-      // 2. Pedir permiso de sensores explícito (Requerido en algunos celulares)
-      if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
+      // iOS (si aplica)
+      if (
+        typeof DeviceOrientationEvent !== 'undefined' &&
+        typeof DeviceOrientationEvent.requestPermission === 'function'
+      ) {
         DeviceOrientationEvent.requestPermission().catch(console.error);
       }
 
-      // 3. Reiniciar manualmente el componente que lee el giroscopio
-      const camaraVirtual = escena?.querySelector('a-camera');
+      const camaraVirtual = document.getElementById('camara-ar');
       if (camaraVirtual && camaraVirtual.components['look-controls']) {
         camaraVirtual.components['look-controls'].pause();
         camaraVirtual.components['look-controls'].play();
       }
-    }, 250);
+    }, 300);
 
     const hacerTransparente = () => {
       const canvas = escena?.querySelector('canvas');
@@ -308,8 +326,6 @@ async function iniciarCamaraAR() {
       }
       if (escena) {
         escena.style.background = 'transparent';
-        const body = escena.querySelector('.a-body, .a-canvas');
-        if (body) body.style.background = 'transparent';
       }
     };
 
@@ -318,23 +334,58 @@ async function iniciarCamaraAR() {
         hacerTransparente();
         forzarModeloVisible();
       } else {
-        escena.addEventListener('loaded', () => {
-          hacerTransparente();
-          forzarModeloVisible();
-        }, { once: true });
+        escena.addEventListener(
+          'loaded',
+          () => {
+            hacerTransparente();
+            forzarModeloVisible();
+          },
+          { once: true }
+        );
       }
       setTimeout(hacerTransparente, 500);
       setTimeout(hacerTransparente, 1500);
       setTimeout(forzarModeloVisible, 800);
     }
 
-    if (btnCapturar) btnCapturar.onclick = capturarGuajojo;
+    if (btnCapturar) {
+      btnCapturar.disabled = true;
+      btnCapturar.style.background = '#555555';
+      btnCapturar.style.opacity = '0.6';
+      btnCapturar.innerText = '👀 Busca al Guajojó...';
+      btnCapturar.onclick = capturarGuajojo;
+    }
     if (btnCerrar) btnCerrar.onclick = cerrarCamaraAR;
-
   } catch (err) {
     console.error(err);
     alert('No se pudo abrir la cámara.\n\n' + err.message);
   }
+}
+
+// ============================================================
+// COLOCAR EL MODELO EN UN LUGAR FIJO DEL MUNDO 3D
+// ============================================================
+function colocarModeloEnMundo() {
+  const modelo = document.getElementById('modelo-guajojo');
+  if (!modelo) return;
+
+  // Posición fija pero no centrada:
+  // un poco a la derecha y ligeramente arriba
+  // (si quieres que sea random cada vez, descomenta el bloque de abajo)
+
+  const x = 1.5;   // derecha
+  const y = 0.4;   // un poco arriba
+  const z = -2.2;  // delante
+
+  // --- Opción random (descomenta si quieres que cambie cada vez) ---
+  // const x = (Math.random() * 2.4) - 1.2; // entre -1.2 y 1.2
+  // const y = (Math.random() * 0.6) + 0.1; // entre 0.1 y 0.7
+  // const z = -2.0 - Math.random() * 0.8;  // entre -2.0 y -2.8
+
+  modelo.setAttribute('position', `${x} ${y} ${z}`);
+  modelo.setAttribute('rotation', '0 200 0');
+  modelo.setAttribute('scale', '0.45 0.45 0.45');
+  modelo.setAttribute('visible', true);
 }
 
 // ============================================================
@@ -350,6 +401,9 @@ function forzarModeloVisible() {
 // CAPTURAR
 // ============================================================
 function capturarGuajojo() {
+  const btn = document.getElementById('btn-capturar');
+  if (btn && btn.disabled) return; // por seguridad
+
   cerrarCamaraAR();
 
   const btnAbrir = document.getElementById('btn-abrir-ar');
@@ -369,7 +423,7 @@ function capturarGuajojo() {
 // ============================================================
 function cerrarCamaraAR() {
   if (streamCamara) {
-    streamCamara.getTracks().forEach(t => t.stop());
+    streamCamara.getTracks().forEach((t) => t.stop());
     streamCamara = null;
   }
   const video = document.getElementById('video-camara');
