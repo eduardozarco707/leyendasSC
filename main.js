@@ -161,7 +161,13 @@ btnLeyenda2.addEventListener(
             enabled: false
           "
 
+          webxr="
+            optionalFeatures: dom-overlay; 
+            overlayElement: #estado-ar;
+          "
+
           renderer="
+            alpha: true; /* ¡CORRECCIÓN VITAL PARA EVITAR ERROR NotSupported! */
             antialias: false;
             precision: lowp;
             colorManagement: false;
@@ -179,6 +185,9 @@ btnLeyenda2.addEventListener(
             ></a-asset-item>
 
           </a-assets>
+
+          <!-- CIELO QUE DESAPARECE EN AR -->
+          <a-sky color="#87CEEB" hide-on-enter-ar></a-sky>
 
 
           <!-- LUZ -->
@@ -204,7 +213,7 @@ btnLeyenda2.addEventListener(
 
             src="#modelo-guajojo"
 
-            position="0 -2 -10"
+            position="0 0 -2.5"
 
             rotation="0 0 0"
 
@@ -458,52 +467,6 @@ async function iniciarAR() {
 
 
     // --------------------------------------------------------
-    // SOLICITAR SESIÓN AR
-    //
-    // IMPORTANTE:
-    //
-    // NO usamos:
-    //
-    // hit-test
-    // dom-overlay
-    // local-floor
-    //
-    // Esta es una prueba AR MÍNIMA.
-    // --------------------------------------------------------
-
-    console.log(
-      'Solicitando sesión AR básica...'
-    );
-
-
-    const session =
-      await navigator.xr.requestSession(
-        'immersive-ar'
-      );
-
-
-    console.log(
-      '===================================='
-    );
-
-    console.log(
-      'SESION AR CREADA CORRECTAMENTE'
-    );
-
-    console.log(
-      '===================================='
-    );
-
-
-    // --------------------------------------------------------
-    // GUARDAR SESIÓN
-    // --------------------------------------------------------
-
-    window.sessionAR =
-      session;
-
-
-    // --------------------------------------------------------
     // BUSCAR ESCENA A-FRAME
     // --------------------------------------------------------
 
@@ -519,15 +482,13 @@ async function iniciarAR() {
         'No se encontró la escena A-Frame.'
       );
 
-      await session.end();
-
       return;
 
     }
 
 
     // --------------------------------------------------------
-    // ESPERAR A-FRAME
+    // ESPERAR A-FRAME (TU LÓGICA EXCELENTE)
     // --------------------------------------------------------
 
     if (!escena.hasLoaded) {
@@ -555,46 +516,27 @@ async function iniciarAR() {
 
 
     // --------------------------------------------------------
-    // OBTENER RENDERER
+    // INICIAR SESIÓN (CORREGIDO PARA EVITAR NotSupportedError)
+    // Usamos el comando nativo de A-Frame que prepara
+    // automáticamente el WebGL de forma segura.
     // --------------------------------------------------------
-
-    const renderer =
-      escena.renderer;
-
-
-    if (!renderer) {
-
-      throw new Error(
-        'A-Frame todavía no tiene renderer.'
-      );
-
-    }
-
 
     console.log(
-      'Renderer encontrado.'
+      'Solicitando sesión AR básica...'
     );
 
-
-    // --------------------------------------------------------
-    // ACTIVAR XR EN THREE.JS
-    // --------------------------------------------------------
-
-    renderer.xr.enabled =
-      true;
-
-
-    // --------------------------------------------------------
-    // CONECTAR SESIÓN
-    // --------------------------------------------------------
-
-    await renderer.xr.setSession(
-      session
-    );
-
+    await escena.enterAR();
 
     console.log(
-      'Sesión conectada al renderer.'
+      '===================================='
+    );
+
+    console.log(
+      'SESION AR CREADA CORRECTAMENTE'
+    );
+
+    console.log(
+      '===================================='
     );
 
 
@@ -611,22 +553,18 @@ async function iniciarAR() {
     // EVENTO CUANDO TERMINA
     // --------------------------------------------------------
 
-    session.addEventListener(
-      'end',
+    escena.addEventListener(
+      'exit-vr',
       () => {
 
         console.log(
           'Sesión AR terminada.'
         );
 
-
-        window.sessionAR =
-          null;
-
-
         ocultarEstadoAR();
 
-      }
+      },
+      { once: true }
     );
 
 
