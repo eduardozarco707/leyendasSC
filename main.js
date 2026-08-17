@@ -125,7 +125,6 @@ btnLeyenda2.addEventListener('click', () => {
           id="escena-guajojo"
           embedded
           vr-mode-ui="enabled: false"
-          device-orientation-permission-ui="enabled: false"
           renderer="alpha: true; antialias: true; colorManagement: true;"
           style="width:100%; height:100%; background:transparent !important;"
         >
@@ -133,7 +132,7 @@ btnLeyenda2.addEventListener('click', () => {
             <a-asset-item id="modelo-guajojo-asset" src="/guajojo.glb"></a-asset-item>
           </a-assets>
 
-          <!-- MODELO GUAJOJÓ: Estático, rotado para que se pare, y con el detector de enfoque -->
+          <!-- MODELO GUAJOJÓ: Estático, rotado y con detector de enfoque -->
           <a-entity
             id="modelo-guajojo"
             detector-enfoque
@@ -148,7 +147,7 @@ btnLeyenda2.addEventListener('click', () => {
           <a-light type="directional" color="#ffffff" intensity="1.2" position="0 3 2"></a-light>
           <a-light type="directional" color="#ffffff" intensity="0.6" position="0 -1 -2"></a-light>
 
-          <!-- CÁMARA VIRTUAL: Ahora tiene look-controls activado para leer tu giroscopio -->
+          <!-- CÁMARA VIRTUAL CON GIROSCOPIO -->
           <a-camera
             position="0 0 0"
             look-controls="enabled: true; magicWindowTrackingEnabled: true;"
@@ -177,7 +176,7 @@ btnLeyenda2.addEventListener('click', () => {
         📷 Busca al Guajojó girando tu celular
       </div>
 
-      <!-- BOTÓN CAPTURAR (Inicia desactivado) -->
+      <!-- BOTÓN CAPTURAR -->
       <button id="btn-capturar" disabled style="
         position: absolute;
         bottom: 36px;
@@ -283,9 +282,23 @@ async function iniciarCamaraAR() {
     await video.play();
     pantalla.style.display = 'block';
 
+    // ¡EL TRUCO PARA DESPERTAR EL GIROSCOPIO!
     setTimeout(() => {
+      // 1. Forzar redibujado de la ventana
       window.dispatchEvent(new Event('resize'));
-    }, 200);
+
+      // 2. Pedir permiso de sensores explícito (Requerido en algunos celulares)
+      if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
+        DeviceOrientationEvent.requestPermission().catch(console.error);
+      }
+
+      // 3. Reiniciar manualmente el componente que lee el giroscopio
+      const camaraVirtual = escena?.querySelector('a-camera');
+      if (camaraVirtual && camaraVirtual.components['look-controls']) {
+        camaraVirtual.components['look-controls'].pause();
+        camaraVirtual.components['look-controls'].play();
+      }
+    }, 250);
 
     const hacerTransparente = () => {
       const canvas = escena?.querySelector('canvas');
