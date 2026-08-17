@@ -1,6 +1,46 @@
 import './style.css';
 
 // ============================================================
+// SISTEMA DE ENFOQUE (DETECTA SI ESTÁS MIRANDO AL AVE)
+// ============================================================
+AFRAME.registerComponent('detector-enfoque', {
+  tick: function () {
+    const btn = document.getElementById('btn-capturar');
+    const pantalla = document.getElementById('pantalla-ar');
+    if (!btn || !pantalla || pantalla.style.display === 'none') return;
+
+    const camera = this.el.sceneEl.camera;
+    if (!camera) return;
+
+    // Calcular posición del modelo en la pantalla
+    const pos = new AFRAME.THREE.Vector3();
+    this.el.object3D.getWorldPosition(pos);
+    pos.project(camera);
+
+    // Z < 1 significa que está frente a la cámara. 
+    // X e Y entre -0.7 y 0.7 significa que está casi al centro de la pantalla.
+    const enfocado = (pos.z < 1 && pos.x >= -0.7 && pos.x <= 0.7 && pos.y >= -0.7 && pos.y <= 0.7);
+
+    // Cambiar el diseño del botón según el enfoque
+    if (enfocado) {
+      if (btn.disabled) {
+        btn.style.background = '#1b5e20';
+        btn.style.opacity = '1';
+        btn.innerText = '✨ CAPTURAR';
+        btn.disabled = false;
+      }
+    } else {
+      if (!btn.disabled) {
+        btn.style.background = '#555555';
+        btn.style.opacity = '0.6';
+        btn.innerText = '👀 Busca al Guajojó...';
+        btn.disabled = true;
+      }
+    }
+  }
+});
+
+// ============================================================
 // VARIABLES
 // ============================================================
 const btnMenu = document.getElementById('btn-menu');
@@ -12,15 +52,12 @@ const areaTexto = document.getElementById('contenido-dinamico');
 let streamCamara = null;
 
 // ============================================================
-// MENÚ
+// MENÚ Y MOSTRAR LEYENDA
 // ============================================================
 btnMenu.addEventListener('click', () => {
   sidebar.classList.toggle('abierto');
 });
 
-// ============================================================
-// MOSTRAR LEYENDA
-// ============================================================
 function mostrarLeyenda(titulo, descripcion, contenido = '') {
   areaTexto.innerHTML = `
     <h2>${titulo}</h2>
@@ -67,7 +104,7 @@ btnLeyenda2.addEventListener('click', () => {
       background: #000;
       overflow: hidden;
     ">
-      <!-- CÁMARA -->
+      <!-- CÁMARA REAL -->
       <video id="video-camara" autoplay playsinline muted style="
         position: absolute;
         inset: 0;
@@ -96,14 +133,14 @@ btnLeyenda2.addEventListener('click', () => {
             <a-asset-item id="modelo-guajojo-asset" src="/guajojo.glb"></a-asset-item>
           </a-assets>
 
-          <!-- MODELO BIEN CERCA Y GRANDE PARA QUE SE VEA -->
+          <!-- MODELO GUAJOJÓ: Estático, rotado para que se pare, y con el detector de enfoque -->
           <a-entity
             id="modelo-guajojo"
+            detector-enfoque
             gltf-model="#modelo-guajojo-asset"
-            position="0 0 -1.2"
+            position="0 0 -2"
             scale="0.45 0.45 0.45"
-            rotation="0 180 0"
-            animation="property: rotation; to: 0 540 0; loop: true; dur: 14000; easing: linear"
+            rotation="90 0 0" 
           ></a-entity>
 
           <!-- Luces fuertes -->
@@ -111,9 +148,10 @@ btnLeyenda2.addEventListener('click', () => {
           <a-light type="directional" color="#ffffff" intensity="1.2" position="0 3 2"></a-light>
           <a-light type="directional" color="#ffffff" intensity="0.6" position="0 -1 -2"></a-light>
 
+          <!-- CÁMARA VIRTUAL: Ahora tiene look-controls activado para leer tu giroscopio -->
           <a-camera
             position="0 0 0"
-            look-controls="enabled: false"
+            look-controls="enabled: true; magicWindowTrackingEnabled: true;"
             wasd-controls="enabled: false"
             near="0.01"
             far="20"
@@ -121,7 +159,7 @@ btnLeyenda2.addEventListener('click', () => {
         </a-scene>
       </div>
 
-      <!-- UI -->
+      <!-- UI SUPERIOR -->
       <div style="
         position: absolute;
         top: 18px;
@@ -136,15 +174,16 @@ btnLeyenda2.addEventListener('click', () => {
         text-align: center;
         max-width: 90%;
       ">
-        📷 El Guajojó debería verse al centro
+        📷 Busca al Guajojó girando tu celular
       </div>
 
-      <button id="btn-capturar" style="
+      <!-- BOTÓN CAPTURAR (Inicia desactivado) -->
+      <button id="btn-capturar" disabled style="
         position: absolute;
         bottom: 36px;
         left: 50%;
         transform: translateX(-50%);
-        background: #1b5e20;
+        background: #555555;
         color: white;
         border: none;
         padding: 16px 42px;
@@ -153,10 +192,13 @@ btnLeyenda2.addEventListener('click', () => {
         font-weight: bold;
         box-shadow: 0 4px 18px rgba(0,0,0,0.5);
         z-index: 10;
+        opacity: 0.6;
+        transition: all 0.3s ease;
       ">
-        ✨ CAPTURAR
+        👀 Busca al Guajojó...
       </button>
 
+      <!-- BOTÓN CERRAR -->
       <button id="btn-cerrar-ar" style="
         position: absolute;
         top: 14px;
@@ -241,13 +283,10 @@ async function iniciarCamaraAR() {
     await video.play();
     pantalla.style.display = 'block';
 
-    // ¡EL TRUCO DE ORO! 
-    // Obligamos a A-Frame a recalcular su tamaño porque acaba de salir de un 'display: none'
     setTimeout(() => {
       window.dispatchEvent(new Event('resize'));
     }, 200);
 
-    // Forzar canvas transparente (clave para ver el modelo sobre la cámara)
     const hacerTransparente = () => {
       const canvas = escena?.querySelector('canvas');
       if (canvas) {
@@ -290,35 +329,8 @@ async function iniciarCamaraAR() {
 // ============================================================
 function forzarModeloVisible() {
   const modelo = document.getElementById('modelo-guajojo');
-  if (!modelo) {
-    console.error('No se encontró #modelo-guajojo');
-    return;
-  }
-
-  // Posición y escala seguras
-  modelo.setAttribute('position', '0 0 -1.2');
-  modelo.setAttribute('scale', '0.45 0.45 0.45');
+  if (!modelo) return;
   modelo.setAttribute('visible', true);
-
-  modelo.addEventListener('model-error', () => {
-    console.error('Error cargando guajojo.glb');
-    const escena = document.getElementById('escena-guajojo');
-    if (escena && !document.getElementById('cubo-prueba')) {
-      const cubo = document.createElement('a-box');
-      cubo.id = 'cubo-prueba';
-      cubo.setAttribute('position', '0 0 -1.2');
-      cubo.setAttribute('color', '#00ff88');
-      cubo.setAttribute('width', '0.5');
-      cubo.setAttribute('height', '0.5');
-      cubo.setAttribute('depth', '0.5');
-      escena.appendChild(cubo);
-      alert('El archivo /guajojo.glb no se pudo cargar.\nSe muestra un cubo de prueba verde.');
-    }
-  });
-
-  modelo.addEventListener('model-loaded', () => {
-    console.log('Modelo Guajojó cargado correctamente');
-  });
 }
 
 // ============================================================
