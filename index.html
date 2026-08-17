@@ -15,18 +15,14 @@
   </title>
 
 
-  <!-- =====================================================
-       A-FRAME
-       ===================================================== -->
+  <!-- A-FRAME -->
 
   <script
     src="https://aframe.io/releases/1.4.2/aframe.min.js">
   </script>
 
 
-  <!-- =====================================================
-       ESTILOS
-       ===================================================== -->
+  <!-- CSS -->
 
   <link
     rel="stylesheet"
@@ -47,26 +43,22 @@
 
 
     <!-- ===================================================
-         SECCIÓN SUPERIOR
+         PARTE SUPERIOR
          =================================================== -->
 
     <header class="seccion-superior">
 
 
-      <!-- PANEL DEL LOGO -->
-
       <div class="panel-izquierdo">
 
         <img
           src="/logo.png"
-          alt="Logo Leyendas de Santa Cruz"
+          alt="Logo Leyendas"
           id="logo-principal"
         >
 
       </div>
 
-
-      <!-- IMAGEN DE FONDO -->
 
       <div class="panel-derecho-imagen">
 
@@ -78,14 +70,14 @@
 
 
     <!-- ===================================================
-         SECCIÓN INFERIOR
+         PARTE INFERIOR
          =================================================== -->
 
     <main class="seccion-inferior">
 
 
       <!-- =================================================
-           MENÚ LATERAL
+           MENÚ
            ================================================= -->
 
       <aside
@@ -93,20 +85,13 @@
         id="sidebar"
       >
 
-
-        <!-- BOTÓN MENÚ -->
-
         <button
           id="btn-menu"
           type="button"
-          aria-label="Abrir menú"
         >
           ≡
         </button>
 
-
-
-        <!-- LISTA DE LEYENDAS -->
 
         <nav id="menu-leyendas">
 
@@ -115,7 +100,9 @@
             id="btn-leyenda-1"
             type="button"
           >
+
             La Leyenda del Carretón
+
           </button>
 
 
@@ -123,19 +110,20 @@
             id="btn-leyenda-2"
             type="button"
           >
+
             El Guajojó
+
           </button>
 
 
         </nav>
-
 
       </aside>
 
 
 
       <!-- =================================================
-           ÁREA PRINCIPAL
+           CONTENIDO
            ================================================= -->
 
       <section
@@ -166,340 +154,7 @@
 
 
   <!-- =====================================================
-       INTERFAZ DE REALIDAD AUMENTADA
-       ===================================================== -->
-
-  <div
-    id="contenedor-ar"
-    class="contenedor-ar"
-  >
-
-
-    <!-- ===================================================
-         ESCENA WEBXR
-         =================================================== -->
-
-    <a-scene
-
-      id="escena-ar"
-
-      embedded
-
-      vr-mode-ui="enabled: false"
-
-      renderer="
-        antialias: false;
-        precision: lowp;
-        colorManagement: false;
-        physicallyCorrectLights: false;
-      "
-
-      webxr="
-        requiredFeatures: hit-test;
-        optionalFeatures: local-floor, dom-overlay;
-      "
-
-      device-orientation-permission-ui="
-        enabled: true;
-      "
-
-    >
-
-
-      <!-- =================================================
-           RECURSOS
-           ================================================= -->
-
-      <a-assets>
-
-
-        <!-- MODELO DEL GUAJOJÓ -->
-
-        <a-asset-item
-          id="modelo-guajojo-ar"
-          src="/guajojo.glb"
-        ></a-asset-item>
-
-
-      </a-assets>
-
-
-
-      <!-- =================================================
-           CÁMARA AR
-           ================================================= -->
-
-      <a-camera
-        id="camara-ar"
-        position="0 1.6 0"
-        near="0.01"
-        far="50"
-      ></a-camera>
-
-
-
-      <!-- =================================================
-           LUCES
-           ================================================= -->
-
-      <a-light
-        type="ambient"
-        color="#ffffff"
-        intensity="1.5"
-      ></a-light>
-
-
-      <a-light
-        type="directional"
-        color="#ffffff"
-        intensity="1"
-        position="-2 4 2"
-      ></a-light>
-
-
-
-      <!-- =================================================
-           GUAJOJÓ
-           
-           IMPORTANTE:
-           Empieza oculto.
-           
-           JavaScript lo colocará sobre la superficie
-           detectada mediante hit-test.
-           ================================================= -->
-
-      <a-entity
-        id="guajojo-ar"
-        visible="false"
-      >
-
-
-        <a-gltf-model
-
-          src="#modelo-guajojo-ar"
-
-          position="0 0 0"
-
-          rotation="0 0 0"
-
-          scale="0.2 0.2 0.2"
-
-        ></a-gltf-model>
-
-
-      </a-entity>
-
-
-
-      <!-- =================================================
-           RETÍCULA
-           
-           Este círculo indica dónde detectó el suelo.
-           ================================================= -->
-
-      <a-ring
-
-        id="reticula"
-
-        visible="false"
-
-        rotation="-90 0 0"
-
-        radius-inner="0.12"
-
-        radius-outer="0.15"
-
-        color="#00ff66"
-
-        material="
-          shader: flat;
-          transparent: true;
-          opacity: 0.8;
-        "
-
-      ></a-ring>
-
-
-    </a-scene>
-
-
-
-    <!-- ===================================================
-         INTERFAZ SOBRE LA CÁMARA
-         ================================================= -->
-
-    <div
-      id="interfaz-ar"
-      class="interfaz-ar"
-    >
-
-
-      <!-- =================================================
-           PARTE SUPERIOR
-           ================================================= -->
-
-      <div class="ar-superior">
-
-
-        <div
-          id="estado-guajojo"
-          class="estado-guajojo"
-        >
-          Preparando la experiencia...
-        </div>
-
-
-        <button
-          id="btn-cerrar-ar"
-          class="btn-cerrar-ar"
-          type="button"
-          aria-label="Cerrar realidad aumentada"
-        >
-          ✕
-        </button>
-
-
-      </div>
-
-
-
-      <!-- =================================================
-           INSTRUCCIÓN
-           ================================================= -->
-
-      <div
-        id="mensaje-ar"
-        class="mensaje-ar"
-      >
-
-        Mueve lentamente el celular
-        para encontrar una superficie.
-
-      </div>
-
-
-
-      <!-- =================================================
-           BOTÓN COLOCAR
-           ================================================= -->
-
-      <button
-
-        id="btn-colocar-ar"
-
-        class="btn-ar btn-colocar"
-
-        type="button"
-
-        style="display: none;"
-
-      >
-
-        🐦 COLOCAR GUAJOJÓ
-
-      </button>
-
-
-
-      <!-- =================================================
-           BOTÓN CAPTURAR
-           ================================================= -->
-
-      <button
-
-        id="btn-capturar"
-
-        class="btn-ar btn-capturar"
-
-        type="button"
-
-      >
-
-        🫴 CAPTURAR GUAJOJÓ
-
-      </button>
-
-
-
-      <!-- =================================================
-           MENSAJE DE CAPTURA
-           ================================================= -->
-
-      <div
-
-        id="mensaje-captura"
-
-        class="mensaje-captura"
-
-      >
-
-        <div class="captura-contenido">
-
-
-          <div class="emoji-guajojo">
-            🐦
-          </div>
-
-
-          <h2>
-            ¡Guajojó capturado!
-          </h2>
-
-
-          <p>
-            Has encontrado al misterioso
-            habitante de la selva.
-          </p>
-
-
-          <button
-
-            id="btn-ver-leyenda"
-
-            class="btn-leyenda"
-
-            type="button"
-
-          >
-
-            📖 CONOCER SU LEYENDA
-
-          </button>
-
-
-        </div>
-
-      </div>
-
-
-
-    </div>
-
-
-  </div>
-
-
-
-  <!-- =====================================================
-       AUDIO
-       ===================================================== -->
-
-  <audio
-    id="audio-guajojo"
-    preload="auto"
-  >
-
-    <source
-      src="/audio-guajojo.mp3"
-      type="audio/mpeg"
-    >
-
-  </audio>
-
-
-
-  <!-- =====================================================
-       JAVASCRIPT PRINCIPAL
+       SCRIPT PRINCIPAL
        ===================================================== -->
 
   <script
