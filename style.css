@@ -1,3 +1,7 @@
+/* =========================================================
+   CONFIGURACIÓN GENERAL
+   ========================================================= */
+
 * {
   margin: 0;
   padding: 0;
@@ -5,43 +9,62 @@
 }
 
 
+html,
 body {
-  font-family: 'Georgia', serif;
-  background-color: #ffffff;
-  color: #000000;
 
-  height: 100vh;
+  width: 100%;
+  height: 100%;
+
+}
+
+
+body {
+
+  font-family: Georgia, serif;
+
+  background-color: #ffffff;
+
+  color: #000000;
 
   overflow: hidden;
 
-  position: relative;
 }
 
 
 /* =========================================================
-   ESTRUCTURA PRINCIPAL
+   CONTENEDOR PRINCIPAL
    ========================================================= */
 
 .contenedor-principal {
+
   display: flex;
+
   flex-direction: column;
 
+  width: 100%;
+
   height: 100vh;
+
 }
 
 
 /* =========================================================
-   PARTE SUPERIOR
+   SECCIÓN SUPERIOR
    ========================================================= */
 
 .seccion-superior {
+
   display: flex;
 
+  width: 100%;
+
   height: 35vh;
+
 }
 
 
 .panel-izquierdo {
+
   width: 30%;
 
   background-color: #06402B;
@@ -50,21 +73,28 @@ body {
 
   align-items: center;
 
+  justify-content: center;
+
   padding-left: 20px;
+
 }
 
 
 #logo-principal {
+
   width: 100%;
+
   height: 100%;
 
   object-fit: contain;
 
   object-position: left center;
+
 }
 
 
 .panel-derecho-imagen {
+
   width: 70%;
 
   background-image:
@@ -73,24 +103,29 @@ body {
   background-size: cover;
 
   background-position: center;
+
 }
 
 
 /* =========================================================
-   PARTE INFERIOR
+   SECCIÓN INFERIOR
    ========================================================= */
 
 .seccion-inferior {
+
   display: flex;
+
+  width: 100%;
 
   height: 65vh;
 
   position: relative;
+
 }
 
 
 /* =========================================================
-   MENÚ LATERAL
+   SIDEBAR
    ========================================================= */
 
 .sidebar-verde {
@@ -101,8 +136,7 @@ body {
 
   flex-shrink: 0;
 
-  transition:
-    width 0.3s ease;
+  transition: width 0.3s ease;
 
   display: flex;
 
@@ -114,12 +148,15 @@ body {
 
   overflow: hidden;
 
-  z-index: 10;
+  z-index: 100;
+
 }
 
 
 .sidebar-verde.abierto {
+
   width: 320px;
+
 }
 
 
@@ -136,8 +173,13 @@ body {
   cursor: pointer;
 
   margin-bottom: 20px;
+
 }
 
+
+/* =========================================================
+   BOTONES DEL MENÚ
+   ========================================================= */
 
 #menu-leyendas {
 
@@ -153,16 +195,18 @@ body {
 
   pointer-events: none;
 
-  transition:
-    opacity 0.2s ease;
+  transition: opacity 0.2s ease;
+
 }
 
 
-.sidebar-verde.abierto #menu-leyendas {
+.sidebar-verde.abierto
+#menu-leyendas {
 
   opacity: 1;
 
   pointer-events: auto;
+
 }
 
 
@@ -182,11 +226,8 @@ body {
 
   cursor: pointer;
 
-  font-family: 'Georgia', serif;
+  font-family: Georgia, serif;
 
-  transition: all 0.3s;
-
-  text-align: center;
 }
 
 
@@ -194,6 +235,7 @@ body {
 
   background-color:
     rgba(212, 175, 55, 0.2);
+
 }
 
 
@@ -207,10 +249,8 @@ body {
 
   padding: 40px 60px;
 
-  transition:
-    padding 0.3s ease;
-
   overflow-y: auto;
+
 }
 
 
@@ -223,6 +263,7 @@ body {
   font-weight: normal;
 
   margin-bottom: 20px;
+
 }
 
 
@@ -231,6 +272,59 @@ body {
   font-size: 1.3rem;
 
   line-height: 1.5;
+
+}
+
+
+/* =========================================================
+   BOTÓN REALIDAD AUMENTADA
+   ========================================================= */
+
+.btn-ver-ar {
+
+  display: block;
+
+  width: 100%;
+
+  max-width: 600px;
+
+  margin: 30px auto;
+
+  padding: 18px 20px;
+
+  border: none;
+
+  border-radius: 12px;
+
+  background-color: #06402B;
+
+  color: #ffffff;
+
+  font-family: Georgia, serif;
+
+  font-size: 1.1rem;
+
+  font-weight: bold;
+
+  cursor: pointer;
+
+  box-shadow:
+    0 5px 15px rgba(0, 0, 0, 0.25);
+
+}
+
+
+.btn-ver-ar:active {
+
+  transform: scale(0.97);
+
+}
+
+
+.btn-ver-ar:hover {
+
+  background-color: #08633f;
+
 }
 
 
@@ -253,6 +347,18 @@ body {
   position: relative;
 
   border: 2px solid #008f39;
+
+  background-color: #87CEEB;
+
+}
+
+
+.contenedor-3d a-scene {
+
+  width: 100% !important;
+
+  height: 100% !important;
+
 }
 
 
@@ -277,6 +383,7 @@ body {
   border-radius: 10px;
 
   border: 1px solid #c9d6d0;
+
 }
 
 
@@ -288,14 +395,13 @@ body {
 
   object-fit: contain;
 
-  object-position: center;
-
   border-radius: 8px;
 
   box-shadow:
     0 4px 8px rgba(0,0,0,0.2);
 
   background-color: #e8ecea;
+
 }
 
 
@@ -310,6 +416,7 @@ body {
   align-items: center;
 
   text-align: center;
+
 }
 
 
@@ -320,6 +427,7 @@ body {
   color: #06402B;
 
   margin-bottom: 15px;
+
 }
 
 
@@ -327,7 +435,6 @@ body {
 
   width: 100%;
 
-  outline: none;
 }
 
 
@@ -340,6 +447,7 @@ body {
   margin-top: 40px;
 
   padding-bottom: 40px;
+
 }
 
 
@@ -352,6 +460,7 @@ body {
   margin-bottom: 15px;
 
   text-align: center;
+
 }
 
 
@@ -364,447 +473,43 @@ body {
   color: #333333;
 
   text-align: justify;
+
 }
 
 
 /* =========================================================
-   BOTÓN VER AR
+   MENSAJE AR
    ========================================================= */
 
-.btn-ver-ar {
+#estado-ar {
 
-  display: block;
-
-  margin: 25px auto 10px;
-
-  padding: 16px 28px;
-
-  background-color: #06402B;
-
-  color: #ffffff;
-
-  border: 2px solid #d4af37;
-
-  border-radius: 12px;
-
-  font-family: Georgia, serif;
-
-  font-size: 1.1rem;
-
-  cursor: pointer;
-
-  transition: all 0.3s ease;
-}
-
-
-.btn-ver-ar:hover {
-
-  background-color: #008f39;
-
-  transform: scale(1.03);
-}
-
-
-/* =========================================================
-   PANTALLA AR
-   ========================================================= */
-
-.contenedor-ar {
+  display: none;
 
   position: fixed;
 
-  inset: 0;
-
-  width: 100vw;
-
-  height: 100vh;
-
-  background-color: #000000;
-
-  z-index: 99999;
-
-  display: none;
-
-  overflow: hidden;
-}
-
-
-.contenedor-ar.activo {
-
-  display: block;
-}
-
-
-/* =========================================================
-   VIDEO DE CÁMARA
-   ========================================================= */
-
-#camara-ar {
-
-  position: absolute;
-
-  inset: 0;
-
-  width: 100%;
-
-  height: 100%;
-
-  object-fit: cover;
-
-  z-index: 0;
-}
-
-
-/* =========================================================
-   ESCENA A-FRAME
-   ========================================================= */
-
-#escena-ar {
-
-  position: absolute !important;
-
-  inset: 0 !important;
-
-  width: 100% !important;
-
-  height: 100% !important;
-
-  z-index: 2;
-
-  background: transparent !important;
-}
-
-
-/* Ocultamos el canvas cuando usamos
-   la cámara como fondo */
-
-#escena-ar canvas {
-
-  background: transparent !important;
-}
-
-
-/* =========================================================
-   INTERFAZ AR
-   ========================================================= */
-
-.interfaz-ar {
-
-  position: absolute;
-
-  inset: 0;
-
-  z-index: 20;
-
-  pointer-events: none;
-}
-
-
-/* =========================================================
-   INFORMACIÓN
-   ========================================================= */
-
-.info-guajojo-ar {
-
-  position: absolute;
-
   top: 20px;
-
-  left: 20px;
-
-  right: 85px;
-
-  padding: 12px 16px;
-
-  background:
-    rgba(6, 64, 43, 0.90);
-
-  border:
-    1px solid #d4af37;
-
-  border-radius: 12px;
-
-  color: #ffffff;
-
-  text-align: center;
-}
-
-
-.info-guajojo-ar h3 {
-
-  margin-bottom: 5px;
-
-  color: #d4af37;
-}
-
-
-.info-guajojo-ar p {
-
-  font-size: 0.9rem;
-}
-
-
-/* =========================================================
-   CERRAR AR
-   ========================================================= */
-
-.btn-cerrar-ar {
-
-  position: absolute;
-
-  top: 20px;
-
-  right: 20px;
-
-  width: 50px;
-
-  height: 50px;
-
-  border-radius: 50%;
-
-  border: none;
-
-  background:
-    rgba(0,0,0,0.70);
-
-  color: #ffffff;
-
-  font-size: 1.8rem;
-
-  cursor: pointer;
-
-  pointer-events: auto;
-}
-
-
-/* =========================================================
-   MIRA
-   ========================================================= */
-
-.mira-captura {
-
-  position: absolute;
 
   left: 50%;
 
-  top: 50%;
+  transform: translateX(-50%);
 
-  transform:
-    translate(-50%, -50%);
+  z-index: 9999;
 
-  width: 130px;
-
-  height: 130px;
-
-  border:
-    3px solid rgba(255,255,255,0.9);
-
-  border-radius: 50%;
-
-  box-shadow:
-    0 0 20px rgba(255,255,255,0.5);
-
-  transition:
-    all 0.2s ease;
-}
-
-
-.mira-captura.objetivo {
-
-  border-color: #d4af37;
-
-  box-shadow:
-    0 0 30px rgba(212,175,55,0.9);
-
-  transform:
-    translate(-50%, -50%)
-    scale(1.15);
-}
-
-
-/* =========================================================
-   BOTÓN COLOCAR
-   ========================================================= */
-
-.btn-colocar-ar {
-
-  position: absolute;
-
-  left: 50%;
-
-  bottom: 100px;
-
-  transform:
-    translateX(-50%);
-
-  width: 220px;
-
-  padding: 15px;
-
-  border:
-    2px solid #d4af37;
+  padding: 12px 20px;
 
   border-radius: 30px;
 
-  background:
-    #06402B;
+  background-color:
+    rgba(0, 0, 0, 0.75);
 
   color: #ffffff;
 
-  font-family: Georgia, serif;
+  font-family: Arial, sans-serif;
 
-  font-size: 1.05rem;
-
-  cursor: pointer;
-
-  pointer-events: auto;
-}
-
-
-/* =========================================================
-   BOTÓN CAPTURAR
-   ========================================================= */
-
-.btn-capturar {
-
-  position: absolute;
-
-  left: 50%;
-
-  bottom: 30px;
-
-  transform:
-    translateX(-50%);
-
-  width: 180px;
-
-  padding: 15px;
-
-  border:
-    2px solid #d4af37;
-
-  border-radius: 30px;
-
-  background:
-    #06402B;
-
-  color: #ffffff;
-
-  font-family: Georgia, serif;
-
-  font-size: 1.2rem;
-
-  cursor: pointer;
-
-  pointer-events: auto;
-
-  box-shadow:
-    0 5px 15px rgba(0,0,0,0.4);
-
-  display: none;
-}
-
-
-.btn-capturar.visible {
-
-  display: block;
-}
-
-
-.btn-capturar:active {
-
-  transform:
-    translateX(-50%)
-    scale(0.95);
-}
-
-
-/* =========================================================
-   MENSAJE DE CAPTURA
-   ========================================================= */
-
-.mensaje-captura {
-
-  position: absolute;
-
-  left: 50%;
-
-  top: 50%;
-
-  transform:
-    translate(-50%, -50%);
-
-  width: 85%;
-
-  padding: 30px;
-
-  background:
-    rgba(6,64,43,0.96);
-
-  border:
-    2px solid #d4af37;
-
-  border-radius: 20px;
+  font-size: 15px;
 
   text-align: center;
 
-  color: #ffffff;
-
-  display: none;
-
-  pointer-events: auto;
-}
-
-
-.mensaje-captura.activo {
-
-  display: block;
-}
-
-
-.mensaje-captura h2 {
-
-  color: #d4af37;
-
-  font-size: 2rem;
-
-  margin-bottom: 15px;
-}
-
-
-.emoji-guajojo {
-
-  font-size: 4rem;
-
-  margin-bottom: 10px;
-}
-
-
-/* =========================================================
-   BOTÓN VER LEYENDA
-   ========================================================= */
-
-.btn-ver-leyenda {
-
-  margin-top: 20px;
-
-  padding: 14px 22px;
-
-  border:
-    2px solid #d4af37;
-
-  border-radius: 25px;
-
-  background:
-    #008f39;
-
-  color: #ffffff;
-
-  font-family: Georgia, serif;
-
-  font-size: 1rem;
-
-  cursor: pointer;
 }
 
 
@@ -814,9 +519,11 @@ body {
 
 @media screen and (max-width: 768px) {
 
+
   .seccion-superior {
 
     height: 15vh;
+
   }
 
 
@@ -827,18 +534,21 @@ body {
     padding: 10px;
 
     justify-content: center;
+
   }
 
 
   .panel-derecho-imagen {
 
     display: none;
+
   }
 
 
   .seccion-inferior {
 
     height: 85vh;
+
   }
 
 
@@ -850,12 +560,14 @@ body {
 
     box-shadow:
       2px 0 10px rgba(0,0,0,0.5);
+
   }
 
 
   .sidebar-verde.abierto {
 
     width: 85%;
+
   }
 
 
@@ -864,18 +576,21 @@ body {
     margin-left: 60px;
 
     padding: 20px 15px;
+
   }
 
 
   .area-texto h2 {
 
     font-size: 2.2rem;
+
   }
 
 
   .contenedor-3d {
 
     height: 300px;
+
   }
 
 
@@ -884,6 +599,7 @@ body {
     flex-direction: column;
 
     gap: 20px;
+
   }
 
 
@@ -891,28 +607,16 @@ body {
   .foto-leyenda {
 
     width: 100%;
+
   }
 
 
-  .mira-captura {
+  .btn-ver-ar {
 
-    width: 110px;
+    font-size: 1rem;
 
-    height: 110px;
-  }
+    padding: 16px;
 
-
-  .info-guajojo-ar {
-
-    font-size: 0.9rem;
-  }
-
-
-  .mensaje-captura {
-
-    width: 90%;
-
-    padding: 25px 15px;
   }
 
 }
