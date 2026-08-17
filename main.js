@@ -1,486 +1,1487 @@
 import './style.css';
 
 // ============================================================
-// SISTEMA DE ENFOQUE (DETECTA SI ESTÁS MIRANDO AL AVE)
+// COMPONENTE: DETECTOR DE ENFOQUE
+// Detecta si el Guajojó está realmente dentro y cerca
+// del centro de la cámara.
 // ============================================================
+
 AFRAME.registerComponent('detector-enfoque', {
+
   tick: function () {
+
     const btn = document.getElementById('btn-capturar');
     const pantalla = document.getElementById('pantalla-ar');
-    if (!btn || !pantalla || pantalla.style.display === 'none') return;
 
-    const camera = this.el.sceneEl.camera;
-    if (!camera) return;
+    // Si la pantalla AR no está abierta, no hacemos nada.
+    if (
+      !btn ||
+      !pantalla ||
+      pantalla.style.display === 'none' ||
+      !this.el.object3D.visible
+    ) {
+      return;
+    }
 
-    const pos = new AFRAME.THREE.Vector3();
-    this.el.object3D.getWorldPosition(pos);
-    pos.project(camera);
+    const scene = this.el.sceneEl;
 
-    const enfocado =
-      pos.z < 1 &&
-      pos.x >= -0.55 &&
-      pos.x <= 0.55 &&
-      pos.y >= -0.55 &&
-      pos.y <= 0.55;
+    if (!scene || !scene.camera) return;
 
-    if (enfocado) {
-      if (btn.disabled) {
-        btn.style.background = '#1b5e20';
-        btn.style.opacity = '1';
-        btn.innerText = '✨ CAPTURAR';
-        btn.disabled = false;
-      }
+    const camera = scene.camera;
+
+    // ---------------------------------------------------------
+    // POSICIÓN MUNDIAL DEL GUAJOJÓ
+    // ---------------------------------------------------------
+
+    const posicionModelo = new AFRAME.THREE.Vector3();
+
+    this.el.object3D.getWorldPosition(
+      posicionModelo
+    );
+
+    // ---------------------------------------------------------
+    // POSICIÓN MUNDIAL DE LA CÁMARA
+    // ---------------------------------------------------------
+
+    const posicionCamara = new AFRAME.THREE.Vector3();
+
+    camera.getWorldPosition(
+      posicionCamara
+    );
+
+    // ---------------------------------------------------------
+    // DIRECCIÓN DESDE LA CÁMARA HACIA EL GUAJOJÓ
+    // ---------------------------------------------------------
+
+    const direccionModelo = posicionModelo
+      .clone()
+      .sub(posicionCamara)
+      .normalize();
+
+    // ---------------------------------------------------------
+    // DIRECCIÓN HACIA DONDE ESTÁ MIRANDO LA CÁMARA
+    // ---------------------------------------------------------
+
+    const quaternionCamara =
+      new AFRAME.THREE.Quaternion();
+
+    camera.getWorldQuaternion(
+      quaternionCamara
+    );
+
+    const direccionCamara =
+      new AFRAME.THREE.Vector3(
+        0,
+        0,
+        -1
+      );
+
+    direccionCamara
+      .applyQuaternion(quaternionCamara)
+      .normalize();
+
+    // ---------------------------------------------------------
+    // VER SI EL MODELO ESTÁ DELANTE DE LA CÁMARA
+    // ---------------------------------------------------------
+
+    const producto =
+      direccionCamara.dot(
+        direccionModelo
+      );
+
+    const estaDelante =
+      producto > 0;
+
+    // ---------------------------------------------------------
+    // PROYECTAR EL MODELO A LA PANTALLA
+    // ---------------------------------------------------------
+
+    const posicionPantalla =
+      posicionModelo.clone();
+
+    posicionPantalla.project(
+      camera
+    );
+
+    // ---------------------------------------------------------
+    // VERIFICAR SI ESTÁ CERCA DEL CENTRO
+    // ---------------------------------------------------------
+
+    const dentroPantalla =
+      posicionPantalla.x >= -1 &&
+      posicionPantalla.x <= 1 &&
+      posicionPantalla.y >= -1 &&
+      posicionPantalla.y <= 1 &&
+      posicionPantalla.z >= -1 &&
+      posicionPantalla.z <= 1;
+
+    // Zona central necesaria para capturar
+    const centrado =
+      estaDelante &&
+      dentroPantalla &&
+      posicionPantalla.x >= -0.38 &&
+      posicionPantalla.x <= 0.38 &&
+      posicionPantalla.y >= -0.38 &&
+      posicionPantalla.y <= 0.38;
+
+    // ---------------------------------------------------------
+    // BOTÓN
+    // ---------------------------------------------------------
+
+    if (centrado) {
+
+      btn.style.background =
+        '#1b5e20';
+
+      btn.style.opacity =
+        '1';
+
+      btn.innerText =
+        '✨ CAPTURAR';
+
+      btn.disabled =
+        false;
+
     } else {
-      if (!btn.disabled) {
-        btn.style.background = '#555555';
-        btn.style.opacity = '0.6';
-        btn.innerText = '👀 Busca al Guajojó...';
-        btn.disabled = true;
-      }
+
+      btn.style.background =
+        '#555555';
+
+      btn.style.opacity =
+        '0.6';
+
+      btn.innerText =
+        '👀 Busca al Guajojó...';
+
+      btn.disabled =
+        true;
     }
   }
 });
 
+
 // ============================================================
-// VARIABLES
+// VARIABLES GENERALES
 // ============================================================
-const btnMenu = document.getElementById('btn-menu');
-const sidebar = document.getElementById('sidebar');
-const btnLeyenda1 = document.getElementById('btn-leyenda-1');
-const btnLeyenda2 = document.getElementById('btn-leyenda-2');
-const areaTexto = document.getElementById('contenido-dinamico');
+
+const btnMenu =
+  document.getElementById(
+    'btn-menu'
+  );
+
+const sidebar =
+  document.getElementById(
+    'sidebar'
+  );
+
+const btnLeyenda1 =
+  document.getElementById(
+    'btn-leyenda-1'
+  );
+
+const btnLeyenda2 =
+  document.getElementById(
+    'btn-leyenda-2'
+  );
+
+const areaTexto =
+  document.getElementById(
+    'contenido-dinamico'
+  );
 
 let streamCamara = null;
-let orientacionActiva = false;
-let modeloColocado = false;
-let baseAlpha = null; // para calibrar al abrir AR
+
 
 // ============================================================
-// MENÚ Y MOSTRAR LEYENDA
+// MENÚ
 // ============================================================
-btnMenu.addEventListener('click', () => {
-  sidebar.classList.toggle('abierto');
-});
 
-function mostrarLeyenda(titulo, descripcion, contenido = '') {
+if (btnMenu) {
+
+  btnMenu.addEventListener(
+    'click',
+    () => {
+
+      sidebar?.classList.toggle(
+        'abierto'
+      );
+
+    }
+  );
+}
+
+
+// ============================================================
+// FUNCIÓN MOSTRAR LEYENDA
+// ============================================================
+
+function mostrarLeyenda(
+  titulo,
+  descripcion,
+  contenido = ''
+) {
+
+  if (!areaTexto) return;
+
   areaTexto.innerHTML = `
     <h2>${titulo}</h2>
-    <p>${descripcion}</p>
+
+    <p>
+      ${descripcion}
+    </p>
+
     ${contenido}
   `;
-  sidebar.classList.remove('abierto');
+
+  sidebar?.classList.remove(
+    'abierto'
+  );
 }
 
-// ============================================================
-// CARRETÓN
-// ============================================================
-btnLeyenda1.addEventListener('click', () => {
-  mostrarLeyenda(
-    'El Carretón de la Otra Vida',
-    'Se escucha el crujir de las ruedas de madera acercándose en la oscuridad...',
-    `
-    <div class="historia-leyenda">
-      <h3>La Leyenda del Carretón</h3>
-      <p>Cuenta la tradición que durante las noches silenciosas puede escucharse el sonido de un carretón que avanza por las calles.</p>
-    </div>
-    `
-  );
-});
 
 // ============================================================
-// GUAJOJÓ
+// LEYENDA 1 - CARRETÓN
 // ============================================================
-btnLeyenda2.addEventListener('click', () => {
-  mostrarLeyenda(
-    'El Guajojó',
-    'Un canto melancólico resuena en la selva. Explora el entorno y descubre su historia.',
-    `
-    <button id="btn-abrir-ar" class="btn-ver-ar" type="button">
-      📱 VER GUAJOJÓ EN REALIDAD AUMENTADA
-    </button>
 
-    <div id="pantalla-ar" style="
-      display: none;
-      position: fixed;
-      inset: 0;
-      z-index: 9999;
-      background: #000;
-      overflow: hidden;
-    ">
-      <video id="video-camara" autoplay playsinline muted style="
-        position: absolute;
-        inset: 0;
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        z-index: 1;
-      "></video>
+if (btnLeyenda1) {
 
-      <div id="capa-modelo" style="
-        position: absolute;
-        inset: 0;
-        z-index: 2;
-        pointer-events: none;
-      ">
-        <a-scene
-          id="escena-guajojo"
-          embedded
-          vr-mode-ui="enabled: false"
-          device-orientation-permission-ui="enabled: false"
-          renderer="alpha: true; antialias: true; colorManagement: true;"
-          style="width:100%; height:100%; background:transparent !important;"
-        >
-          <a-assets timeout="15000">
-            <a-asset-item id="modelo-guajojo-asset" src="/guajojo.glb"></a-asset-item>
-          </a-assets>
+  btnLeyenda1.addEventListener(
+    'click',
+    () => {
 
-          <!-- Modelo FIJO en el mundo. La cámara gira con el celular. -->
-          <a-entity
-            id="modelo-guajojo"
-            detector-enfoque
-            gltf-model="#modelo-guajojo-asset"
-            position="0 0 -2"
-            scale="0.5 0.5 0.5"
-            rotation="0 180 0"
-            visible="false"
-          ></a-entity>
+      cerrarCamaraAR();
 
-          <a-light type="ambient" color="#ffffff" intensity="1.8"></a-light>
-          <a-light type="directional" color="#ffffff" intensity="1.2" position="0 3 2"></a-light>
-          <a-light type="directional" color="#ffffff" intensity="0.6" position="0 -1 -2"></a-light>
+      mostrarLeyenda(
 
-          <!-- Cámara SIN look-controls: el giroscopio lo controlamos nosotros -->
-          <a-camera
-            id="camara-ar"
-            position="0 0 0"
-            look-controls="enabled: false"
-            wasd-controls="enabled: false"
-            near="0.01"
-            far="30"
-          ></a-camera>
-        </a-scene>
-      </div>
+        'El Carretón de la Otra Vida',
 
-      <div id="texto-pista" style="
-        position: absolute;
-        top: 18px;
-        left: 50%;
-        transform: translateX(-50%);
-        background: rgba(0,0,0,0.8);
-        color: #fff;
-        padding: 10px 18px;
-        border-radius: 24px;
-        font-size: 14px;
-        z-index: 10;
-        text-align: center;
-        max-width: 90%;
-      ">
-        📷 Gira el celular para buscar al Guajojó
-      </div>
+        'Se escucha el crujir de las ruedas de madera acercándose en la oscuridad...',
 
-      <button id="btn-capturar" disabled style="
-        position: absolute;
-        bottom: 36px;
-        left: 50%;
-        transform: translateX(-50%);
-        background: #555555;
-        color: white;
-        border: none;
-        padding: 16px 42px;
-        border-radius: 50px;
-        font-size: 17px;
-        font-weight: bold;
-        box-shadow: 0 4px 18px rgba(0,0,0,0.5);
-        z-index: 10;
-        opacity: 0.6;
-        transition: all 0.3s ease;
-      ">
-        👀 Busca al Guajojó...
-      </button>
+        `
+        <div class="historia-leyenda">
 
-      <button id="btn-cerrar-ar" style="
-        position: absolute;
-        top: 14px;
-        right: 14px;
-        background: rgba(0,0,0,0.65);
-        color: white;
-        border: none;
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-        font-size: 18px;
-        z-index: 10;
-      ">✕</button>
-    </div>
+          <h3>
+            La Leyenda del Carretón
+          </h3>
 
-    <div id="contenido-capturado" style="display: none; margin-top: 20px;">
-      <div style="
-        background: #e8f5e9;
-        border: 2px solid #2e7d32;
-        border-radius: 16px;
-        padding: 16px;
-        text-align: center;
-        margin-bottom: 20px;
-      ">
-        <h3 style="color: #1b5e20; margin: 0 0 8px 0;">✨ ¡CAPTURADO!</h3>
-        <p style="margin: 0; color: #333;">Has descubierto al Guajojó</p>
-      </div>
+          <p>
+            Cuenta la tradición que durante las noches
+            silenciosas puede escucharse el sonido de un
+            carretón que avanza por las calles.
+          </p>
 
-      <div class="multimedia-leyenda">
-        <div class="reproductor-leyenda">
-          <h3>Escucha su canto original</h3>
-          <audio id="audio-guajojo" controls>
-            <source src="/audio-guajojo.mp3" type="audio/mpeg">
-            Tu navegador no soporta audio.
-          </audio>
         </div>
-        <img src="/foto-guajojo.jpg" alt="Fotografía del Guajojó" class="foto-leyenda">
-      </div>
+        `
+      );
 
-      <div class="historia-leyenda">
-        <h3>La Leyenda del Guajojó</h3>
-        <p>Cuenta la leyenda que hace muchos años, en una antigua tribu de la selva oriental, la hermosa hija del cacique se enamoró perdidamente de un joven guerrero.</p><br>
-        <p>Al enterarse de este romance prohibido, el cacique enfureció y llevó al joven guerrero a lo más profundo de la selva.</p><br>
-        <p>La muchacha salió desesperada en busca de su amado y finalmente encontró su cuerpo sin vida.</p><br>
-        <p>Su llanto fue tan profundo que los espíritus de la selva la transformaron en un ave.</p><br>
-        <p>Desde entonces, durante las noches, puede escucharse su triste canto: <strong>¡Gua... jo... jó!</strong></p>
-      </div>
-    </div>
-    `
+    }
   );
-
-  setTimeout(() => {
-    const btn = document.getElementById('btn-abrir-ar');
-    if (btn) btn.addEventListener('click', iniciarCamaraAR);
-  }, 100);
-});
-
-// ============================================================
-// GIROSCOPIO MANUAL → rota la cámara, el modelo se queda fijo
-// ============================================================
-function onOrientacion(e) {
-  if (!orientacionActiva) return;
-
-  const camaraEl = document.getElementById('camara-ar');
-  if (!camaraEl || !camaraEl.object3D) return;
-
-  const alpha = e.alpha; // brújula 0–360
-  const beta = e.beta;   // frente/atrás -180–180
-  const gamma = e.gamma; // izquierda/derecha -90–90
-
-  if (alpha === null || beta === null || gamma === null) return;
-
-  // Guardar orientación inicial para calibrar
-  if (baseAlpha === null) {
-    baseAlpha = alpha;
-  }
-
-  const THREE = AFRAME.THREE;
-  const deg = THREE.MathUtils.degToRad;
-
-  // Rotación relativa al momento en que abriste AR
-  const yaw = deg(alpha - baseAlpha);   // girar izquierda/derecha
-  const pitch = deg(beta - 90);         // inclinar (celular vertical ≈ 90)
-  const roll = deg(-gamma);
-
-  // Orden YXZ típico en móviles
-  camaraEl.object3D.rotation.order = 'YXZ';
-  camaraEl.object3D.rotation.set(pitch, yaw, roll);
-
-  // Colocar el modelo UNA sola vez, delante de la cámara inicial
-  if (!modeloColocado) {
-    colocarModeloFijo();
-    modeloColocado = true;
-  }
 }
 
-function activarGiroscopio() {
-  orientacionActiva = true;
-  baseAlpha = null;
-  modeloColocado = false;
 
-  // iOS necesita permiso
-  if (
-    typeof DeviceOrientationEvent !== 'undefined' &&
-    typeof DeviceOrientationEvent.requestPermission === 'function'
-  ) {
-    DeviceOrientationEvent.requestPermission()
-      .then((state) => {
-        if (state === 'granted') {
-          window.addEventListener('deviceorientation', onOrientacion, true);
-        } else {
-          alert('Necesitamos permiso del giroscopio para buscar al Guajojó.');
-        }
-      })
-      .catch(console.error);
-  } else {
-    window.addEventListener('deviceorientation', onOrientacion, true);
-  }
+// ============================================================
+// LEYENDA 2 - GUAJOJÓ
+// ============================================================
+
+if (btnLeyenda2) {
+
+  btnLeyenda2.addEventListener(
+    'click',
+    () => {
+
+      cerrarCamaraAR();
+
+      mostrarLeyenda(
+
+        'El Guajojó',
+
+        'Un canto melancólico resuena en la selva. Explora el entorno y descubre su historia.',
+
+        `
+
+        <button
+          id="btn-abrir-ar"
+          class="btn-ver-ar"
+          type="button"
+        >
+          📱 VER GUAJOJÓ EN REALIDAD AUMENTADA
+        </button>
+
+
+        <!-- ================================================= -->
+        <!-- PANTALLA AR                                      -->
+        <!-- ================================================= -->
+
+        <div
+          id="pantalla-ar"
+          style="
+            display: none;
+            position: fixed;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 9999;
+            background: #000;
+            overflow: hidden;
+          "
+        >
+
+
+          <!-- =============================================== -->
+          <!-- CÁMARA REAL                                     -->
+          <!-- =============================================== -->
+
+          <video
+            id="video-camara"
+            autoplay
+            playsinline
+            muted
+            style="
+              position: absolute;
+              inset: 0;
+              width: 100%;
+              height: 100%;
+              object-fit: cover;
+              z-index: 1;
+            "
+          >
+          </video>
+
+
+          <!-- =============================================== -->
+          <!-- CAPA A-FRAME                                    -->
+          <!-- =============================================== -->
+
+          <div
+            id="capa-modelo"
+            style="
+              position: absolute;
+              inset: 0;
+              width: 100%;
+              height: 100%;
+              z-index: 2;
+              pointer-events: none;
+            "
+          >
+
+            <a-scene
+
+              id="escena-guajojo"
+
+              embedded
+
+              vr-mode-ui="enabled: false"
+
+              renderer="
+                alpha: true;
+                antialias: true;
+                colorManagement: true;
+              "
+
+              style="
+                width: 100%;
+                height: 100%;
+                background: transparent !important;
+              "
+            >
+
+
+              <!-- =========================================== -->
+              <!-- RECURSOS                                    -->
+              <!-- =========================================== -->
+
+              <a-assets timeout="15000">
+
+                <a-asset-item
+                  id="modelo-guajojo-asset"
+                  src="/guajojo.glb"
+                >
+                </a-asset-item>
+
+              </a-assets>
+
+
+              <!-- =========================================== -->
+              <!-- GUAJOJÓ                                     -->
+              <!-- =========================================== -->
+
+              <a-entity
+
+                id="modelo-guajojo"
+
+                detector-enfoque
+
+                gltf-model="#modelo-guajojo-asset"
+
+                position="0 0 -3"
+
+                scale="0.45 0.45 0.45"
+
+                rotation="90 0 0"
+
+                visible="false"
+
+              >
+              </a-entity>
+
+
+              <!-- =========================================== -->
+              <!-- ILUMINACIÓN                                 -->
+              <!-- =========================================== -->
+
+              <a-light
+
+                type="ambient"
+
+                color="#ffffff"
+
+                intensity="1.8"
+
+              >
+              </a-light>
+
+
+              <a-light
+
+                type="directional"
+
+                color="#ffffff"
+
+                intensity="1.2"
+
+                position="0 3 2"
+
+              >
+              </a-light>
+
+
+              <a-light
+
+                type="directional"
+
+                color="#ffffff"
+
+                intensity="0.6"
+
+                position="0 -1 -2"
+
+              >
+              </a-light>
+
+
+              <!-- =========================================== -->
+              <!-- CÁMARA VIRTUAL                              -->
+              <!-- =========================================== -->
+
+              <a-camera
+
+                id="camara-ar"
+
+                position="0 0 0"
+
+                look-controls="
+                  enabled: true;
+                  magicWindowTrackingEnabled: true;
+                  touchEnabled: false;
+                  mouseEnabled: false;
+                "
+
+                wasd-controls="
+                  enabled: false
+                "
+
+                near="0.01"
+
+                far="30"
+
+              >
+              </a-camera>
+
+
+            </a-scene>
+
+          </div>
+
+
+          <!-- =============================================== -->
+          <!-- MENSAJE SUPERIOR                                -->
+          <!-- =============================================== -->
+
+          <div
+            id="mensaje-ar"
+            style="
+              position: absolute;
+              top: 18px;
+              left: 50%;
+              transform: translateX(-50%);
+              background: rgba(0,0,0,0.8);
+              color: #ffffff;
+              padding: 10px 18px;
+              border-radius: 24px;
+              font-size: 14px;
+              z-index: 10;
+              text-align: center;
+              max-width: 80%;
+              pointer-events: none;
+            "
+          >
+
+            📷 Gira tu celular y encuentra al Guajojó
+
+          </div>
+
+
+          <!-- =============================================== -->
+          <!-- BOTÓN CAPTURAR                                  -->
+          <!-- =============================================== -->
+
+          <button
+
+            id="btn-capturar"
+
+            disabled
+
+            type="button"
+
+            style="
+              position: absolute;
+              bottom: 36px;
+              left: 50%;
+              transform: translateX(-50%);
+              background: #555555;
+              color: white;
+              border: none;
+              padding: 16px 42px;
+              border-radius: 50px;
+              font-size: 17px;
+              font-weight: bold;
+              box-shadow: 0 4px 18px rgba(0,0,0,0.5);
+              z-index: 10;
+              opacity: 0.6;
+              transition: all 0.3s ease;
+              white-space: nowrap;
+            "
+          >
+
+            👀 Busca al Guajojó...
+
+          </button>
+
+
+          <!-- =============================================== -->
+          <!-- BOTÓN CERRAR                                    -->
+          <!-- =============================================== -->
+
+          <button
+
+            id="btn-cerrar-ar"
+
+            type="button"
+
+            style="
+              position: absolute;
+              top: 14px;
+              right: 14px;
+              background: rgba(0,0,0,0.65);
+              color: white;
+              border: none;
+              width: 42px;
+              height: 42px;
+              border-radius: 50%;
+              font-size: 20px;
+              z-index: 20;
+              cursor: pointer;
+            "
+          >
+
+            ✕
+
+          </button>
+
+
+        </div>
+
+
+        <!-- ================================================= -->
+        <!-- CONTENIDO DESPUÉS DE CAPTURAR                     -->
+        <!-- ================================================= -->
+
+        <div
+          id="contenido-capturado"
+          style="
+            display: none;
+            margin-top: 20px;
+          "
+        >
+
+          <div
+            style="
+              background: #e8f5e9;
+              border: 2px solid #2e7d32;
+              border-radius: 16px;
+              padding: 16px;
+              text-align: center;
+              margin-bottom: 20px;
+            "
+          >
+
+            <h3
+              style="
+                color: #1b5e20;
+                margin: 0 0 8px 0;
+              "
+            >
+              ✨ ¡CAPTURADO!
+            </h3>
+
+            <p
+              style="
+                margin: 0;
+                color: #333;
+              "
+            >
+              Has descubierto al Guajojó
+            </p>
+
+          </div>
+
+
+          <!-- MULTIMEDIA -->
+
+          <div class="multimedia-leyenda">
+
+            <div class="reproductor-leyenda">
+
+              <h3>
+                Escucha su canto original
+              </h3>
+
+              <audio
+                id="audio-guajojo"
+                controls
+              >
+
+                <source
+                  src="/audio-guajojo.mp3"
+                  type="audio/mpeg"
+                >
+
+                Tu navegador no soporta audio.
+
+              </audio>
+
+            </div>
+
+
+            <img
+
+              src="/foto-guajojo.jpg"
+
+              alt="Fotografía del Guajojó"
+
+              class="foto-leyenda"
+
+            >
+
+          </div>
+
+
+          <!-- HISTORIA -->
+
+          <div class="historia-leyenda">
+
+            <h3>
+              La Leyenda del Guajojó
+            </h3>
+
+
+            <p>
+              Cuenta la leyenda que hace muchos años,
+              en una antigua tribu de la selva oriental,
+              la hermosa hija del cacique se enamoró
+              perdidamente de un joven guerrero.
+            </p>
+
+            <br>
+
+
+            <p>
+              Al enterarse de este romance prohibido,
+              el cacique enfureció y llevó al joven
+              guerrero a lo más profundo de la selva.
+            </p>
+
+            <br>
+
+
+            <p>
+              La muchacha salió desesperada en busca
+              de su amado y finalmente encontró su
+              cuerpo sin vida.
+            </p>
+
+            <br>
+
+
+            <p>
+              Su llanto fue tan profundo que los
+              espíritus de la selva la transformaron
+              en un ave.
+            </p>
+
+            <br>
+
+
+            <p>
+              Desde entonces, durante las noches,
+              puede escucharse su triste canto:
+
+              <strong>
+                ¡Gua... jo... jó!
+              </strong>
+
+            </p>
+
+          </div>
+
+        </div>
+
+        `
+      );
+
+
+      // -------------------------------------------------------
+      // Esperar a que el HTML dinámico exista
+      // -------------------------------------------------------
+
+      setTimeout(
+        () => {
+
+          const btnAbrir =
+            document.getElementById(
+              'btn-abrir-ar'
+            );
+
+          if (btnAbrir) {
+
+            btnAbrir.addEventListener(
+              'click',
+              iniciarCamaraAR
+            );
+
+          }
+
+        },
+        100
+      );
+
+    }
+  );
 }
 
-function desactivarGiroscopio() {
-  orientacionActiva = false;
-  baseAlpha = null;
-  modeloColocado = false;
-  window.removeEventListener('deviceorientation', onOrientacion, true);
-}
 
 // ============================================================
-// COLOCAR MODELO FIJO EN EL MUNDO (solo una vez)
+// INICIAR CÁMARA AR
 // ============================================================
-function colocarModeloFijo() {
-  const modelo = document.getElementById('modelo-guajojo');
-  const camaraEl = document.getElementById('camara-ar');
-  if (!modelo || !camaraEl) return;
 
-  const THREE = AFRAME.THREE;
-
-  // Dirección en la que mira la cámara AHORA
-  const dir = new THREE.Vector3(0, 0, -1);
-  dir.applyQuaternion(camaraEl.object3D.quaternion);
-
-  const derecha = new THREE.Vector3(1, 0, 0);
-  derecha.applyQuaternion(camaraEl.object3D.quaternion);
-
-  const arriba = new THREE.Vector3(0, 1, 0);
-
-  // Un poco a un lado (±25°) para que tengas que buscarlo
-  const lado = (Math.random() > 0.5 ? 1 : -1) * (0.6 + Math.random() * 0.5);
-  const distancia = 2.0;
-
-  const pos = new THREE.Vector3()
-    .copy(camaraEl.object3D.position)
-    .add(dir.multiplyScalar(distancia))
-    .add(derecha.multiplyScalar(lado))
-    .add(arriba.multiplyScalar(0.2));
-
-  modelo.object3D.position.copy(pos);
-  modelo.object3D.lookAt(camaraEl.object3D.position);
-  modelo.setAttribute('scale', '0.5 0.5 0.5');
-  modelo.setAttribute('visible', true);
-
-  const pista = document.getElementById('texto-pista');
-  if (pista) {
-    pista.textContent =
-      lado > 0
-        ? '📷 Gira a la derecha para encontrar al Guajojó'
-        : '📷 Gira a la izquierda para encontrar al Guajojó';
-  }
-
-  console.log('Guajojó FIJO en el mundo:', pos.x.toFixed(2), pos.y.toFixed(2), pos.z.toFixed(2));
-}
-
-// ============================================================
-// INICIAR CÁMARA + MODELO
-// ============================================================
 async function iniciarCamaraAR() {
-  const pantalla = document.getElementById('pantalla-ar');
-  const video = document.getElementById('video-camara');
-  const btnCapturar = document.getElementById('btn-capturar');
-  const btnCerrar = document.getElementById('btn-cerrar-ar');
-  const escena = document.getElementById('escena-guajojo');
 
-  if (!pantalla || !video) return;
+  const pantalla =
+    document.getElementById(
+      'pantalla-ar'
+    );
+
+  const video =
+    document.getElementById(
+      'video-camara'
+    );
+
+  const btnCapturar =
+    document.getElementById(
+      'btn-capturar'
+    );
+
+  const btnCerrar =
+    document.getElementById(
+      'btn-cerrar-ar'
+    );
+
+  const escena =
+    document.getElementById(
+      'escena-guajojo'
+    );
+
+  const modelo =
+    document.getElementById(
+      'modelo-guajojo'
+    );
+
+
+  if (
+    !pantalla ||
+    !video ||
+    !escena
+  ) {
+    return;
+  }
+
 
   try {
-    streamCamara = await navigator.mediaDevices.getUserMedia({
-      video: {
-        facingMode: { ideal: 'environment' },
-        width: { ideal: 1280 },
-        height: { ideal: 720 }
-      },
-      audio: false
-    });
 
-    video.srcObject = streamCamara;
-    await video.play();
-    pantalla.style.display = 'block';
+    // ========================================================
+    // 1. PERMISO PARA SENSORES / GIROSCOPIO
+    // Especialmente necesario en iPhone
+    // ========================================================
 
-    // Activar giroscopio manual
-    activarGiroscopio();
+    if (
+      typeof DeviceOrientationEvent !==
+        'undefined' &&
+      typeof DeviceOrientationEvent
+        .requestPermission === 'function'
+    ) {
 
-    // Por si el sensor tarda: colocar modelo de respaldo a los 2s
-    setTimeout(() => {
-      if (!modeloColocado) {
-        const modelo = document.getElementById('modelo-guajojo');
-        if (modelo) {
-          // Posición fija en el mundo de la escena (no sigue a la cámara)
-          modelo.setAttribute('position', '1.2 0.3 -2');
-          modelo.setAttribute('visible', true);
-          modeloColocado = true;
-          const pista = document.getElementById('texto-pista');
-          if (pista) pista.textContent = '📷 Gira el celular para buscar al Guajojó';
-        }
+      const permiso =
+        await DeviceOrientationEvent
+          .requestPermission();
+
+      if (permiso !== 'granted') {
+
+        alert(
+          'Debes permitir el acceso al movimiento del celular para buscar al Guajojó.'
+        );
+
+        return;
       }
-    }, 2000);
-
-    const hacerTransparente = () => {
-      const canvas = escena?.querySelector('canvas');
-      if (canvas) {
-        canvas.style.background = 'transparent';
-        canvas.style.backgroundColor = 'transparent';
-      }
-      if (escena) escena.style.background = 'transparent';
-    };
-
-    if (escena) {
-      if (escena.hasLoaded) {
-        hacerTransparente();
-      } else {
-        escena.addEventListener('loaded', hacerTransparente, { once: true });
-      }
-      setTimeout(hacerTransparente, 500);
-      setTimeout(hacerTransparente, 1500);
     }
+
+
+    // ========================================================
+    // 2. OCULTAR MODELO ANTES DE ABRIR
+    // Evita que aparezca primero pegado al centro.
+    // ========================================================
+
+    if (modelo) {
+
+      modelo.object3D.visible =
+        false;
+
+    }
+
+
+    // ========================================================
+    // 3. REINICIAR BOTÓN CAPTURAR
+    // ========================================================
 
     if (btnCapturar) {
-      btnCapturar.disabled = true;
-      btnCapturar.style.background = '#555555';
-      btnCapturar.style.opacity = '0.6';
-      btnCapturar.innerText = '👀 Busca al Guajojó...';
-      btnCapturar.onclick = capturarGuajojo;
+
+      btnCapturar.disabled =
+        true;
+
+      btnCapturar.style.background =
+        '#555555';
+
+      btnCapturar.style.opacity =
+        '0.6';
+
+      btnCapturar.innerText =
+        '👀 Busca al Guajojó...';
+
     }
-    if (btnCerrar) btnCerrar.onclick = cerrarCamaraAR;
+
+
+    // ========================================================
+    // 4. ABRIR CÁMARA TRASERA
+    // ========================================================
+
+    streamCamara =
+      await navigator.mediaDevices
+        .getUserMedia({
+
+          video: {
+
+            facingMode: {
+              ideal: 'environment'
+            },
+
+            width: {
+              ideal: 1280
+            },
+
+            height: {
+              ideal: 720
+            }
+
+          },
+
+          audio: false
+
+        });
+
+
+    video.srcObject =
+      streamCamara;
+
+
+    await video.play();
+
+
+    // ========================================================
+    // 5. MOSTRAR PANTALLA AR
+    // ========================================================
+
+    pantalla.style.display =
+      'block';
+
+
+    // Evitar scroll del sitio mientras AR está abierto
+    document.body.style.overflow =
+      'hidden';
+
+
+    // ========================================================
+    // 6. FORZAR REDIMENSIONADO
+    // ========================================================
+
+    window.dispatchEvent(
+      new Event('resize')
+    );
+
+
+    // ========================================================
+    // 7. REACTIVAR LOOK-CONTROLS
+    // ========================================================
+
+    const camaraVirtual =
+      escena.querySelector(
+        '#camara-ar'
+      );
+
+
+    if (
+      camaraVirtual &&
+      camaraVirtual.components[
+        'look-controls'
+      ]
+    ) {
+
+      camaraVirtual.components[
+        'look-controls'
+      ].pause();
+
+
+      camaraVirtual.components[
+        'look-controls'
+      ].play();
+
+    }
+
+
+    // ========================================================
+    // 8. FONDO TRANSPARENTE
+    // ========================================================
+
+    const hacerTransparente =
+      () => {
+
+        const canvas =
+          escena.querySelector(
+            'canvas'
+          );
+
+
+        if (canvas) {
+
+          canvas.style.background =
+            'transparent';
+
+          canvas.style.backgroundColor =
+            'transparent';
+
+        }
+
+
+        escena.style.background =
+          'transparent';
+
+        escena.style.backgroundColor =
+          'transparent';
+
+      };
+
+
+    if (escena.hasLoaded) {
+
+      hacerTransparente();
+
+    } else {
+
+      escena.addEventListener(
+
+        'loaded',
+
+        hacerTransparente,
+
+        {
+          once: true
+        }
+
+      );
+
+    }
+
+
+    setTimeout(
+      hacerTransparente,
+      300
+    );
+
+    setTimeout(
+      hacerTransparente,
+      1000
+    );
+
+
+    // ========================================================
+    // 9. COLOCAR EL GUAJOJÓ
+    //
+    // IMPORTANTE:
+    //
+    // Esperamos un poco para que el giroscopio tenga tiempo
+    // de darle una orientación real a la cámara.
+    //
+    // El Guajojó se colocará 55° - 75° hacia un lado.
+    // ========================================================
+
+    setTimeout(
+      () => {
+
+        colocarGuajojoEnElMundo();
+
+      },
+      1000
+    );
+
+
+    // ========================================================
+    // 10. EVENTOS
+    // ========================================================
+
+    if (btnCapturar) {
+
+      btnCapturar.onclick =
+        capturarGuajojo;
+
+    }
+
+
+    if (btnCerrar) {
+
+      btnCerrar.onclick =
+        cerrarCamaraAR;
+
+    }
+
+
   } catch (err) {
-    console.error(err);
-    alert('No se pudo abrir la cámara.\n\n' + err.message);
+
+    console.error(
+      'Error cámara AR:',
+      err
+    );
+
+
+    cerrarCamaraAR();
+
+
+    alert(
+      'No se pudo abrir la cámara.\n\n' +
+      err.message
+    );
   }
 }
 
-// ============================================================
-// CAPTURAR
-// ============================================================
-function capturarGuajojo() {
-  const btn = document.getElementById('btn-capturar');
-  if (btn && btn.disabled) return;
 
+// ============================================================
+// COLOCAR GUAJOJÓ FIJO EN EL "MUNDO"
+// ============================================================
+
+function colocarGuajojoEnElMundo() {
+
+  const escena =
+    document.getElementById(
+      'escena-guajojo'
+    );
+
+
+  const modelo =
+    document.getElementById(
+      'modelo-guajojo'
+    );
+
+
+  if (
+    !escena ||
+    !modelo ||
+    !escena.camera
+  ) {
+
+    console.warn(
+      'Todavía no está lista la escena AR.'
+    );
+
+    // Intentar nuevamente
+    setTimeout(
+      colocarGuajojoEnElMundo,
+      300
+    );
+
+    return;
+  }
+
+
+  const camera =
+    escena.camera;
+
+
+  // ==========================================================
+  // OBTENER ORIENTACIÓN ACTUAL DEL TELÉFONO
+  // ==========================================================
+
+  const quaternion =
+    new AFRAME.THREE.Quaternion();
+
+
+  camera.getWorldQuaternion(
+    quaternion
+  );
+
+
+  // Dirección hacia donde mira actualmente el usuario
+  const direccion =
+    new AFRAME.THREE.Vector3(
+      0,
+      0,
+      -1
+    );
+
+
+  direccion.applyQuaternion(
+    quaternion
+  );
+
+
+  // Para ubicar el ave principalmente de forma horizontal
+  direccion.y =
+    0;
+
+
+  if (
+    direccion.lengthSq() <
+    0.001
+  ) {
+
+    direccion.set(
+      0,
+      0,
+      -1
+    );
+
+  }
+
+
+  direccion.normalize();
+
+
+  // ==========================================================
+  // ELEGIR IZQUIERDA O DERECHA
+  // ==========================================================
+
+  const lado =
+    Math.random() >
+      0.5
+      ? 1
+      : -1;
+
+
+  // ==========================================================
+  // ÁNGULO DEL GUAJOJÓ
+  //
+  // Entre 55 y 75 grados respecto a donde estás mirando.
+  //
+  // Esto hace que inicialmente NO aparezca en el centro.
+  // ==========================================================
+
+  const anguloGrados =
+    55 +
+    Math.random() * 20;
+
+
+  const angulo =
+    AFRAME.THREE.MathUtils
+      .degToRad(
+        anguloGrados *
+        lado
+      );
+
+
+  // Girar dirección sobre eje Y
+  direccion.applyAxisAngle(
+
+    new AFRAME.THREE.Vector3(
+      0,
+      1,
+      0
+    ),
+
+    angulo
+
+  );
+
+
+  // ==========================================================
+  // DISTANCIA VIRTUAL
+  // ==========================================================
+
+  const distancia =
+    3;
+
+
+  const posicion =
+    direccion
+      .multiplyScalar(
+        distancia
+      );
+
+
+  // ==========================================================
+  // ALTURA DEL GUAJOJÓ
+  //
+  // 0 = aproximadamente altura de la cámara.
+  //
+  // Puedes cambiar a:
+  //
+  // 0.4
+  //
+  // para que esté un poco más arriba.
+  // ==========================================================
+
+  posicion.y =
+    0;
+
+
+  // ==========================================================
+  // COLOCAR MODELO
+  // ==========================================================
+
+  modelo.object3D.position.copy(
+    posicion
+  );
+
+
+  // Mostrar SOLO después de colocarlo
+  modelo.object3D.visible =
+    true;
+
+
+  // Asegurar matrices actualizadas
+  modelo.object3D.updateMatrixWorld(
+    true
+  );
+
+
+  console.log(
+    '================================'
+  );
+
+  console.log(
+    'GUAJOJÓ COLOCADO'
+  );
+
+  console.log(
+    'Lado:',
+    lado === 1
+      ? 'Derecha'
+      : 'Izquierda'
+  );
+
+  console.log(
+    'Ángulo:',
+    anguloGrados
+  );
+
+  console.log(
+    'Posición:',
+    posicion
+  );
+
+  console.log(
+    '================================'
+  );
+}
+
+
+// ============================================================
+// CAPTURAR GUAJOJÓ
+// ============================================================
+
+function capturarGuajojo() {
+
+  const btnCapturar =
+    document.getElementById(
+      'btn-capturar'
+    );
+
+
+  // Seguridad:
+  // si todavía está deshabilitado,
+  // no permitir captura.
+  if (
+    btnCapturar &&
+    btnCapturar.disabled
+  ) {
+    return;
+  }
+
+
+  // Cerrar AR
   cerrarCamaraAR();
 
-  const btnAbrir = document.getElementById('btn-abrir-ar');
-  if (btnAbrir) btnAbrir.style.display = 'none';
 
-  const contenido = document.getElementById('contenido-capturado');
-  if (contenido) contenido.style.display = 'block';
+  // Ocultar botón de abrir AR
+  const btnAbrir =
+    document.getElementById(
+      'btn-abrir-ar'
+    );
 
-  const audio = document.getElementById('audio-guajojo');
+
+  if (btnAbrir) {
+
+    btnAbrir.style.display =
+      'none';
+
+  }
+
+
+  // Mostrar contenido desbloqueado
+  const contenido =
+    document.getElementById(
+      'contenido-capturado'
+    );
+
+
+  if (contenido) {
+
+    contenido.style.display =
+      'block';
+
+  }
+
+
+  // Reproducir canto
+  const audio =
+    document.getElementById(
+      'audio-guajojo'
+    );
+
+
   if (audio) {
-    audio.play().catch(() => {});
+
+    audio
+      .play()
+      .catch(
+        () => {}
+      );
+
   }
 }
 
+
 // ============================================================
-// CERRAR
+// CERRAR CÁMARA AR
 // ============================================================
+
 function cerrarCamaraAR() {
-  desactivarGiroscopio();
+
+  // ==========================================================
+  // DETENER CÁMARA REAL
+  // ==========================================================
 
   if (streamCamara) {
-    streamCamara.getTracks().forEach((t) => t.stop());
-    streamCamara = null;
-  }
-  const video = document.getElementById('video-camara');
-  if (video) video.srcObject = null;
 
-  const pantalla = document.getElementById('pantalla-ar');
-  if (pantalla) pantalla.style.display = 'none';
+    streamCamara
+      .getTracks()
+      .forEach(
+        track => {
+
+          track.stop();
+
+        }
+      );
+
+
+    streamCamara =
+      null;
+
+  }
+
+
+  // ==========================================================
+  // QUITAR VIDEO
+  // ==========================================================
+
+  const video =
+    document.getElementById(
+      'video-camara'
+    );
+
+
+  if (video) {
+
+    video.pause();
+
+    video.srcObject =
+      null;
+
+  }
+
+
+  // ==========================================================
+  // OCULTAR MODELO
+  // ==========================================================
+
+  const modelo =
+    document.getElementById(
+      'modelo-guajojo'
+    );
+
+
+  if (modelo) {
+
+    modelo.object3D.visible =
+      false;
+
+  }
+
+
+  // ==========================================================
+  // OCULTAR PANTALLA AR
+  // ==========================================================
+
+  const pantalla =
+    document.getElementById(
+      'pantalla-ar'
+    );
+
+
+  if (pantalla) {
+
+    pantalla.style.display =
+      'none';
+
+  }
+
+
+  // Volver a permitir scroll
+  document.body.style.overflow =
+    '';
 }
