@@ -241,6 +241,12 @@ async function iniciarCamaraAR() {
     await video.play();
     pantalla.style.display = 'block';
 
+    // ¡EL TRUCO DE ORO! 
+    // Obligamos a A-Frame a recalcular su tamaño porque acaba de salir de un 'display: none'
+    setTimeout(() => {
+      window.dispatchEvent(new Event('resize'));
+    }, 200);
+
     // Forzar canvas transparente (clave para ver el modelo sobre la cámara)
     const hacerTransparente = () => {
       const canvas = escena?.querySelector('canvas');
@@ -248,7 +254,6 @@ async function iniciarCamaraAR() {
         canvas.style.background = 'transparent';
         canvas.style.backgroundColor = 'transparent';
       }
-      // También el contenedor de A-Frame
       if (escena) {
         escena.style.background = 'transparent';
         const body = escena.querySelector('.a-body, .a-canvas');
@@ -266,7 +271,6 @@ async function iniciarCamaraAR() {
           forzarModeloVisible();
         }, { once: true });
       }
-      // Por si acaso, repetir un par de veces
       setTimeout(hacerTransparente, 500);
       setTimeout(hacerTransparente, 1500);
       setTimeout(forzarModeloVisible, 800);
@@ -296,10 +300,8 @@ function forzarModeloVisible() {
   modelo.setAttribute('scale', '0.45 0.45 0.45');
   modelo.setAttribute('visible', true);
 
-  // Si el glb no carga, mostrar un cubo de prueba para saber que la escena funciona
   modelo.addEventListener('model-error', () => {
     console.error('Error cargando guajojo.glb');
-    // Cubo de emergencia (para probar que se ve algo)
     const escena = document.getElementById('escena-guajojo');
     if (escena && !document.getElementById('cubo-prueba')) {
       const cubo = document.createElement('a-box');
@@ -310,7 +312,7 @@ function forzarModeloVisible() {
       cubo.setAttribute('height', '0.5');
       cubo.setAttribute('depth', '0.5');
       escena.appendChild(cubo);
-      alert('El archivo /guajojo.glb no se pudo cargar.\nSe muestra un cubo de prueba.\nRevisa que el archivo exista en tu servidor.');
+      alert('El archivo /guajojo.glb no se pudo cargar.\nSe muestra un cubo de prueba verde.');
     }
   });
 
