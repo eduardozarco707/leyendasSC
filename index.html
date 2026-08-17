@@ -7,10 +7,8 @@
 
   <meta
     name="viewport"
-    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    content="width=device-width, initial-scale=1.0, viewport-fit=cover"
   >
-
-  <meta name="theme-color" content="#06402B">
 
   <title>
     Leyendas de Santa Cruz - Experiencia Inmersiva
@@ -18,17 +16,22 @@
 
 
   <!-- =====================================================
-       CSS
-       ===================================================== -->
-
-  <link rel="stylesheet" href="/style.css">
-
-
-  <!-- =====================================================
        A-FRAME
        ===================================================== -->
 
-  <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
+  <script
+    src="https://aframe.io/releases/1.4.2/aframe.min.js">
+  </script>
+
+
+  <!-- =====================================================
+       ESTILOS
+       ===================================================== -->
+
+  <link
+    rel="stylesheet"
+    href="/style.css"
+  >
 
 </head>
 
@@ -37,21 +40,20 @@
 
 
   <!-- =====================================================
-       PÁGINA PRINCIPAL
+       CONTENEDOR PRINCIPAL
        ===================================================== -->
 
-  <div
-    class="contenedor-principal"
-    id="pagina-principal"
-  >
+  <div class="contenedor-principal">
 
 
     <!-- ===================================================
-         PARTE SUPERIOR
+         SECCIÓN SUPERIOR
          =================================================== -->
 
     <header class="seccion-superior">
 
+
+      <!-- PANEL DEL LOGO -->
 
       <div class="panel-izquierdo">
 
@@ -64,7 +66,10 @@
       </div>
 
 
+      <!-- IMAGEN DE FONDO -->
+
       <div class="panel-derecho-imagen">
+
       </div>
 
 
@@ -73,14 +78,14 @@
 
 
     <!-- ===================================================
-         PARTE INFERIOR
+         SECCIÓN INFERIOR
          =================================================== -->
 
     <main class="seccion-inferior">
 
 
       <!-- =================================================
-           MENÚ
+           MENÚ LATERAL
            ================================================= -->
 
       <aside
@@ -88,39 +93,56 @@
         id="sidebar"
       >
 
+
+        <!-- BOTÓN MENÚ -->
+
         <button
           id="btn-menu"
+          type="button"
           aria-label="Abrir menú"
         >
           ≡
         </button>
 
 
+
+        <!-- LISTA DE LEYENDAS -->
+
         <nav id="menu-leyendas">
 
-          <button id="btn-leyenda-1">
+
+          <button
+            id="btn-leyenda-1"
+            type="button"
+          >
             La Leyenda del Carretón
           </button>
 
 
-          <button id="btn-leyenda-2">
+          <button
+            id="btn-leyenda-2"
+            type="button"
+          >
             El Guajojó
           </button>
 
+
         </nav>
+
 
       </aside>
 
 
 
       <!-- =================================================
-           CONTENIDO
+           ÁREA PRINCIPAL
            ================================================= -->
 
       <section
         class="area-texto"
         id="contenido-dinamico"
       >
+
 
         <h2>
           Patio de los Abuelos
@@ -131,6 +153,7 @@
           Bienvenido al núcleo de nuestras tradiciones.
           Escucha, observa y vive las historias.
         </p>
+
 
       </section>
 
@@ -143,7 +166,7 @@
 
 
   <!-- =====================================================
-       PANTALLA DE REALIDAD AUMENTADA
+       INTERFAZ DE REALIDAD AUMENTADA
        ===================================================== -->
 
   <div
@@ -153,25 +176,7 @@
 
 
     <!-- ===================================================
-         CÁMARA DEL TELÉFONO
-         
-         Se utiliza como respaldo cuando WebXR AR no está
-         disponible.
-         =================================================== -->
-
-    <video
-      id="camara-ar"
-      autoplay
-      muted
-      playsinline
-    ></video>
-
-
-
-    <!-- ===================================================
-         ESCENA A-FRAME
-         
-         Se utiliza para renderizar el Guajojó.
+         ESCENA WEBXR
          =================================================== -->
 
     <a-scene
@@ -184,55 +189,58 @@
 
       renderer="
         antialias: false;
+        precision: lowp;
         colorManagement: false;
         physicallyCorrectLights: false;
-        precision: lowp;
-        logarithmicDepthBuffer: false;
       "
 
       webxr="
         requiredFeatures: hit-test;
         optionalFeatures: local-floor, dom-overlay;
-        overlayElement: #interfaz-ar;
       "
 
       device-orientation-permission-ui="
-        enabled: true
+        enabled: true;
       "
 
     >
 
 
-      <!-- ================================================
+      <!-- =================================================
            RECURSOS
-           ================================================ -->
+           ================================================= -->
 
       <a-assets>
+
+
+        <!-- MODELO DEL GUAJOJÓ -->
 
         <a-asset-item
           id="modelo-guajojo-ar"
           src="/guajojo.glb"
         ></a-asset-item>
 
+
       </a-assets>
 
 
 
-      <!-- ================================================
-           CÁMARA
-           ================================================ -->
+      <!-- =================================================
+           CÁMARA AR
+           ================================================= -->
 
       <a-camera
-        id="camara-3d"
+        id="camara-ar"
         position="0 1.6 0"
-      >
-      </a-camera>
+        near="0.01"
+        far="50"
+      ></a-camera>
 
 
 
-      <!-- ================================================
-           LUZ
-           ================================================ -->
+      <!-- =================================================
+           LUCES
+           ================================================= -->
 
       <a-light
         type="ambient"
@@ -240,11 +248,6 @@
         intensity="1.5"
       ></a-light>
 
-
-
-      <!-- ================================================
-           LUZ DIRECCIONAL
-           ================================================ -->
 
       <a-light
         type="directional"
@@ -255,41 +258,66 @@
 
 
 
-      <!-- ================================================
+      <!-- =================================================
            GUAJOJÓ
            
-           Se mantiene oculto hasta iniciar el juego.
-           ================================================ -->
+           IMPORTANTE:
+           Empieza oculto.
+           
+           JavaScript lo colocará sobre la superficie
+           detectada mediante hit-test.
+           ================================================= -->
 
       <a-entity
         id="guajojo-ar"
         visible="false"
-        position="0 0 -3"
-        scale="0.2 0.2 0.2"
       >
 
+
         <a-gltf-model
+
           src="#modelo-guajojo-ar"
-        >
-        </a-gltf-model>
+
+          position="0 0 0"
+
+          rotation="0 0 0"
+
+          scale="0.2 0.2 0.2"
+
+        ></a-gltf-model>
+
 
       </a-entity>
 
 
 
-      <!-- ================================================
-           RETÍCULA DE COLOCACIÓN
-           ================================================ -->
+      <!-- =================================================
+           RETÍCULA
+           
+           Este círculo indica dónde detectó el suelo.
+           ================================================= -->
 
       <a-ring
+
         id="reticula"
-        rotation="-90 0 0"
-        radius-inner="0.12"
-        radius-outer="0.15"
-        color="#d4af37"
+
         visible="false"
-      >
-      </a-ring>
+
+        rotation="-90 0 0"
+
+        radius-inner="0.12"
+
+        radius-outer="0.15"
+
+        color="#00ff66"
+
+        material="
+          shader: flat;
+          transparent: true;
+          opacity: 0.8;
+        "
+
+      ></a-ring>
 
 
     </a-scene>
@@ -297,124 +325,152 @@
 
 
     <!-- ===================================================
-         INTERFAZ DEL JUEGO
-         =================================================== -->
+         INTERFAZ SOBRE LA CÁMARA
+         ================================================= -->
 
     <div
-      class="interfaz-ar"
       id="interfaz-ar"
+      class="interfaz-ar"
     >
 
 
-      <!-- ================================================
-           INFORMACIÓN
-           ================================================ -->
+      <!-- =================================================
+           PARTE SUPERIOR
+           ================================================= -->
 
-      <div class="info-guajojo-ar">
-
-        <h3>
-          🐦 Guajojó
-        </h3>
+      <div class="ar-superior">
 
 
-        <p id="estado-guajojo">
+        <div
+          id="estado-guajojo"
+          class="estado-guajojo"
+        >
           Preparando la experiencia...
-        </p>
-
-      </div>
-
-
-
-      <!-- ================================================
-           BOTÓN CERRAR
-           ================================================ -->
-
-      <button
-        class="btn-cerrar-ar"
-        id="btn-cerrar-ar"
-      >
-        ×
-      </button>
-
-
-
-      <!-- ================================================
-           MIRA
-           ================================================ -->
-
-      <div
-        class="mira-captura"
-        id="mira-captura"
-      >
-      </div>
-
-
-
-      <!-- ================================================
-           BOTÓN COLOCAR
-           ================================================ -->
-
-      <button
-        class="btn-colocar-ar"
-        id="btn-colocar-ar"
-      >
-
-        📍 COLOCAR GUAJOJÓ
-
-      </button>
-
-
-
-      <!-- ================================================
-           BOTÓN CAPTURAR
-           ================================================ -->
-
-      <button
-        class="btn-capturar"
-        id="btn-capturar"
-      >
-
-        🎯 CAPTURAR
-
-      </button>
-
-
-
-      <!-- ================================================
-           MENSAJE CAPTURADO
-           ================================================ -->
-
-      <div
-        class="mensaje-captura"
-        id="mensaje-captura"
-      >
-
-        <div class="emoji-guajojo">
-          🐦
         </div>
 
 
-        <h2>
-          ¡Guajojó capturado!
-        </h2>
-
-
-        <p>
-          Has descubierto una de las leyendas
-          de la selva oriental.
-        </p>
-
-
         <button
-          class="btn-ver-leyenda"
-          id="btn-ver-leyenda"
+          id="btn-cerrar-ar"
+          class="btn-cerrar-ar"
+          type="button"
+          aria-label="Cerrar realidad aumentada"
         >
-
-          📖 CONOCER SU LEYENDA
-
+          ✕
         </button>
 
+
       </div>
+
+
+
+      <!-- =================================================
+           INSTRUCCIÓN
+           ================================================= -->
+
+      <div
+        id="mensaje-ar"
+        class="mensaje-ar"
+      >
+
+        Mueve lentamente el celular
+        para encontrar una superficie.
+
+      </div>
+
+
+
+      <!-- =================================================
+           BOTÓN COLOCAR
+           ================================================= -->
+
+      <button
+
+        id="btn-colocar-ar"
+
+        class="btn-ar btn-colocar"
+
+        type="button"
+
+        style="display: none;"
+
+      >
+
+        🐦 COLOCAR GUAJOJÓ
+
+      </button>
+
+
+
+      <!-- =================================================
+           BOTÓN CAPTURAR
+           ================================================= -->
+
+      <button
+
+        id="btn-capturar"
+
+        class="btn-ar btn-capturar"
+
+        type="button"
+
+      >
+
+        🫴 CAPTURAR GUAJOJÓ
+
+      </button>
+
+
+
+      <!-- =================================================
+           MENSAJE DE CAPTURA
+           ================================================= -->
+
+      <div
+
+        id="mensaje-captura"
+
+        class="mensaje-captura"
+
+      >
+
+        <div class="captura-contenido">
+
+
+          <div class="emoji-guajojo">
+            🐦
+          </div>
+
+
+          <h2>
+            ¡Guajojó capturado!
+          </h2>
+
+
+          <p>
+            Has encontrado al misterioso
+            habitante de la selva.
+          </p>
+
+
+          <button
+
+            id="btn-ver-leyenda"
+
+            class="btn-leyenda"
+
+            type="button"
+
+          >
+
+            📖 CONOCER SU LEYENDA
+
+          </button>
+
+
+        </div>
+
+      </div>
+
 
 
     </div>
@@ -443,7 +499,7 @@
 
 
   <!-- =====================================================
-       JAVASCRIPT
+       JAVASCRIPT PRINCIPAL
        ===================================================== -->
 
   <script
