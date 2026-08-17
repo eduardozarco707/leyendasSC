@@ -63,7 +63,7 @@ btnLeyenda2.addEventListener('click', () => {
            VISOR 3D NORMAL
            ================================================ -->
       <div class="contenedor-3d">
-        <!-- IMPORTANTE: Añadí alpha: true al renderer para que el fondo pueda ser transparente y se vea la cámara -->
+        <!-- IMPORTANTE: alpha: true permite que el fondo sea la cámara -->
         <a-scene
           id="escena-guajojo"
           embedded
@@ -74,14 +74,14 @@ btnLeyenda2.addEventListener('click', () => {
             <a-asset-item id="modelo-guajojo" src="/guajojo.glb"></a-asset-item>
           </a-assets>
 
-          <!-- IMPORTANTE: El cielo azul con hide-on-enter-ar para que desaparezca al usar la cámara -->
+          <!-- CIELO QUE DESAPARECE AL ACTIVAR LA CÁMARA -->
           <a-sky color="#87CEEB" hide-on-enter-ar></a-sky> 
 
           <!-- LUZ -->
           <a-light type="ambient" color="#ffffff" intensity="1.5"></a-light>
           <a-light type="directional" color="#ffffff" intensity="1" position="-2 4 2"></a-light>
 
-          <!-- MODELO (A 2 metros frente a la cámara para que no quede muy lejos en el cuarto) -->
+          <!-- MODELO -->
           <a-gltf-model
             src="#modelo-guajojo"
             position="0 0 -2"
@@ -128,61 +128,41 @@ btnLeyenda2.addEventListener('click', () => {
   setTimeout(() => {
     const botonAR = document.getElementById('btn-abrir-ar');
 
-    if (!botonAR) {
-      console.error('No se encontró el botón AR');
-      return;
+    if (botonAR) {
+      botonAR.addEventListener('click', iniciarAR);
     }
 
-    botonAR.addEventListener('click', iniciarAR);
-
-    // Escuchar cuando A-Frame entre en AR para mostrar tu mensaje de estado
     const escena = document.getElementById('escena-guajojo');
-    escena.addEventListener('enter-vr', () => {
-      // En A-Frame, 'enter-vr' también se dispara para AR. 
-      // Comprobamos si es AR revisando el estado interno.
-      if (escena.is('ar-mode')) {
-        mostrarEstadoAR('🟢 ¡REALIDAD AUMENTADA INICIADA!');
-      }
-    });
-
+    if (escena) {
+      escena.addEventListener('enter-vr', () => {
+        if (escena.is('ar-mode')) {
+          mostrarEstadoAR('🟢 ¡REALIDAD AUMENTADA INICIADA!');
+        }
+      });
+    }
   }, 100);
 });
 
 // ============================================================
-// INICIAR IMMERSIVE AR (VERSIÓN OPTIMIZADA A-FRAME)
+// INICIAR IMMERSIVE AR (CORRECCIÓN DE SEGURIDAD CHROME)
 // ============================================================
-async function iniciarAR() {
-  console.log('====================================');
-  console.log('INICIANDO IMMERSIVE-AR');
-  console.log('====================================');
+function iniciarAR() {
+  const escena = document.getElementById('escena-guajojo');
 
   if (!navigator.xr) {
-    alert('WebXR no está disponible en este navegador.');
+    alert('WebXR no está disponible en este navegador. Por favor usa Google Chrome.');
     return;
   }
 
-  try {
-    const compatible = await navigator.xr.isSessionSupported('immersive-ar');
-    console.log('immersive-ar disponible:', compatible);
-
-    if (!compatible) {
-      alert('Tu dispositivo o navegador no soporta Realidad Aumentada.');
-      return;
-    }
-
-    const escena = document.getElementById('escena-guajojo');
-    
-    if (escena) {
-      // ¡ESTA ES LA MAGIA DE A-FRAME!
-      // Ejecuta todas las conexiones WebXR, esconde el fondo y ajusta la cámara con 1 sola línea de código
+  if (escena) {
+    // EL TRUCO: Se llama directamente a la acción sin pausas ni 'awaits'.
+    // Así el navegador respeta que fue el usuario quien hizo el click físico.
+    try {
       escena.enterAR();
-    } else {
-      console.error('No se encontró la escena A-Frame.');
+    } catch (error) {
+      console.error('Error al intentar abrir AR:', error);
+      alert('Hubo un problema al abrir la cámara. Verifica los permisos de tu navegador.');
     }
-
-  } catch (error) {
-    console.error('ERROR INICIANDO AR:', error);
-    alert('No se pudo iniciar la cámara AR.\n\n' + error.message);
   }
 }
 
