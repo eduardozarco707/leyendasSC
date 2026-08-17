@@ -12,12 +12,11 @@ AFRAME.registerComponent('detector-enfoque', {
     const camera = this.el.sceneEl.camera;
     if (!camera) return;
 
-    // Posición del modelo en coordenadas de pantalla (-1 a 1)
     const pos = new AFRAME.THREE.Vector3();
     this.el.object3D.getWorldPosition(pos);
     pos.project(camera);
 
-    // Está frente a la cámara y cerca del centro de la pantalla
+    // Está en pantalla y cerca del centro
     const enfocado =
       pos.z < 1 &&
       pos.x >= -0.55 &&
@@ -135,26 +134,21 @@ btnLeyenda2.addEventListener('click', () => {
             <a-asset-item id="modelo-guajojo-asset" src="/guajojo.glb"></a-asset-item>
           </a-assets>
 
-          <!--
-            MODELO FIJO EN EL MUNDO 3D (no en el centro de la pantalla)
-            Al girar el celular, la cámara se mueve y el ave se queda en su lugar.
-            Así tienes que buscarlo.
-          -->
+          <!-- El modelo se posiciona por JS delante de la cámara al iniciar -->
           <a-entity
             id="modelo-guajojo"
             detector-enfoque
             gltf-model="#modelo-guajojo-asset"
-            position="1.5 0.4 -2.2"
+            position="0 0 -2"
             scale="0.45 0.45 0.45"
-            rotation="0 200 0"
+            rotation="0 180 0"
+            visible="false"
           ></a-entity>
 
-          <!-- Luces -->
           <a-light type="ambient" color="#ffffff" intensity="1.8"></a-light>
           <a-light type="directional" color="#ffffff" intensity="1.2" position="0 3 2"></a-light>
           <a-light type="directional" color="#ffffff" intensity="0.6" position="0 -1 -2"></a-light>
 
-          <!-- CÁMARA CON GIROSCOPIO (se mueve con el celular) -->
           <a-camera
             id="camara-ar"
             position="0 0 0"
@@ -171,8 +165,8 @@ btnLeyenda2.addEventListener('click', () => {
         </a-scene>
       </div>
 
-      <!-- UI SUPERIOR -->
-      <div style="
+      <!-- UI -->
+      <div id="texto-pista" style="
         position: absolute;
         top: 18px;
         left: 50%;
@@ -189,7 +183,6 @@ btnLeyenda2.addEventListener('click', () => {
         📷 Gira el celular para buscar al Guajojó
       </div>
 
-      <!-- BOTÓN CAPTURAR -->
       <button id="btn-capturar" disabled style="
         position: absolute;
         bottom: 36px;
@@ -210,7 +203,6 @@ btnLeyenda2.addEventListener('click', () => {
         👀 Busca al Guajojó...
       </button>
 
-      <!-- BOTÓN CERRAR -->
       <button id="btn-cerrar-ar" style="
         position: absolute;
         top: 14px;
@@ -295,15 +287,10 @@ async function iniciarCamaraAR() {
     await video.play();
     pantalla.style.display = 'block';
 
-    // Posición FIJA del ave en el mundo (un poco a un lado para que no salga centrado)
-    // Cada vez que entras, puede variar un poco para que no siempre esté en el mismo sitio
-    colocarModeloEnMundo();
-
     // Activar giroscopio
     setTimeout(() => {
       window.dispatchEvent(new Event('resize'));
 
-      // iOS (si aplica)
       if (
         typeof DeviceOrientationEvent !== 'undefined' &&
         typeof DeviceOrientationEvent.requestPermission === 'function'
@@ -324,28 +311,29 @@ async function iniciarCamaraAR() {
         canvas.style.background = 'transparent';
         canvas.style.backgroundColor = 'transparent';
       }
-      if (escena) {
-        escena.style.background = 'transparent';
-      }
+      if (escena) escena.style.background = 'transparent';
+    };
+
+    const alistarModelo = () => {
+      hacerTransparente();
+      // Esperar un momento a que el giroscopio oriente la cámara
+      // y luego colocar el ave DELANTE de donde estás mirando
+      setTimeout(() => {
+        colocarModeloFrenteACamara();
+      }, 600);
+      setTimeout(() => {
+        colocarModeloFrenteACamara();
+      }, 1200);
     };
 
     if (escena) {
       if (escena.hasLoaded) {
-        hacerTransparente();
-        forzarModeloVisible();
+        alistarModelo();
       } else {
-        escena.addEventListener(
-          'loaded',
-          () => {
-            hacerTransparente();
-            forzarModeloVisible();
-          },
-          { once: true }
-        );
+        escena.addEventListener('loaded', alistarModelo, { once: true });
       }
       setTimeout(hacerTransparente, 500);
       setTimeout(hacerTransparente, 1500);
-      setTimeout(forzarModeloVisible, 800);
     }
 
     if (btnCapturar) {
@@ -363,38 +351,60 @@ async function iniciarCamaraAR() {
 }
 
 // ============================================================
-// COLOCAR EL MODELO EN UN LUGAR FIJO DEL MUNDO 3D
+// COLOCAR EL AVE FRENTE A LA CÁMARA (un poco a un lado)
+// Así siempre está cerca de donde apuntas al abrir AR
 // ============================================================
-function colocarModeloEnMundo() {
+function colocarModeloFrenteACamara() {
   const modelo = document.getElementById('modelo-guajojo');
-  if (!modelo) return;
+  const escena = document.getElementById('escena-guajojo');
+  if (!modelo || !escena || !escena.camera) return;
 
-  // Posición fija pero no centrada:
-  // un poco a la derecha y ligeramente arriba
-  // (si quieres que sea random cada vez, descomenta el bloque de abajo)
+  const THREE = AFRAME.THREE;
+  const camera = escena.camera;
 
-  const x = 1.5;   // derecha
-  const y = 0.4;   // un poco arriba
-  const z = -2.2;  // delante
+  const camPos = new THREE.Vector3();
+  const camDir = new THREE.Vector3();
+  camera.getWorldPosition(camPos);
+  camera.getWorldDirection(camDir);
 
-  // --- Opción random (descomenta si quieres que cambie cada vez) ---
-  // const x = (Math.random() * 2.4) - 1.2; // entre -1.2 y 1.2
-  // const y = (Math.random() * 0.6) + 0.1; // entre 0.1 y 0.7
-  // const z = -2.0 - Math.random() * 0.8;  // entre -2.0 y -2.8
+  // Ángulo lateral aleatorio (±35°) para que no quede justo en el centro
+  // y tengas que girar un poco para centrarlo
+  const angulo = ((Math.random() * 70) - 35) * (Math.PI / 180);
+  const distancia = 2.0;
 
-  modelo.setAttribute('position', `${x} ${y} ${z}`);
-  modelo.setAttribute('rotation', '0 200 0');
+  // Vector "derecha" respecto a donde mira la cámara
+  const arriba = new THREE.Vector3(0, 1, 0);
+  const derecha = new THREE.Vector3().crossVectors(camDir, arriba).normalize();
+  if (derecha.lengthSq() < 0.01) {
+    // Si la cámara mira casi arriba/abajo, usar otro eje
+    derecha.set(1, 0, 0);
+  }
+
+  // Posición = delante + un poco a la izquierda o derecha + un poco arriba
+  const pos = new THREE.Vector3()
+    .copy(camPos)
+    .add(camDir.clone().multiplyScalar(distancia))
+    .add(derecha.multiplyScalar(Math.sin(angulo) * 1.1))
+    .add(arriba.multiplyScalar(0.25));
+
+  modelo.object3D.position.copy(pos);
+  modelo.object3D.lookAt(camPos); // que mire hacia la cámara
   modelo.setAttribute('scale', '0.45 0.45 0.45');
   modelo.setAttribute('visible', true);
-}
 
-// ============================================================
-// FORZAR QUE EL MODELO SE VEA
-// ============================================================
-function forzarModeloVisible() {
-  const modelo = document.getElementById('modelo-guajojo');
-  if (!modelo) return;
-  modelo.setAttribute('visible', true);
+  // Pista según el lado
+  const pista = document.getElementById('texto-pista');
+  if (pista) {
+    if (angulo > 0.15) {
+      pista.textContent = '📷 Gira un poco a la derecha para encontrar al Guajojó';
+    } else if (angulo < -0.15) {
+      pista.textContent = '📷 Gira un poco a la izquierda para encontrar al Guajojó';
+    } else {
+      pista.textContent = '📷 Gira el celular para centrar al Guajojó';
+    }
+  }
+
+  console.log('Guajojó colocado en', pos.x.toFixed(2), pos.y.toFixed(2), pos.z.toFixed(2));
 }
 
 // ============================================================
@@ -402,7 +412,7 @@ function forzarModeloVisible() {
 // ============================================================
 function capturarGuajojo() {
   const btn = document.getElementById('btn-capturar');
-  if (btn && btn.disabled) return; // por seguridad
+  if (btn && btn.disabled) return;
 
   cerrarCamaraAR();
 
