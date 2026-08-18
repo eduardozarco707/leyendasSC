@@ -1,5 +1,5 @@
 /* =========================================================
-   VARIABLES DE DISEÑO
+   VARIABLES
    ========================================================= */
 
 :root {
@@ -62,14 +62,6 @@ body {
 }
 
 
-html {
-
-  background:
-    var(--crema-100);
-
-}
-
-
 body {
 
   font-family:
@@ -79,26 +71,20 @@ body {
     Arial,
     sans-serif;
 
-  color:
-    var(--texto-900);
-
   background:
     var(--crema-100);
+
+  color:
+    var(--texto-900);
 
   overflow: hidden;
 
 }
 
 
-button,
-audio {
+button {
 
   font: inherit;
-
-}
-
-
-button {
 
   -webkit-tap-highlight-color:
     transparent;
@@ -107,94 +93,80 @@ button {
 
 
 /* =========================================================
-   SCROLLBAR
+   QUITAR BOTONES VR / AR DE A-FRAME
    ========================================================= */
 
-* {
+.a-enter-vr,
+.a-enter-ar,
+.a-enter-vr-button,
+.a-enter-ar-button {
 
-  scrollbar-width: thin;
-  scrollbar-color:
-    var(--verde-600)
-    var(--crema-200);
+  display: none !important;
 
-}
+  visibility: hidden !important;
 
+  opacity: 0 !important;
 
-*::-webkit-scrollbar {
-
-  width: 8px;
-
-}
-
-
-*::-webkit-scrollbar-track {
-
-  background:
-    var(--crema-200);
-
-}
-
-
-*::-webkit-scrollbar-thumb {
-
-  background:
-    var(--verde-600);
-
-  border-radius: 20px;
+  pointer-events: none !important;
 
 }
 
 
 /* =========================================================
-   CONTENEDOR GENERAL
+   CONTENEDOR PRINCIPAL
    ========================================================= */
 
 .contenedor-principal {
 
-  display: flex;
-  flex-direction: column;
-
   width: 100%;
   height: 100dvh;
 
-  background:
-    var(--crema-100);
+  display: flex;
+  flex-direction: column;
 
 }
 
 
 /* =========================================================
-   CABECERA / HERO
+   CABECERA
    ========================================================= */
 
 .seccion-superior {
-
-  display: flex;
 
   width: 100%;
   height: 32vh;
 
   min-height: 230px;
 
+  display: flex;
+
   position: relative;
+
+  z-index: 10;
 
   box-shadow:
     0 6px 25px rgba(0,0,0,0.12);
 
-  z-index: 10;
-
 }
 
-
-/* =========================================================
-   LOGO
-   ========================================================= */
 
 .panel-izquierdo {
 
   width: 31%;
 
   min-width: 300px;
+
+  padding:
+    30px 45px;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  position: relative;
+
+  overflow: hidden;
 
   background:
 
@@ -203,18 +175,6 @@ button {
       var(--verde-800),
       var(--verde-900)
     );
-
-  display: flex;
-
-  align-items: center;
-  justify-content: center;
-
-  padding:
-    30px 45px;
-
-  position: relative;
-
-  overflow: hidden;
 
 }
 
@@ -228,13 +188,13 @@ button {
   width: 260px;
   height: 260px;
 
-  border:
-    1px solid rgba(222, 193, 106, 0.20);
-
-  border-radius: 50%;
-
   left: -130px;
   bottom: -150px;
+
+  border:
+    1px solid rgba(222,193,106,0.20);
+
+  border-radius: 50%;
 
 }
 
@@ -245,13 +205,13 @@ button {
 
   position: absolute;
 
-  color:
-    rgba(222, 193, 106, 0.40);
-
-  font-size: 28px;
-
   right: 25px;
   top: 20px;
+
+  color:
+    rgba(222,193,106,0.40);
+
+  font-size: 28px;
 
 }
 
@@ -298,6 +258,10 @@ button {
 
   flex: 1;
 
+  position: relative;
+
+  overflow: hidden;
+
   background-image:
     url('/fondo-patio.jpg');
 
@@ -306,25 +270,22 @@ button {
   background-position:
     center 45%;
 
-  position: relative;
-
-  overflow: hidden;
-
 }
 
 
 .overlay-hero {
 
   position: absolute;
+
   inset: 0;
 
   background:
 
     linear-gradient(
       90deg,
-      rgba(5, 46, 35, 0.76) 0%,
-      rgba(5, 46, 35, 0.42) 45%,
-      rgba(5, 46, 35, 0.10) 100%
+      rgba(5,46,35,0.76) 0%,
+      rgba(5,46,35,0.42) 45%,
+      rgba(5,46,35,0.10) 100%
     );
 
 }
@@ -339,10 +300,10 @@ button {
 
   max-width: 650px;
 
+  z-index: 2;
+
   color:
     var(--blanco);
-
-  z-index: 2;
 
 }
 
@@ -351,21 +312,23 @@ button {
 
   display: inline-block;
 
+  margin-bottom: 10px;
+
+  color:
+    var(--dorado-400);
+
   font-size: 0.72rem;
 
   font-weight: 700;
 
   letter-spacing: 0.18em;
 
-  color:
-    var(--dorado-400);
-
-  margin-bottom: 10px;
-
 }
 
 
 .contenido-hero h1 {
+
+  margin-bottom: 12px;
 
   font-family:
     Georgia,
@@ -383,8 +346,6 @@ button {
 
   line-height: 1.05;
 
-  margin-bottom: 12px;
-
 }
 
 
@@ -392,10 +353,10 @@ button {
 
   display: block;
 
-  font-weight: 400;
-
   color:
     var(--dorado-400);
+
+  font-weight: 400;
 
 }
 
@@ -404,23 +365,21 @@ button {
 
   max-width: 540px;
 
+  color:
+    rgba(255,255,255,0.90);
+
   font-size: 1rem;
 
   line-height: 1.55;
-
-  color:
-    rgba(255,255,255,0.90);
 
 }
 
 
 /* =========================================================
-   SECCIÓN INFERIOR
+   PARTE INFERIOR
    ========================================================= */
 
 .seccion-inferior {
-
-  display: flex;
 
   width: 100%;
 
@@ -428,10 +387,9 @@ button {
 
   min-height: 0;
 
-  position: relative;
+  display: flex;
 
-  background:
-    var(--crema-100);
+  position: relative;
 
 }
 
@@ -447,16 +405,7 @@ button {
 
   flex-shrink: 0;
 
-  background:
-
-    linear-gradient(
-      180deg,
-      var(--verde-800),
-      var(--verde-900)
-    );
-
   display: flex;
-
   flex-direction: column;
 
   position: relative;
@@ -465,6 +414,17 @@ button {
 
   overflow: hidden;
 
+  background:
+
+    linear-gradient(
+      180deg,
+      var(--verde-800),
+      var(--verde-900)
+    );
+
+  box-shadow:
+    8px 0 30px rgba(5,46,35,0.12);
+
   transition:
     width 0.35s cubic-bezier(
       0.22,
@@ -472,9 +432,6 @@ button {
       0.36,
       1
     );
-
-  box-shadow:
-    8px 0 30px rgba(5,46,35,0.12);
 
 }
 
@@ -486,15 +443,12 @@ button {
 }
 
 
-/* =========================================================
-   CABECERA SIDEBAR
-   ========================================================= */
-
 .cabecera-sidebar {
 
   width: 100%;
 
-  padding: 18px 14px 12px;
+  padding:
+    18px 14px 12px;
 
 }
 
@@ -503,6 +457,12 @@ button {
 
   width: 100%;
   height: 54px;
+
+  display: flex;
+
+  align-items: center;
+
+  overflow: hidden;
 
   border: none;
 
@@ -516,15 +476,6 @@ button {
     var(--blanco);
 
   cursor: pointer;
-
-  display: flex;
-
-  align-items: center;
-
-  transition:
-    background 0.2s ease;
-
-  overflow: hidden;
 
 }
 
@@ -563,8 +514,6 @@ button {
     Georgia,
     serif;
 
-  font-size: 1rem;
-
   transition:
     opacity 0.2s ease;
 
@@ -580,20 +529,20 @@ button {
 
 
 /* =========================================================
-   MENU LEYENDAS
+   BOTONES LEYENDAS
    ========================================================= */
 
 #menu-leyendas {
 
   flex: 1;
 
+  width: 100%;
+
   display: flex;
 
   flex-direction: column;
 
   gap: 7px;
-
-  width: 100%;
 
   padding:
     4px 14px 20px;
@@ -608,31 +557,32 @@ button {
   width: 100%;
   min-height: 65px;
 
+  display: flex;
+
+  align-items: center;
+
+  overflow: hidden;
+
+  border:
+    1px solid transparent;
+
+  border-radius:
+    var(--radio-sm);
+
   background:
     transparent;
 
   color:
     rgba(255,255,255,0.82);
 
-  border: 1px solid transparent;
-
-  border-radius:
-    var(--radio-sm);
+  text-align: left;
 
   cursor: pointer;
-
-  display: flex;
-
-  align-items: center;
-
-  text-align: left;
 
   transition:
     background 0.2s ease,
     border-color 0.2s ease,
     color 0.2s ease;
-
-  overflow: hidden;
 
 }
 
@@ -643,21 +593,21 @@ button {
     rgba(255,255,255,0.08);
 
   color:
-    var(--blanco);
+    white;
 
 }
 
 
 .btn-leyenda.activo {
 
-  color:
-    var(--blanco);
-
   background:
     rgba(201,163,60,0.14);
 
   border-color:
     rgba(222,193,106,0.40);
+
+  color:
+    white;
 
 }
 
@@ -686,9 +636,9 @@ button {
 
   gap: 3px;
 
-  white-space: nowrap;
-
   opacity: 0;
+
+  white-space: nowrap;
 
   transform:
     translateX(-5px);
@@ -726,10 +676,10 @@ button {
 
 .contenido-btn-menu small {
 
-  font-size: 0.74rem;
-
   color:
     rgba(255,255,255,0.54);
+
+  font-size: 0.74rem;
 
 }
 
@@ -740,21 +690,21 @@ button {
 
 .pie-sidebar {
 
-  margin-top: auto;
-
   min-height: 60px;
 
-  border-top:
-    1px solid rgba(255,255,255,0.08);
+  margin-top: auto;
 
   display: flex;
 
   align-items: center;
 
+  overflow: hidden;
+
+  border-top:
+    1px solid rgba(255,255,255,0.08);
+
   color:
     rgba(255,255,255,0.55);
-
-  overflow: hidden;
 
 }
 
@@ -765,21 +715,21 @@ button {
 
   flex-shrink: 0;
 
-  text-align: center;
-
   color:
     var(--dorado-400);
+
+  text-align: center;
 
 }
 
 
 .texto-pie-sidebar {
 
+  opacity: 0;
+
   white-space: nowrap;
 
   font-size: 0.75rem;
-
-  opacity: 0;
 
   transition:
     opacity 0.2s ease;
@@ -796,7 +746,7 @@ button {
 
 
 /* =========================================================
-   ÁREA DE CONTENIDO
+   CONTENIDO
    ========================================================= */
 
 .area-texto {
@@ -805,12 +755,12 @@ button {
 
   min-width: 0;
 
-  overflow-y: auto;
-
   padding:
-    clamp(28px, 4vw, 60px)
-    clamp(22px, 5vw, 80px)
+    clamp(28px,4vw,60px)
+    clamp(22px,5vw,80px)
     80px;
+
+  overflow-y: auto;
 
   background:
 
@@ -837,13 +787,11 @@ button {
 }
 
 
-/* =========================================================
-   TITULOS
-   ========================================================= */
-
 .sobrelinea {
 
   display: block;
+
+  margin-bottom: 12px;
 
   color:
     var(--dorado-600);
@@ -853,8 +801,6 @@ button {
   font-weight: 800;
 
   letter-spacing: 0.16em;
-
-  margin-bottom: 12px;
 
 }
 
@@ -869,9 +815,10 @@ button {
 
 .area-texto h2 {
 
+  margin-bottom: 20px;
+
   font-family:
     Georgia,
-    "Times New Roman",
     serif;
 
   color:
@@ -888,27 +835,26 @@ button {
 
   line-height: 1.1;
 
-  margin-bottom: 20px;
-
 }
 
 
-.descripcion-principal {
+.descripcion-principal,
+.descripcion-leyenda {
+
+  max-width: 800px;
 
   color:
     var(--texto-700);
 
-  font-size: 1.12rem;
+  font-size: 1.08rem;
 
   line-height: 1.75;
-
-  max-width: 800px;
 
 }
 
 
 /* =========================================================
-   TARJETAS PRINCIPALES
+   TARJETAS
    ========================================================= */
 
 .grid-caracteristicas {
@@ -941,21 +887,6 @@ button {
   box-shadow:
     var(--sombra-suave);
 
-  transition:
-    transform 0.2s ease,
-    box-shadow 0.2s ease;
-
-}
-
-
-.tarjeta-caracteristica:hover {
-
-  transform:
-    translateY(-3px);
-
-  box-shadow:
-    var(--sombra-media);
-
 }
 
 
@@ -964,37 +895,37 @@ button {
   width: 48px;
   height: 48px;
 
-  border-radius: 14px;
-
-  background:
-    rgba(6, 64, 43, 0.08);
+  margin-bottom: 18px;
 
   display: flex;
 
   align-items: center;
   justify-content: center;
 
-  font-size: 1.4rem;
+  border-radius: 14px;
 
-  margin-bottom: 18px;
+  background:
+    rgba(6,64,43,0.08);
+
+  font-size: 1.4rem;
 
 }
 
 
 .tarjeta-caracteristica h3 {
 
-  font-family:
-    Georgia,
-    serif;
+  margin-bottom: 8px;
 
   color:
     var(--verde-800);
 
+  font-family:
+    Georgia,
+    serif;
+
   font-size: 1.25rem;
 
   font-weight: 500;
-
-  margin-bottom: 8px;
 
 }
 
@@ -1019,7 +950,15 @@ button {
 
   margin-top: 30px;
 
-  padding: 28px 32px;
+  padding:
+    28px 32px;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: space-between;
+
+  overflow: hidden;
 
   border-radius:
     var(--radio-md);
@@ -1035,20 +974,12 @@ button {
   color:
     white;
 
-  display: flex;
-
-  align-items: center;
-
-  justify-content: space-between;
-
-  overflow: hidden;
-
-  position: relative;
-
 }
 
 
 .panel-explorar h3 {
+
+  margin-bottom: 8px;
 
   font-family:
     Georgia,
@@ -1057,8 +988,6 @@ button {
   font-size: 1.8rem;
 
   font-weight: 400;
-
-  margin-bottom: 8px;
 
 }
 
@@ -1075,57 +1004,25 @@ button {
 
 .decoracion-panel {
 
-  font-size: 5rem;
+  padding-right: 20px;
 
   color:
     rgba(222,193,106,0.25);
 
-  padding-right: 20px;
+  font-size: 5rem;
 
 }
 
 
 /* =========================================================
-   CONTENIDO DE LEYENDA
+   LEYENDA
    ========================================================= */
-
-.vista-leyenda {
-
-  animation:
-    entradaContenido 0.35s ease;
-
-}
-
-
-@keyframes entradaContenido {
-
-  from {
-
-    opacity: 0;
-
-    transform:
-      translateY(8px);
-
-  }
-
-  to {
-
-    opacity: 1;
-
-    transform:
-      translateY(0);
-
-  }
-
-}
-
 
 .cabecera-leyenda {
 
   display: flex;
 
   align-items: flex-start;
-
   justify-content: space-between;
 
   gap: 30px;
@@ -1149,6 +1046,11 @@ button {
 
   flex-shrink: 0;
 
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
   border-radius: 22px;
 
   background:
@@ -1159,38 +1061,21 @@ button {
       var(--verde-900)
     );
 
-  display: flex;
-
-  align-items: center;
-  justify-content: center;
-
-  font-size: 2rem;
-
   box-shadow:
     var(--sombra-media);
 
-}
-
-
-.descripcion-leyenda {
-
-  max-width: 780px;
-
-  color:
-    var(--texto-700);
-
-  font-size: 1.08rem;
-
-  line-height: 1.75;
+  font-size: 2rem;
 
 }
 
 
 .barra-leyenda {
 
+  width: 100%;
   height: 1px;
 
-  width: 100%;
+  margin:
+    30px 0;
 
   background:
 
@@ -1200,173 +1085,82 @@ button {
       transparent
     );
 
-  margin:
-    30px 0;
-
 }
 
 
 /* =========================================================
-   PANEL DE HISTORIA
-   ========================================================= */
-
-.historia-leyenda {
-
-  margin-top: 30px;
-
-  padding: 30px;
-
-  border:
-    1px solid var(--borde);
-
-  background:
-    rgba(255,255,255,0.72);
-
-  border-radius:
-    var(--radio-md);
-
-  box-shadow:
-    var(--sombra-suave);
-
-}
-
-
-.historia-leyenda h3 {
-
-  font-family:
-    Georgia,
-    serif;
-
-  font-size: 1.65rem;
-
-  color:
-    var(--verde-800);
-
-  font-weight: 400;
-
-  margin-bottom: 18px;
-
-}
-
-
-.historia-leyenda p {
-
-  font-family:
-    Georgia,
-    serif;
-
-  font-size: 1.07rem;
-
-  line-height: 1.9;
-
-  color:
-    var(--texto-700);
-
-  text-align: justify;
-
-}
-
-
-/* =========================================================
-   ESTADO "PRÓXIMAMENTE"
-   ========================================================= */
-
-.estado-proximamente {
-
-  margin-top: 28px;
-
-  padding: 25px;
-
-  display: flex;
-
-  gap: 18px;
-
-  align-items: center;
-
-  border:
-    1px solid rgba(201,163,60,0.28);
-
-  border-radius:
-    var(--radio-md);
-
-  background:
-    rgba(201,163,60,0.08);
-
-}
-
-
-.estado-proximamente .icono {
-
-  font-size: 2rem;
-
-}
-
-
-.estado-proximamente strong {
-
-  display: block;
-
-  color:
-    var(--verde-800);
-
-  margin-bottom: 5px;
-
-}
-
-
-.estado-proximamente p {
-
-  color:
-    var(--texto-500);
-
-  line-height: 1.55;
-
-}
-
-
-/* =========================================================
-   GUAJOJÓ - TARGET
+   PANEL TARGET
    ========================================================= */
 
 .panel-target {
 
   margin-top: 30px;
 
-  padding: 25px;
-
-  border-radius:
-    var(--radio-md);
-
-  border:
-    1px solid var(--borde);
-
-  background:
-    var(--blanco);
-
-  box-shadow:
-    var(--sombra-suave);
+  padding: 28px;
 
   display: flex;
 
   align-items: center;
 
-  gap: 28px;
+  gap: 32px;
+
+  border:
+    1px solid var(--borde);
+
+  border-radius:
+    var(--radio-md);
+
+  background:
+    white;
+
+  box-shadow:
+    var(--sombra-suave);
 
 }
 
 
+/* =========================================================
+   IMAGEN OBJETIVO
+   =========================================================
+   
+   CORREGIDO:
+   
+   NO usamos object-fit: cover.
+   
+   Así la imagen del Carretón y la del Guajojó
+   SIEMPRE se muestran completas.
+   
+   ========================================================= */
+
 .imagen-target {
 
-  width: 190px;
+  width: 240px;
 
-  aspect-ratio: 4 / 5;
+  max-width: 40%;
 
-  object-fit: cover;
+  height: auto;
 
-  border-radius: 14px;
+  max-height: 420px;
+
+  flex-shrink: 0;
+
+  display: block;
+
+  object-fit: contain;
+
+  object-position: center;
+
+  aspect-ratio: auto;
+
+  padding: 8px;
 
   border:
     3px solid var(--verde-700);
+
+  border-radius: 16px;
+
+  background:
+    #ffffff;
 
   box-shadow:
     0 8px 22px rgba(5,46,35,0.16);
@@ -1383,18 +1177,18 @@ button {
 
 .info-target h3 {
 
-  font-family:
-    Georgia,
-    serif;
+  margin-bottom: 10px;
 
   color:
     var(--verde-800);
 
+  font-family:
+    Georgia,
+    serif;
+
   font-size: 1.45rem;
 
   font-weight: 400;
-
-  margin-bottom: 10px;
 
 }
 
@@ -1410,17 +1204,10 @@ button {
 
 
 /* =========================================================
-   BOTONES PRINCIPALES
+   BOTÓN AR
    ========================================================= */
 
 .btn-ver-ar {
-
-  display: inline-flex;
-
-  align-items: center;
-  justify-content: center;
-
-  gap: 10px;
 
   min-height: 56px;
 
@@ -1428,6 +1215,13 @@ button {
 
   padding:
     0 28px;
+
+  display: inline-flex;
+
+  align-items: center;
+  justify-content: center;
+
+  gap: 10px;
 
   border: none;
 
@@ -1442,41 +1236,117 @@ button {
     );
 
   color:
-    var(--blanco);
+    white;
 
   font-size: 0.95rem;
 
   font-weight: 700;
-
-  letter-spacing: 0.02em;
 
   cursor: pointer;
 
   box-shadow:
     0 10px 24px rgba(5,46,35,0.20);
 
-  transition:
-    transform 0.2s ease,
-    box-shadow 0.2s ease;
-
 }
 
 
-.btn-ver-ar:hover {
+/* =========================================================
+   HISTORIA
+   ========================================================= */
 
-  transform:
-    translateY(-2px);
+.historia-leyenda {
+
+  margin-top: 30px;
+
+  padding: 30px;
+
+  border:
+    1px solid var(--borde);
+
+  border-radius:
+    var(--radio-md);
+
+  background:
+    rgba(255,255,255,0.72);
 
   box-shadow:
-    0 14px 28px rgba(5,46,35,0.26);
+    var(--sombra-suave);
 
 }
 
 
-.btn-ver-ar:active {
+.historia-leyenda h3 {
 
-  transform:
-    scale(0.98);
+  margin-bottom: 18px;
+
+  color:
+    var(--verde-800);
+
+  font-family:
+    Georgia,
+    serif;
+
+  font-size: 1.65rem;
+
+  font-weight: 400;
+
+}
+
+
+.historia-leyenda p {
+
+  color:
+    var(--texto-700);
+
+  font-family:
+    Georgia,
+    serif;
+
+  font-size: 1.07rem;
+
+  line-height: 1.9;
+
+  text-align: justify;
+
+}
+
+
+/* =========================================================
+   CAPTURADO
+   ========================================================= */
+
+.mensaje-capturado {
+
+  margin-top: 30px;
+
+  padding: 22px;
+
+  border:
+    1px solid rgba(10,145,84,0.25);
+
+  border-radius:
+    var(--radio-md);
+
+  background:
+    rgba(10,145,84,0.08);
+
+  text-align: center;
+
+}
+
+
+.mensaje-capturado h3 {
+
+  margin-bottom: 7px;
+
+  color:
+    var(--verde-700);
+
+  font-family:
+    Georgia,
+    serif;
+
+  font-size: 1.6rem;
 
 }
 
@@ -1487,16 +1357,16 @@ button {
 
 .multimedia-leyenda {
 
+  margin-top: 30px;
+
+  padding: 25px;
+
   display: grid;
 
   grid-template-columns:
     1fr 1fr;
 
   gap: 25px;
-
-  margin-top: 30px;
-
-  padding: 25px;
 
   border:
     1px solid var(--borde);
@@ -1505,7 +1375,7 @@ button {
     var(--radio-md);
 
   background:
-    var(--blanco);
+    white;
 
   box-shadow:
     var(--sombra-suave);
@@ -1530,18 +1400,23 @@ button {
 
 .reproductor-leyenda {
 
+  padding: 20px;
+
   display: flex;
 
   flex-direction: column;
 
   justify-content: center;
 
-  padding: 20px;
-
 }
 
 
 .reproductor-leyenda h3 {
+
+  margin-bottom: 10px;
+
+  color:
+    var(--verde-800);
 
   font-family:
     Georgia,
@@ -1549,24 +1424,19 @@ button {
 
   font-size: 1.4rem;
 
-  color:
-    var(--verde-800);
-
   font-weight: 400;
-
-  margin-bottom: 10px;
 
 }
 
 
 .reproductor-leyenda p {
 
+  margin-bottom: 20px;
+
   color:
     var(--texto-500);
 
   line-height: 1.6;
-
-  margin-bottom: 20px;
 
 }
 
@@ -1579,48 +1449,58 @@ button {
 
 
 /* =========================================================
-   CAPTURADO
+   PRÓXIMAMENTE
    ========================================================= */
 
-#contenido-capturado {
+.estado-proximamente {
 
-  display: none;
+  margin-top: 28px;
 
-}
+  padding: 25px;
 
+  display: flex;
 
-.mensaje-capturado {
+  align-items: center;
 
-  margin-top: 30px;
-
-  padding: 22px;
+  gap: 18px;
 
   border:
-    1px solid rgba(10,145,84,0.25);
+    1px solid rgba(201,163,60,0.28);
 
   border-radius:
     var(--radio-md);
 
   background:
-    rgba(10,145,84,0.08);
-
-  text-align: center;
+    rgba(201,163,60,0.08);
 
 }
 
 
-.mensaje-capturado h3 {
+.estado-proximamente .icono {
 
-  font-family:
-    Georgia,
-    serif;
+  font-size: 2rem;
+
+}
+
+
+.estado-proximamente strong {
+
+  display: block;
+
+  margin-bottom: 5px;
 
   color:
-    var(--verde-700);
+    var(--verde-800);
 
-  font-size: 1.6rem;
+}
 
-  margin-bottom: 7px;
+
+.estado-proximamente p {
+
+  color:
+    var(--texto-500);
+
+  line-height: 1.55;
 
 }
 
@@ -1640,12 +1520,12 @@ button {
   width: 100%;
   height: 100dvh;
 
-  background:
-    #000;
-
   z-index: 99999;
 
   overflow: hidden;
+
+  background:
+    #000;
 
 }
 
@@ -1668,15 +1548,15 @@ button {
 
   inset: 0;
 
-  pointer-events: none;
-
   z-index: 100;
+
+  pointer-events: none;
 
 }
 
 
 /* =========================================================
-   BARRA AR
+   BARRA SUPERIOR AR
    ========================================================= */
 
 .barra-superior-ar {
@@ -1695,24 +1575,21 @@ button {
   display: flex;
 
   align-items: center;
-
   justify-content: space-between;
-
-  pointer-events: none;
 
 }
 
 
 .estado-principal-ar {
 
+  padding:
+    10px 16px;
+
   display: flex;
 
   align-items: center;
 
   gap: 11px;
-
-  padding:
-    10px 16px;
 
   border:
     1px solid rgba(255,255,255,0.12);
@@ -1722,11 +1599,11 @@ button {
   background:
     rgba(0,0,0,0.66);
 
-  backdrop-filter:
-    blur(10px);
-
   color:
     white;
+
+  backdrop-filter:
+    blur(10px);
 
 }
 
@@ -1761,12 +1638,12 @@ button {
 
 .estado-principal-ar small {
 
+  color:
+    rgba(255,255,255,0.55);
+
   font-size: 0.6rem;
 
   letter-spacing: 0.12em;
-
-  color:
-    rgba(255,255,255,0.55);
 
 }
 
@@ -1775,15 +1652,13 @@ button {
 
   font-size: 0.83rem;
 
-  font-weight: 600;
-
 }
 
 
 .btn-cerrar-ar {
 
-  width: 46px;
-  height: 46px;
+  width: 50px;
+  height: 50px;
 
   border: none;
 
@@ -1792,12 +1667,10 @@ button {
   background:
     rgba(0,0,0,0.68);
 
-  backdrop-filter:
-    blur(8px);
+  color:
+    white;
 
-  color: white;
-
-  font-size: 1.35rem;
+  font-size: 1.4rem;
 
   cursor: pointer;
 
@@ -1836,20 +1709,17 @@ button {
     rgba(0,0,0,0.58);
 
   color:
-    rgba(255,255,255,0.90);
+    white;
 
   font-size: 0.78rem;
 
   white-space: nowrap;
 
-  backdrop-filter:
-    blur(7px);
-
 }
 
 
 /* =========================================================
-   GUÍA TARGET
+   MARCO DE BÚSQUEDA
    ========================================================= */
 
 .guia-target {
@@ -1860,10 +1730,10 @@ button {
   top: 50%;
 
   transform:
-    translate(-50%, -50%);
+    translate(-50%,-50%);
 
   width:
-    min(68vw, 320px);
+    min(68vw,320px);
 
   aspect-ratio:
     4 / 5;
@@ -1879,7 +1749,7 @@ button {
   height: 38px;
 
   border-color:
-    rgba(255,255,255,0.85);
+    rgba(255,255,255,0.90);
 
   border-style: solid;
 
@@ -1894,9 +1764,6 @@ button {
   border-width:
     3px 0 0 3px;
 
-  border-radius:
-    10px 0 0 0;
-
 }
 
 
@@ -1907,9 +1774,6 @@ button {
 
   border-width:
     3px 3px 0 0;
-
-  border-radius:
-    0 10px 0 0;
 
 }
 
@@ -1922,9 +1786,6 @@ button {
   border-width:
     0 0 3px 3px;
 
-  border-radius:
-    0 0 0 10px;
-
 }
 
 
@@ -1935,9 +1796,6 @@ button {
 
   border-width:
     0 3px 3px 0;
-
-  border-radius:
-    0 0 10px 0;
 
 }
 
@@ -1950,14 +1808,12 @@ button {
   left: 50%;
 
   transform:
-    translate(-50%, -50%);
+    translate(-50%,-50%);
 
   color:
     rgba(255,255,255,0.75);
 
   font-size: 1.7rem;
-
-  font-weight: 300;
 
 }
 
@@ -1982,9 +1838,9 @@ button {
     translateX(-50%);
 
   color:
-    rgba(255,255,255,0.80);
+    rgba(255,255,255,0.88);
 
-  font-size: 0.78rem;
+  font-size: 0.82rem;
 
   text-align: center;
 
@@ -1997,7 +1853,7 @@ button {
 
 
 /* =========================================================
-   CAPTURA
+   BOTÓN CAPTURAR
    ========================================================= */
 
 .btn-capturar {
@@ -2044,11 +1900,6 @@ button {
   box-shadow:
     0 8px 25px rgba(0,0,0,0.30);
 
-  transition:
-    background 0.2s ease,
-    opacity 0.2s ease,
-    transform 0.2s ease;
-
 }
 
 
@@ -2067,17 +1918,8 @@ button {
 }
 
 
-.btn-capturar:not(:disabled):active {
-
-  transform:
-    translateX(-50%)
-    scale(0.97);
-
-}
-
-
 /* =========================================================
-   TABLETS
+   TABLET
    ========================================================= */
 
 @media screen and (max-width: 1000px) {
@@ -2085,6 +1927,7 @@ button {
   .panel-izquierdo {
 
     width: 34%;
+
     min-width: 240px;
 
     padding: 25px;
@@ -2099,20 +1942,11 @@ button {
 
   }
 
-
-  .grid-caracteristicas
-  .tarjeta-caracteristica:last-child {
-
-    grid-column:
-      1 / -1;
-
-  }
-
 }
 
 
 /* =========================================================
-   MÓVILES
+   MÓVIL
    ========================================================= */
 
 @media screen and (max-width: 768px) {
@@ -2129,6 +1963,7 @@ button {
   .panel-izquierdo {
 
     width: 100%;
+
     min-width: 0;
 
     padding:
@@ -2147,13 +1982,6 @@ button {
   .panel-derecho-imagen {
 
     display: none;
-
-  }
-
-
-  .seccion-inferior {
-
-    height: 82vh;
 
   }
 
@@ -2198,13 +2026,6 @@ button {
   }
 
 
-  .icono-leyenda {
-
-    width: 50px;
-
-  }
-
-
   .pie-sidebar {
 
     display: none;
@@ -2222,58 +2043,10 @@ button {
   }
 
 
-  .area-texto h2 {
-
-    font-size: 2.2rem;
-
-  }
-
-
-  .descripcion-principal {
-
-    font-size: 1rem;
-
-  }
-
-
   .grid-caracteristicas {
 
     grid-template-columns:
       1fr;
-
-    gap: 14px;
-
-    margin-top: 30px;
-
-  }
-
-
-  .grid-caracteristicas
-  .tarjeta-caracteristica:last-child {
-
-    grid-column:
-      auto;
-
-  }
-
-
-  .tarjeta-caracteristica {
-
-    padding: 20px;
-
-  }
-
-
-  .panel-explorar {
-
-    padding: 24px;
-
-  }
-
-
-  .decoracion-panel {
-
-    display: none;
 
   }
 
@@ -2297,20 +2070,43 @@ button {
   }
 
 
+  /* =============================================
+     TARGET EN MÓVIL
+     ============================================= */
+
   .panel-target {
 
     flex-direction: column;
 
     align-items: stretch;
 
+    gap: 22px;
+
+    padding: 20px;
+
   }
 
 
   .imagen-target {
 
-    width: 170px;
+    width: auto;
+
+    max-width: 100%;
+
+    height: auto;
+
+    max-height: 390px;
 
     align-self: center;
+
+    object-fit: contain;
+
+  }
+
+
+  .info-target {
+
+    width: 100%;
 
   }
 
@@ -2360,18 +2156,11 @@ button {
 
   }
 
-
-  .estado-principal-ar strong {
-
-    white-space: normal;
-
-  }
-
 }
 
 
 /* =========================================================
-   MÓVILES PEQUEÑOS
+   MÓVIL PEQUEÑO
    ========================================================= */
 
 @media screen and (max-width: 390px) {
@@ -2401,26 +2190,6 @@ button {
   .estado-target {
 
     font-size: 0.7rem;
-
-  }
-
-}
-
-
-/* =========================================================
-   REDUCIR ANIMACIONES
-   ========================================================= */
-
-@media
-(prefers-reduced-motion: reduce) {
-
-  * {
-
-    animation-duration:
-      0.01ms !important;
-
-    transition-duration:
-      0.01ms !important;
 
   }
 
