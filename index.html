@@ -30,7 +30,7 @@
 
 
   <!-- =====================================================
-       MINDAR IMAGE TRACKING
+       MINDAR
        ===================================================== -->
 
   <script
@@ -67,8 +67,6 @@
     <header class="seccion-superior">
 
 
-      <!-- LOGO -->
-
       <div class="panel-izquierdo">
 
         <div class="contenedor-logo">
@@ -83,8 +81,6 @@
 
       </div>
 
-
-      <!-- HERO -->
 
       <div class="panel-derecho-imagen">
 
@@ -133,7 +129,7 @@
 
 
       <!-- =================================================
-           MENÚ LATERAL
+           SIDEBAR
            ================================================= -->
 
       <aside
@@ -163,10 +159,6 @@
         </div>
 
 
-
-        <!-- =================================================
-             LEYENDAS
-             ================================================= -->
 
         <nav id="menu-leyendas">
 
@@ -324,8 +316,6 @@
 
 
 
-        <!-- PIE -->
-
         <div class="pie-sidebar">
 
           <span class="simbolo-sidebar">
@@ -454,8 +444,10 @@
               </h3>
 
               <p>
+
                 Abre el menú lateral y selecciona la historia
                 que deseas descubrir.
+
               </p>
 
             </div>
@@ -491,10 +483,6 @@
   >
 
 
-    <!-- ===================================================
-         UNA SOLA ESCENA MINDAR PARA TODAS LAS LEYENDAS
-         =================================================== -->
-
     <a-scene
 
       id="escena-ar"
@@ -528,21 +516,17 @@
 
 
       <!-- =================================================
-           ASSETS
+           MODELOS
            ================================================= -->
 
       <a-assets timeout="30000">
 
-
-        <!-- GUAJOJÓ -->
 
         <a-asset-item
           id="modelo-guajojo-asset"
           src="/guajojo.glb"
         ></a-asset-item>
 
-
-        <!-- CARRETÓN -->
 
         <a-asset-item
           id="modelo-carreton-asset"
@@ -577,43 +561,15 @@
 
 
       <!-- =================================================
-           TARGET 0 = GUAJOJÓ
-           ================================================= -->
+           TARGET 0 = CARRETÓN
+           =================================================
 
-      <a-entity
+           IMPORTANTE:
 
-        id="target-guajojo"
+           Tu captura demuestra que en TU archivo
+           leyendas-targets.mind el Carretón corresponde
+           al índice 0.
 
-        mindar-image-target="
-          targetIndex: 0
-        "
-
-      >
-
-
-        <a-entity
-
-          id="modelo-guajojo"
-
-          gltf-model="#modelo-guajojo-asset"
-
-          position="0 0 0.25"
-
-          rotation="90 0 0"
-
-          scale="0.45 0.45 0.45"
-
-          visible="false"
-
-        ></a-entity>
-
-
-      </a-entity>
-
-
-
-      <!-- =================================================
-           TARGET 1 = CARRETÓN
            ================================================= -->
 
       <a-entity
@@ -621,7 +577,7 @@
         id="target-carreton"
 
         mindar-image-target="
-          targetIndex: 1
+          targetIndex: 0
         "
 
       >
@@ -638,6 +594,46 @@
           rotation="0 0 0"
 
           scale="0.35 0.35 0.35"
+
+          visible="false"
+
+        ></a-entity>
+
+
+      </a-entity>
+
+
+
+      <!-- =================================================
+           TARGET 1 = GUAJOJÓ
+           =================================================
+
+           Tu Guajojó está guardado como índice 1.
+
+           ================================================= -->
+
+      <a-entity
+
+        id="target-guajojo"
+
+        mindar-image-target="
+          targetIndex: 1
+        "
+
+      >
+
+
+        <a-entity
+
+          id="modelo-guajojo"
+
+          gltf-model="#modelo-guajojo-asset"
+
+          position="0 0 0.25"
+
+          rotation="90 0 0"
+
+          scale="0.45 0.45 0.45"
 
           visible="false"
 
@@ -711,15 +707,10 @@
 
 
         <button
-
           id="btn-cerrar-ar"
-
           class="btn-cerrar-ar"
-
           type="button"
-
           aria-label="Cerrar realidad aumentada"
-
         >
 
           ✕
@@ -730,8 +721,6 @@
       </div>
 
 
-
-      <!-- ESTADO -->
 
       <div
         id="estado-target"
@@ -744,7 +733,7 @@
 
 
 
-      <!-- GUÍA -->
+      <!-- GUÍA VISUAL -->
 
       <div class="guia-target">
 
@@ -762,8 +751,6 @@
 
 
 
-      <!-- INSTRUCCIÓN -->
-
       <div class="instruccion-ar">
 
         <span id="texto-instruccion-ar">
@@ -776,18 +763,11 @@
 
 
 
-      <!-- CAPTURAR -->
-
       <button
-
         id="btn-capturar"
-
         class="btn-capturar"
-
         type="button"
-
         disabled
-
       >
 
         <span>
