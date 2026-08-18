@@ -8,7 +8,6 @@
   --verde-800: #063b2b;
   --verde-700: #07563b;
   --verde-600: #087547;
-  --verde-500: #0a9154;
 
   --dorado-600: #ad8425;
   --dorado-500: #c9a33c;
@@ -16,7 +15,6 @@
 
   --crema-100: #fbf8f0;
   --crema-200: #f3eee2;
-  --crema-300: #e8dfcf;
 
   --blanco: #ffffff;
 
@@ -25,17 +23,12 @@
   --texto-500: #6a746f;
 
   --borde:
-    rgba(6, 64, 43, 0.12);
+    rgba(6,64,43,0.12);
 
-  --sombra-suave:
-    0 12px 35px rgba(5, 46, 35, 0.08);
+  --sombra:
+    0 12px 35px rgba(5,46,35,0.10);
 
-  --sombra-media:
-    0 18px 45px rgba(5, 46, 35, 0.15);
-
-  --radio-sm: 10px;
-  --radio-md: 18px;
-  --radio-lg: 28px;
+  --radio: 18px;
 
 }
 
@@ -48,6 +41,7 @@
 
   margin: 0;
   padding: 0;
+
   box-sizing: border-box;
 
 }
@@ -71,49 +65,36 @@ body {
     Arial,
     sans-serif;
 
-  background:
-    var(--crema-100);
-
   color:
     var(--texto-900);
+
+  background:
+    var(--crema-100);
 
   overflow: hidden;
 
 }
 
 
-button {
-
-  font: inherit;
-
-  -webkit-tap-highlight-color:
-    transparent;
-
-}
-
-
 /* =========================================================
-   QUITAR BOTONES VR / AR DE A-FRAME
+   OCULTAR UI NATIVA A-FRAME
    ========================================================= */
 
 .a-enter-vr,
 .a-enter-ar,
 .a-enter-vr-button,
-.a-enter-ar-button {
+.a-enter-ar-button,
+.a-loader-title {
 
   display: none !important;
 
   visibility: hidden !important;
 
-  opacity: 0 !important;
-
-  pointer-events: none !important;
-
 }
 
 
 /* =========================================================
-   CONTENEDOR PRINCIPAL
+   PRINCIPAL
    ========================================================= */
 
 .contenedor-principal {
@@ -122,13 +103,14 @@ button {
   height: 100dvh;
 
   display: flex;
+
   flex-direction: column;
 
 }
 
 
 /* =========================================================
-   CABECERA
+   HEADER
    ========================================================= */
 
 .seccion-superior {
@@ -136,19 +118,23 @@ button {
   width: 100%;
   height: 32vh;
 
-  min-height: 230px;
+  min-height: 220px;
 
   display: flex;
-
-  position: relative;
-
-  z-index: 10;
 
   box-shadow:
     0 6px 25px rgba(0,0,0,0.12);
 
+  position: relative;
+
+  z-index: 5;
+
 }
 
+
+/* =========================================================
+   LOGO
+   ========================================================= */
 
 .panel-izquierdo {
 
@@ -156,17 +142,12 @@ button {
 
   min-width: 300px;
 
-  padding:
-    30px 45px;
+  padding: 30px 45px;
 
   display: flex;
 
   align-items: center;
   justify-content: center;
-
-  position: relative;
-
-  overflow: hidden;
 
   background:
 
@@ -175,43 +156,6 @@ button {
       var(--verde-800),
       var(--verde-900)
     );
-
-}
-
-
-.panel-izquierdo::before {
-
-  content: "";
-
-  position: absolute;
-
-  width: 260px;
-  height: 260px;
-
-  left: -130px;
-  bottom: -150px;
-
-  border:
-    1px solid rgba(222,193,106,0.20);
-
-  border-radius: 50%;
-
-}
-
-
-.panel-izquierdo::after {
-
-  content: "✦";
-
-  position: absolute;
-
-  right: 25px;
-  top: 20px;
-
-  color:
-    rgba(222,193,106,0.40);
-
-  font-size: 28px;
 
 }
 
@@ -226,10 +170,6 @@ button {
   align-items: center;
   justify-content: center;
 
-  position: relative;
-
-  z-index: 2;
-
 }
 
 
@@ -238,14 +178,9 @@ button {
   width: 100%;
   height: 100%;
 
-  max-width: 420px;
-
   object-fit: contain;
 
-  filter:
-    drop-shadow(
-      0 8px 18px rgba(0,0,0,0.20)
-    );
+  max-width: 420px;
 
 }
 
@@ -260,15 +195,14 @@ button {
 
   position: relative;
 
-  overflow: hidden;
-
   background-image:
     url('/fondo-patio.jpg');
 
   background-size: cover;
 
-  background-position:
-    center 45%;
+  background-position: center;
+
+  overflow: hidden;
 
 }
 
@@ -283,9 +217,8 @@ button {
 
     linear-gradient(
       90deg,
-      rgba(5,46,35,0.76) 0%,
-      rgba(5,46,35,0.42) 45%,
-      rgba(5,46,35,0.10) 100%
+      rgba(5,46,35,0.80),
+      rgba(5,46,35,0.25)
     );
 
 }
@@ -296,30 +229,24 @@ button {
   position: absolute;
 
   left: 7%;
-  bottom: 12%;
+  bottom: 15%;
 
   max-width: 650px;
 
-  z-index: 2;
-
   color:
-    var(--blanco);
+    white;
 
 }
 
 
 .etiqueta-hero {
 
-  display: inline-block;
-
-  margin-bottom: 10px;
-
   color:
     var(--dorado-400);
 
   font-size: 0.72rem;
 
-  font-weight: 700;
+  font-weight: bold;
 
   letter-spacing: 0.18em;
 
@@ -328,11 +255,10 @@ button {
 
 .contenido-hero h1 {
 
-  margin-bottom: 12px;
+  margin-top: 10px;
 
   font-family:
     Georgia,
-    "Times New Roman",
     serif;
 
   font-size:
@@ -344,8 +270,6 @@ button {
 
   font-weight: 400;
 
-  line-height: 1.05;
-
 }
 
 
@@ -356,32 +280,28 @@ button {
   color:
     var(--dorado-400);
 
-  font-weight: 400;
+  font-weight: normal;
 
 }
 
 
 .contenido-hero p {
 
-  max-width: 540px;
+  margin-top: 10px;
+
+  line-height: 1.6;
 
   color:
-    rgba(255,255,255,0.90);
-
-  font-size: 1rem;
-
-  line-height: 1.55;
+    rgba(255,255,255,0.88);
 
 }
 
 
 /* =========================================================
-   PARTE INFERIOR
+   INFERIOR
    ========================================================= */
 
 .seccion-inferior {
-
-  width: 100%;
 
   flex: 1;
 
@@ -401,18 +321,12 @@ button {
 .sidebar-verde {
 
   width: 84px;
-  height: 100%;
 
   flex-shrink: 0;
 
   display: flex;
+
   flex-direction: column;
-
-  position: relative;
-
-  z-index: 100;
-
-  overflow: hidden;
 
   background:
 
@@ -422,16 +336,12 @@ button {
       var(--verde-900)
     );
 
-  box-shadow:
-    8px 0 30px rgba(5,46,35,0.12);
+  overflow: hidden;
 
   transition:
-    width 0.35s cubic-bezier(
-      0.22,
-      1,
-      0.36,
-      1
-    );
+    width 0.3s ease;
+
+  z-index: 100;
 
 }
 
@@ -445,10 +355,8 @@ button {
 
 .cabecera-sidebar {
 
-  width: 100%;
-
   padding:
-    18px 14px 12px;
+    18px 14px;
 
 }
 
@@ -462,28 +370,17 @@ button {
 
   align-items: center;
 
-  overflow: hidden;
-
   border: none;
 
-  border-radius:
-    var(--radio-sm);
+  border-radius: 12px;
 
   background:
     rgba(255,255,255,0.08);
 
   color:
-    var(--blanco);
+    white;
 
   cursor: pointer;
-
-}
-
-
-#btn-menu:hover {
-
-  background:
-    rgba(255,255,255,0.14);
 
 }
 
@@ -494,12 +391,9 @@ button {
 
   flex-shrink: 0;
 
-  display: flex;
+  text-align: center;
 
-  align-items: center;
-  justify-content: center;
-
-  font-size: 1.55rem;
+  font-size: 1.5rem;
 
 }
 
@@ -508,14 +402,11 @@ button {
 
   opacity: 0;
 
-  white-space: nowrap;
-
   font-family:
     Georgia,
     serif;
 
-  transition:
-    opacity 0.2s ease;
+  white-space: nowrap;
 
 }
 
@@ -529,14 +420,12 @@ button {
 
 
 /* =========================================================
-   BOTONES LEYENDAS
+   MENÚ
    ========================================================= */
 
 #menu-leyendas {
 
   flex: 1;
-
-  width: 100%;
 
   display: flex;
 
@@ -545,7 +434,7 @@ button {
   gap: 7px;
 
   padding:
-    4px 14px 20px;
+    4px 14px;
 
   overflow-y: auto;
 
@@ -561,13 +450,10 @@ button {
 
   align-items: center;
 
-  overflow: hidden;
-
   border:
     1px solid transparent;
 
-  border-radius:
-    var(--radio-sm);
+  border-radius: 12px;
 
   background:
     transparent;
@@ -575,14 +461,9 @@ button {
   color:
     rgba(255,255,255,0.82);
 
-  text-align: left;
-
   cursor: pointer;
 
-  transition:
-    background 0.2s ease,
-    border-color 0.2s ease,
-    color 0.2s ease;
+  text-align: left;
 
 }
 
@@ -591,9 +472,6 @@ button {
 
   background:
     rgba(255,255,255,0.08);
-
-  color:
-    white;
 
 }
 
@@ -606,9 +484,6 @@ button {
   border-color:
     rgba(222,193,106,0.40);
 
-  color:
-    white;
-
 }
 
 
@@ -618,34 +493,22 @@ button {
 
   flex-shrink: 0;
 
-  display: flex;
+  text-align: center;
 
-  align-items: center;
-  justify-content: center;
-
-  font-size: 1.35rem;
+  font-size: 1.3rem;
 
 }
 
 
 .contenido-btn-menu {
 
+  opacity: 0;
+
   display: flex;
 
   flex-direction: column;
 
-  gap: 3px;
-
-  opacity: 0;
-
   white-space: nowrap;
-
-  transform:
-    translateX(-5px);
-
-  transition:
-    opacity 0.25s ease,
-    transform 0.25s ease;
 
 }
 
@@ -654,9 +517,6 @@ button {
 .contenido-btn-menu {
 
   opacity: 1;
-
-  transform:
-    translateX(0);
 
 }
 
@@ -667,38 +527,30 @@ button {
     Georgia,
     serif;
 
-  font-size: 0.96rem;
-
-  font-weight: 500;
-
 }
 
 
 .contenido-btn-menu small {
 
   color:
-    rgba(255,255,255,0.54);
+    rgba(255,255,255,0.55);
 
-  font-size: 0.74rem;
+  margin-top: 3px;
 
 }
 
 
 /* =========================================================
-   PIE SIDEBAR
+   PIE
    ========================================================= */
 
 .pie-sidebar {
 
   min-height: 60px;
 
-  margin-top: auto;
-
   display: flex;
 
   align-items: center;
-
-  overflow: hidden;
 
   border-top:
     1px solid rgba(255,255,255,0.08);
@@ -715,10 +567,10 @@ button {
 
   flex-shrink: 0;
 
+  text-align: center;
+
   color:
     var(--dorado-400);
-
-  text-align: center;
 
 }
 
@@ -728,11 +580,6 @@ button {
   opacity: 0;
 
   white-space: nowrap;
-
-  font-size: 0.75rem;
-
-  transition:
-    opacity 0.2s ease;
 
 }
 
@@ -766,8 +613,8 @@ button {
 
     radial-gradient(
       circle at 90% 10%,
-      rgba(201,163,60,0.07),
-      transparent 28%
+      rgba(201,163,60,0.08),
+      transparent 30%
     ),
 
     var(--crema-100);
@@ -781,8 +628,8 @@ button {
 
   max-width: 1080px;
 
-  margin-left: auto;
-  margin-right: auto;
+  margin:
+    0 auto;
 
 }
 
@@ -800,48 +647,36 @@ button {
 
   font-weight: 800;
 
-  letter-spacing: 0.16em;
-
-}
-
-
-.sobrelinea.claro {
-
-  color:
-    var(--dorado-400);
+  letter-spacing: 0.15em;
 
 }
 
 
 .area-texto h2 {
 
-  margin-bottom: 20px;
+  color:
+    var(--verde-800);
 
   font-family:
     Georgia,
     serif;
 
-  color:
-    var(--verde-800);
-
   font-size:
     clamp(
-      2.2rem,
+      2.1rem,
       4vw,
-      3.6rem
+      3.5rem
     );
 
-  font-weight: 400;
+  font-weight: normal;
 
-  line-height: 1.1;
+  margin-bottom: 20px;
 
 }
 
 
 .descripcion-principal,
 .descripcion-leyenda {
-
-  max-width: 800px;
 
   color:
     var(--texto-700);
@@ -854,7 +689,7 @@ button {
 
 
 /* =========================================================
-   TARJETAS
+   INICIO
    ========================================================= */
 
 .grid-caracteristicas {
@@ -862,11 +697,11 @@ button {
   display: grid;
 
   grid-template-columns:
-    repeat(3, 1fr);
+    repeat(3,1fr);
 
   gap: 18px;
 
-  margin-top: 42px;
+  margin-top: 40px;
 
 }
 
@@ -875,46 +710,31 @@ button {
 
   padding: 25px;
 
+  background:
+    rgba(255,255,255,0.75);
+
   border:
     1px solid var(--borde);
 
   border-radius:
-    var(--radio-md);
-
-  background:
-    rgba(255,255,255,0.66);
+    var(--radio);
 
   box-shadow:
-    var(--sombra-suave);
+    var(--sombra);
 
 }
 
 
 .icono-caracteristica {
 
-  width: 48px;
-  height: 48px;
+  font-size: 1.6rem;
 
-  margin-bottom: 18px;
-
-  display: flex;
-
-  align-items: center;
-  justify-content: center;
-
-  border-radius: 14px;
-
-  background:
-    rgba(6,64,43,0.08);
-
-  font-size: 1.4rem;
+  margin-bottom: 15px;
 
 }
 
 
 .tarjeta-caracteristica h3 {
-
-  margin-bottom: 8px;
 
   color:
     var(--verde-800);
@@ -923,9 +743,7 @@ button {
     Georgia,
     serif;
 
-  font-size: 1.25rem;
-
-  font-weight: 500;
+  margin-bottom: 8px;
 
 }
 
@@ -935,87 +753,13 @@ button {
   color:
     var(--texto-500);
 
-  font-size: 0.93rem;
-
   line-height: 1.6;
 
 }
 
 
 /* =========================================================
-   PANEL EXPLORAR
-   ========================================================= */
-
-.panel-explorar {
-
-  margin-top: 30px;
-
-  padding:
-    28px 32px;
-
-  display: flex;
-
-  align-items: center;
-  justify-content: space-between;
-
-  overflow: hidden;
-
-  border-radius:
-    var(--radio-md);
-
-  background:
-
-    linear-gradient(
-      135deg,
-      var(--verde-800),
-      var(--verde-900)
-    );
-
-  color:
-    white;
-
-}
-
-
-.panel-explorar h3 {
-
-  margin-bottom: 8px;
-
-  font-family:
-    Georgia,
-    serif;
-
-  font-size: 1.8rem;
-
-  font-weight: 400;
-
-}
-
-
-.panel-explorar p {
-
-  color:
-    rgba(255,255,255,0.72);
-
-  line-height: 1.6;
-
-}
-
-
-.decoracion-panel {
-
-  padding-right: 20px;
-
-  color:
-    rgba(222,193,106,0.25);
-
-  font-size: 5rem;
-
-}
-
-
-/* =========================================================
-   LEYENDA
+   CABECERA LEYENDA
    ========================================================= */
 
 .cabecera-leyenda {
@@ -1023,11 +767,10 @@ button {
   display: flex;
 
   align-items: flex-start;
+
   justify-content: space-between;
 
   gap: 30px;
-
-  margin-bottom: 35px;
 
 }
 
@@ -1041,8 +784,8 @@ button {
 
 .insignia-leyenda {
 
-  width: 74px;
-  height: 74px;
+  width: 72px;
+  height: 72px;
 
   flex-shrink: 0;
 
@@ -1051,7 +794,7 @@ button {
   align-items: center;
   justify-content: center;
 
-  border-radius: 22px;
+  border-radius: 20px;
 
   background:
 
@@ -1061,10 +804,10 @@ button {
       var(--verde-900)
     );
 
-  box-shadow:
-    var(--sombra-media);
-
   font-size: 2rem;
+
+  box-shadow:
+    var(--sombra);
 
 }
 
@@ -1089,14 +832,10 @@ button {
 
 
 /* =========================================================
-   PANEL TARGET
+   TARGET
    ========================================================= */
 
 .panel-target {
-
-  margin-top: 30px;
-
-  padding: 28px;
 
   display: flex;
 
@@ -1104,33 +843,22 @@ button {
 
   gap: 32px;
 
-  border:
-    1px solid var(--borde);
-
-  border-radius:
-    var(--radio-md);
+  padding: 28px;
 
   background:
     white;
 
+  border:
+    1px solid var(--borde);
+
+  border-radius:
+    var(--radio);
+
   box-shadow:
-    var(--sombra-suave);
+    var(--sombra);
 
 }
 
-
-/* =========================================================
-   IMAGEN OBJETIVO
-   =========================================================
-   
-   CORREGIDO:
-   
-   NO usamos object-fit: cover.
-   
-   Así la imagen del Carretón y la del Guajojó
-   SIEMPRE se muestran completas.
-   
-   ========================================================= */
 
 .imagen-target {
 
@@ -1142,28 +870,19 @@ button {
 
   max-height: 420px;
 
-  flex-shrink: 0;
-
   display: block;
 
   object-fit: contain;
 
-  object-position: center;
-
-  aspect-ratio: auto;
-
   padding: 8px;
+
+  background:
+    white;
 
   border:
     3px solid var(--verde-700);
 
   border-radius: 16px;
-
-  background:
-    #ffffff;
-
-  box-shadow:
-    0 8px 22px rgba(5,46,35,0.16);
 
 }
 
@@ -1177,8 +896,6 @@ button {
 
 .info-target h3 {
 
-  margin-bottom: 10px;
-
   color:
     var(--verde-800);
 
@@ -1186,9 +903,11 @@ button {
     Georgia,
     serif;
 
-  font-size: 1.45rem;
+  font-size: 1.5rem;
 
-  font-weight: 400;
+  font-weight: normal;
+
+  margin-bottom: 10px;
 
 }
 
@@ -1198,7 +917,7 @@ button {
   color:
     var(--texto-500);
 
-  line-height: 1.65;
+  line-height: 1.7;
 
 }
 
@@ -1209,19 +928,12 @@ button {
 
 .btn-ver-ar {
 
-  min-height: 56px;
-
   margin-top: 22px;
+
+  min-height: 56px;
 
   padding:
     0 28px;
-
-  display: inline-flex;
-
-  align-items: center;
-  justify-content: center;
-
-  gap: 10px;
 
   border: none;
 
@@ -1238,9 +950,7 @@ button {
   color:
     white;
 
-  font-size: 0.95rem;
-
-  font-weight: 700;
+  font-weight: bold;
 
   cursor: pointer;
 
@@ -1264,20 +974,18 @@ button {
     1px solid var(--borde);
 
   border-radius:
-    var(--radio-md);
+    var(--radio);
 
   background:
-    rgba(255,255,255,0.72);
+    rgba(255,255,255,0.78);
 
   box-shadow:
-    var(--sombra-suave);
+    var(--sombra);
 
 }
 
 
 .historia-leyenda h3 {
-
-  margin-bottom: 18px;
 
   color:
     var(--verde-800);
@@ -1288,7 +996,9 @@ button {
 
   font-size: 1.65rem;
 
-  font-weight: 400;
+  font-weight: normal;
+
+  margin-bottom: 18px;
 
 }
 
@@ -1302,11 +1012,7 @@ button {
     Georgia,
     serif;
 
-  font-size: 1.07rem;
-
   line-height: 1.9;
-
-  text-align: justify;
 
 }
 
@@ -1321,23 +1027,21 @@ button {
 
   padding: 22px;
 
-  border:
-    1px solid rgba(10,145,84,0.25);
-
-  border-radius:
-    var(--radio-md);
+  text-align: center;
 
   background:
     rgba(10,145,84,0.08);
 
-  text-align: center;
+  border:
+    1px solid rgba(10,145,84,0.25);
+
+  border-radius:
+    var(--radio);
 
 }
 
 
 .mensaje-capturado h3 {
-
-  margin-bottom: 7px;
 
   color:
     var(--verde-700);
@@ -1345,8 +1049,6 @@ button {
   font-family:
     Georgia,
     serif;
-
-  font-size: 1.6rem;
 
 }
 
@@ -1357,10 +1059,6 @@ button {
 
 .multimedia-leyenda {
 
-  margin-top: 30px;
-
-  padding: 25px;
-
   display: grid;
 
   grid-template-columns:
@@ -1368,17 +1066,41 @@ button {
 
   gap: 25px;
 
-  border:
-    1px solid var(--borde);
+  margin-top: 30px;
 
-  border-radius:
-    var(--radio-md);
+  padding: 25px;
 
   background:
     white;
 
+  border:
+    1px solid var(--borde);
+
+  border-radius:
+    var(--radio);
+
   box-shadow:
-    var(--sombra-suave);
+    var(--sombra);
+
+}
+
+
+.reproductor-leyenda {
+
+  display: flex;
+
+  flex-direction: column;
+
+  justify-content: center;
+
+}
+
+
+.reproductor-leyenda audio {
+
+  width: 100%;
+
+  margin-top: 20px;
 
 }
 
@@ -1398,115 +1120,34 @@ button {
 }
 
 
-.reproductor-leyenda {
-
-  padding: 20px;
-
-  display: flex;
-
-  flex-direction: column;
-
-  justify-content: center;
-
-}
-
-
-.reproductor-leyenda h3 {
-
-  margin-bottom: 10px;
-
-  color:
-    var(--verde-800);
-
-  font-family:
-    Georgia,
-    serif;
-
-  font-size: 1.4rem;
-
-  font-weight: 400;
-
-}
-
-
-.reproductor-leyenda p {
-
-  margin-bottom: 20px;
-
-  color:
-    var(--texto-500);
-
-  line-height: 1.6;
-
-}
-
-
-.reproductor-leyenda audio {
-
-  width: 100%;
-
-}
-
-
 /* =========================================================
    PRÓXIMAMENTE
    ========================================================= */
 
 .estado-proximamente {
 
-  margin-top: 28px;
+  margin-top: 30px;
 
   padding: 25px;
 
   display: flex;
 
-  align-items: center;
-
-  gap: 18px;
-
-  border:
-    1px solid rgba(201,163,60,0.28);
+  gap: 20px;
 
   border-radius:
-    var(--radio-md);
+    var(--radio);
 
   background:
-    rgba(201,163,60,0.08);
+    rgba(201,163,60,0.10);
 
-}
-
-
-.estado-proximamente .icono {
-
-  font-size: 2rem;
-
-}
-
-
-.estado-proximamente strong {
-
-  display: block;
-
-  margin-bottom: 5px;
-
-  color:
-    var(--verde-800);
-
-}
-
-
-.estado-proximamente p {
-
-  color:
-    var(--texto-500);
-
-  line-height: 1.55;
+  border:
+    1px solid rgba(201,163,60,0.30);
 
 }
 
 
 /* =========================================================
-   PANTALLA AR
+   AR
    ========================================================= */
 
 .pantalla-ar {
@@ -1520,12 +1161,12 @@ button {
   width: 100%;
   height: 100dvh;
 
+  background:
+    black;
+
   z-index: 99999;
 
   overflow: hidden;
-
-  background:
-    #000;
 
 }
 
@@ -1556,7 +1197,7 @@ button {
 
 
 /* =========================================================
-   BARRA SUPERIOR AR
+   AR CABECERA
    ========================================================= */
 
 .barra-superior-ar {
@@ -1574,44 +1215,42 @@ button {
 
   display: flex;
 
-  align-items: center;
   justify-content: space-between;
+
+  align-items: center;
 
 }
 
 
 .estado-principal-ar {
 
-  padding:
-    10px 16px;
-
   display: flex;
 
   align-items: center;
 
-  gap: 11px;
+  gap: 10px;
 
-  border:
-    1px solid rgba(255,255,255,0.12);
-
-  border-radius: 50px;
+  padding:
+    10px 16px;
 
   background:
-    rgba(0,0,0,0.66);
+    rgba(0,0,0,0.70);
 
   color:
     white;
 
+  border-radius: 50px;
+
   backdrop-filter:
-    blur(10px);
+    blur(8px);
 
 }
 
 
 .punto-estado {
 
-  width: 9px;
-  height: 9px;
+  width: 10px;
+  height: 10px;
 
   border-radius: 50%;
 
@@ -1620,7 +1259,7 @@ button {
 
   box-shadow:
     0 0 0 5px
-    rgba(107,217,142,0.13);
+    rgba(107,217,142,0.15);
 
 }
 
@@ -1630,8 +1269,6 @@ button {
   display: flex;
 
   flex-direction: column;
-
-  gap: 2px;
 
 }
 
@@ -1648,13 +1285,6 @@ button {
 }
 
 
-.estado-principal-ar strong {
-
-  font-size: 0.83rem;
-
-}
-
-
 .btn-cerrar-ar {
 
   width: 50px;
@@ -1665,12 +1295,12 @@ button {
   border-radius: 50%;
 
   background:
-    rgba(0,0,0,0.68);
+    rgba(0,0,0,0.72);
 
   color:
     white;
 
-  font-size: 1.4rem;
+  font-size: 1.5rem;
 
   cursor: pointer;
 
@@ -1680,20 +1310,14 @@ button {
 
 
 /* =========================================================
-   ESTADO TARGET
+   ESTADO
    ========================================================= */
 
 .estado-target {
 
   position: absolute;
 
-  top:
-    max(
-      92px,
-      calc(
-        env(safe-area-inset-top) + 80px
-      )
-    );
+  top: 95px;
 
   left: 50%;
 
@@ -1706,12 +1330,10 @@ button {
   border-radius: 50px;
 
   background:
-    rgba(0,0,0,0.58);
+    rgba(0,0,0,0.62);
 
   color:
     white;
-
-  font-size: 0.78rem;
 
   white-space: nowrap;
 
@@ -1719,7 +1341,7 @@ button {
 
 
 /* =========================================================
-   MARCO DE BÚSQUEDA
+   MARCO DE RECONOCIMIENTO
    ========================================================= */
 
 .guia-target {
@@ -1733,7 +1355,10 @@ button {
     translate(-50%,-50%);
 
   width:
-    min(68vw,320px);
+    min(
+      68vw,
+      320px
+    );
 
   aspect-ratio:
     4 / 5;
@@ -1749,9 +1374,10 @@ button {
   height: 38px;
 
   border-color:
-    rgba(255,255,255,0.90);
+    white;
 
-  border-style: solid;
+  border-style:
+    solid;
 
 }
 
@@ -1804,14 +1430,14 @@ button {
 
   position: absolute;
 
-  top: 50%;
   left: 50%;
+  top: 50%;
 
   transform:
     translate(-50%,-50%);
 
   color:
-    rgba(255,255,255,0.75);
+    white;
 
   font-size: 1.7rem;
 
@@ -1819,7 +1445,7 @@ button {
 
 
 /* =========================================================
-   INSTRUCCIÓN AR
+   INSTRUCCIÓN
    ========================================================= */
 
 .instruccion-ar {
@@ -1838,22 +1464,20 @@ button {
     translateX(-50%);
 
   color:
-    rgba(255,255,255,0.88);
-
-  font-size: 0.82rem;
+    white;
 
   text-align: center;
 
   white-space: nowrap;
 
   text-shadow:
-    0 2px 8px rgba(0,0,0,0.8);
+    0 2px 8px black;
 
 }
 
 
 /* =========================================================
-   BOTÓN CAPTURAR
+   CAPTURA
    ========================================================= */
 
 .btn-capturar {
@@ -1871,8 +1495,8 @@ button {
   transform:
     translateX(-50%);
 
-  min-width: 215px;
-  min-height: 56px;
+  min-width: 230px;
+  min-height: 58px;
 
   padding:
     0 28px;
@@ -1882,23 +1506,18 @@ button {
   border-radius: 50px;
 
   background:
-    rgba(44,44,44,0.90);
+    rgba(45,45,45,0.90);
 
   color:
     white;
 
-  font-size: 0.95rem;
-
-  font-weight: 700;
+  font-weight: 800;
 
   cursor: pointer;
 
   opacity: 0.75;
 
   pointer-events: auto;
-
-  box-shadow:
-    0 8px 25px rgba(0,0,0,0.30);
 
 }
 
@@ -1919,37 +1538,11 @@ button {
 
 
 /* =========================================================
-   TABLET
-   ========================================================= */
-
-@media screen and (max-width: 1000px) {
-
-  .panel-izquierdo {
-
-    width: 34%;
-
-    min-width: 240px;
-
-    padding: 25px;
-
-  }
-
-
-  .grid-caracteristicas {
-
-    grid-template-columns:
-      1fr 1fr;
-
-  }
-
-}
-
-
-/* =========================================================
    MÓVIL
    ========================================================= */
 
 @media screen and (max-width: 768px) {
+
 
   .seccion-superior {
 
@@ -1968,13 +1561,6 @@ button {
 
     padding:
       15px 30px;
-
-  }
-
-
-  #logo-principal {
-
-    max-height: 110px;
 
   }
 
@@ -2010,29 +1596,6 @@ button {
   }
 
 
-  .cabecera-sidebar {
-
-    padding:
-      12px 8px 8px;
-
-  }
-
-
-  #menu-leyendas {
-
-    padding:
-      4px 8px 15px;
-
-  }
-
-
-  .pie-sidebar {
-
-    display: none;
-
-  }
-
-
   .area-texto {
 
     margin-left: 68px;
@@ -2051,36 +1614,11 @@ button {
   }
 
 
-  .cabecera-leyenda {
-
-    gap: 18px;
-
-  }
-
-
-  .insignia-leyenda {
-
-    width: 56px;
-    height: 56px;
-
-    border-radius: 16px;
-
-    font-size: 1.5rem;
-
-  }
-
-
-  /* =============================================
-     TARGET EN MÓVIL
-     ============================================= */
-
   .panel-target {
 
     flex-direction: column;
 
     align-items: stretch;
-
-    gap: 22px;
 
     padding: 20px;
 
@@ -2093,20 +1631,9 @@ button {
 
     max-width: 100%;
 
-    height: auto;
-
     max-height: 390px;
 
     align-self: center;
-
-    object-fit: contain;
-
-  }
-
-
-  .info-target {
-
-    width: 100%;
 
   }
 
@@ -2140,21 +1667,22 @@ button {
   }
 
 
-  .historia-leyenda p {
+  .cabecera-leyenda {
 
-    font-size: 1rem;
-
-    text-align: left;
+    gap: 15px;
 
   }
 
 
-  .estado-principal-ar {
+  .insignia-leyenda {
 
-    max-width:
-      calc(100vw - 85px);
+    width: 58px;
+    height: 58px;
+
+    font-size: 1.5rem;
 
   }
+
 
 }
 
@@ -2165,6 +1693,7 @@ button {
 
 @media screen and (max-width: 390px) {
 
+
   .area-texto {
 
     padding-left: 14px;
@@ -2173,9 +1702,9 @@ button {
   }
 
 
-  .area-texto h2 {
+  .estado-target {
 
-    font-size: 1.95rem;
+    font-size: 0.72rem;
 
   }
 
@@ -2186,11 +1715,5 @@ button {
 
   }
 
-
-  .estado-target {
-
-    font-size: 0.7rem;
-
-  }
 
 }
