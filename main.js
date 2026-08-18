@@ -2,98 +2,82 @@ import './style.css';
 
 
 // ============================================================
-// CONFIGURACIÓN
+// ELEMENTOS GENERALES
 // ============================================================
-//
-// IMPORTANTE:
-//
-// Debes tener estos archivos dentro de /public:
-//
-// /guajojo.glb
-// /guajojo-target.mind
-// /guajojo-target.jpg
-// /audio-guajojo.mp3
-// /foto-guajojo.jpg
-//
-// guajojo-target.jpg = imagen física que buscará la cámara.
-// guajojo-target.mind = esa misma imagen compilada con MindAR.
-//
-// ============================================================
-
-const CONFIG_AR = {
-
-  // Archivo compilado por MindAR
-  targetMind:
-    '/guajojo-target.mind',
-
-  // Imagen original utilizada para crear el .mind
-  targetImagen:
-    '/guajojo-target.jpg',
-
-  // Modelo
-  modelo:
-    '/guajojo.glb',
-
-  // Tamaño inicial del Guajojó
-  escala:
-    0.45,
-
-  // Posición relativa respecto a la imagen
-  posicionX:
-    0,
-
-  posicionY:
-    0,
-
-  posicionZ:
-    0.25,
-
-  // Rotación que ya utilizabas
-  rotacion:
-    '90 0 0',
-
-  // Tiempo mínimo que debe detectarse la imagen
-  // para habilitar captura.
-  tiempoParaCapturar:
-    400
-};
-
-
-// ============================================================
-// CDN DE MINDAR
-// ============================================================
-
-const MINDAR_SCRIPT =
-  'https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js';
-
-
-// ============================================================
-// VARIABLES PRINCIPALES
-// ============================================================
-
-const btnMenu =
-  document.getElementById(
-    'btn-menu'
-  );
 
 const sidebar =
   document.getElementById(
     'sidebar'
   );
 
-const btnLeyenda1 =
+
+const btnMenu =
   document.getElementById(
-    'btn-leyenda-1'
+    'btn-menu'
   );
 
-const btnLeyenda2 =
-  document.getElementById(
-    'btn-leyenda-2'
-  );
 
 const areaTexto =
   document.getElementById(
     'contenido-dinamico'
+  );
+
+
+const botonesLeyenda =
+  document.querySelectorAll(
+    '.btn-leyenda'
+  );
+
+
+// ============================================================
+// ELEMENTOS AR
+// ============================================================
+
+const pantallaAR =
+  document.getElementById(
+    'pantalla-ar'
+  );
+
+
+const escenaAR =
+  document.getElementById(
+    'escena-guajojo'
+  );
+
+
+const targetGuajojo =
+  document.getElementById(
+    'target-guajojo'
+  );
+
+
+const modeloGuajojo =
+  document.getElementById(
+    'modelo-guajojo'
+  );
+
+
+const btnCerrarAR =
+  document.getElementById(
+    'btn-cerrar-ar'
+  );
+
+
+const btnCapturar =
+  document.getElementById(
+    'btn-capturar'
+  );
+
+
+const mensajeAR =
+  document.getElementById(
+    'mensaje-ar'
+  );
+
+
+const estadoTarget =
+  document.getElementById(
+    'estado-target'
   );
 
 
@@ -104,288 +88,217 @@ const areaTexto =
 let arActivo =
   false;
 
+
 let arIniciando =
   false;
+
 
 let targetVisible =
   false;
 
-let temporizadorCaptura =
+
+let leyendaActual =
   null;
 
-let mindARCargado =
-  false;
+
+let temporizadorCaptura =
+  null;
 
 
 // ============================================================
 // MENÚ
 // ============================================================
 
-if (btnMenu) {
+btnMenu?.addEventListener(
+  'click',
+  () => {
 
-  btnMenu.addEventListener(
-    'click',
-    () => {
-
-      if (sidebar) {
-
-        sidebar.classList.toggle(
-          'abierto'
-        );
-
-      }
-
-    }
-  );
-
-}
-
-
-// ============================================================
-// MOSTRAR LEYENDA
-// ============================================================
-
-function mostrarLeyenda(
-  titulo,
-  descripcion,
-  contenido = ''
-) {
-
-  if (!areaTexto) {
-    return;
-  }
-
-
-  areaTexto.innerHTML = `
-
-    <h2>
-      ${titulo}
-    </h2>
-
-    <p>
-      ${descripcion}
-    </p>
-
-    ${contenido}
-
-  `;
-
-
-  if (sidebar) {
-
-    sidebar.classList.remove(
+    sidebar.classList.toggle(
       'abierto'
     );
 
   }
-
-}
+);
 
 
 // ============================================================
-// CARGAR SCRIPT EXTERNO
+// SELECCIÓN DE LEYENDAS
 // ============================================================
 
-function cargarScript(
-  src,
-  id
-) {
+botonesLeyenda.forEach(
+  boton => {
 
-  return new Promise(
-    (resolve, reject) => {
+    boton.addEventListener(
+      'click',
+      () => {
 
-      const existente =
-        document.getElementById(
-          id
+        const leyenda =
+          boton.dataset.legend;
+
+
+        seleccionarLeyenda(
+          leyenda
         );
 
 
-      if (existente) {
+        marcarBotonActivo(
+          boton
+        );
 
+
+        // En móvil cerramos el menú
         if (
-          existente.dataset.cargado ===
-          'true'
+          window.innerWidth <=
+          768
         ) {
 
-          resolve();
-
-          return;
-        }
-
-
-        existente.addEventListener(
-          'load',
-          resolve,
-          {
-            once: true
-          }
-        );
-
-
-        existente.addEventListener(
-          'error',
-          reject,
-          {
-            once: true
-          }
-        );
-
-
-        return;
-      }
-
-
-      const script =
-        document.createElement(
-          'script'
-        );
-
-
-      script.id =
-        id;
-
-
-      script.src =
-        src;
-
-
-      script.async =
-        true;
-
-
-      script.onload =
-        () => {
-
-          script.dataset.cargado =
-            'true';
-
-
-          resolve();
-
-        };
-
-
-      script.onerror =
-        () => {
-
-          reject(
-            new Error(
-              'No se pudo cargar la biblioteca MindAR.'
-            )
+          sidebar.classList.remove(
+            'abierto'
           );
 
-        };
+        }
 
-
-      document.head.appendChild(
-        script
-      );
-
-    }
-  );
-
-}
-
-
-// ============================================================
-// ASEGURAR QUE MINDAR ESTÉ DISPONIBLE
-// ============================================================
-
-async function cargarMindAR() {
-
-  if (
-    mindARCargado &&
-    window.AFRAME &&
-    AFRAME.components[
-      'mindar-image-target'
-    ]
-  ) {
-
-    return;
-  }
-
-
-  if (
-    typeof window.AFRAME ===
-    'undefined'
-  ) {
-
-    throw new Error(
-      'A-Frame no está cargado. Mantén el script de A-Frame que ya tienes en index.html.'
+      }
     );
 
   }
-
-
-  // Si MindAR ya estaba cargado
-  if (
-    AFRAME.components[
-      'mindar-image-target'
-    ]
-  ) {
-
-    mindARCargado =
-      true;
-
-    return;
-  }
-
-
-  await cargarScript(
-    MINDAR_SCRIPT,
-    'mindar-image-script'
-  );
-
-
-  // Pequeña espera para que MindAR
-  // termine de registrar sus componentes.
-  await esperar(
-    100
-  );
-
-
-  if (
-    !AFRAME.components[
-      'mindar-image-target'
-    ]
-  ) {
-
-    throw new Error(
-      'MindAR se descargó pero no pudo registrarse con A-Frame.'
-    );
-
-  }
-
-
-  mindARCargado =
-    true;
-
-
-  console.log(
-    '✅ MindAR Image Tracking cargado.'
-  );
-
-}
+);
 
 
 // ============================================================
-// ESPERA
+// MARCAR BOTÓN ACTIVO
 // ============================================================
 
-function esperar(
-  milisegundos
+function marcarBotonActivo(
+  botonSeleccionado
 ) {
 
-  return new Promise(
-    resolve => {
+  botonesLeyenda.forEach(
+    boton => {
 
-      setTimeout(
-        resolve,
-        milisegundos
+      boton.classList.remove(
+        'activo'
       );
 
     }
   );
+
+
+  botonSeleccionado.classList.add(
+    'activo'
+  );
+}
+
+
+// ============================================================
+// ELEGIR LEYENDA
+// ============================================================
+
+function seleccionarLeyenda(
+  leyenda
+) {
+
+  cerrarCamaraAR();
+
+
+  leyendaActual =
+    leyenda;
+
+
+  switch (leyenda) {
+
+
+    case 'carreton':
+
+      mostrarCarreton();
+
+      break;
+
+
+    case 'guajojo':
+
+      mostrarGuajojo();
+
+      break;
+
+
+    case 'duende':
+
+      mostrarDuende();
+
+      break;
+
+
+    case 'viudita':
+
+      mostrarViudita();
+
+      break;
+
+
+    case 'jichi':
+
+      mostrarJichi();
+
+      break;
+
+
+    default:
+
+      mostrarInicio();
+
+      break;
+
+  }
+
+}
+
+
+// ============================================================
+// CONTENIDO BASE DE LEYENDA
+// ============================================================
+
+function crearCabeceraLeyenda({
+  etiqueta,
+  titulo,
+  descripcion,
+  icono
+}) {
+
+  return `
+
+    <div class="cabecera-leyenda">
+
+      <div class="titulo-leyenda">
+
+        <span class="sobrelinea">
+          ${etiqueta}
+        </span>
+
+        <h2>
+          ${titulo}
+        </h2>
+
+        <p class="descripcion-leyenda">
+          ${descripcion}
+        </p>
+
+      </div>
+
+
+      <div
+        class="insignia-leyenda"
+        aria-hidden="true"
+      >
+        ${icono}
+      </div>
+
+    </div>
+
+
+    <div class="barra-leyenda"></div>
+
+  `;
 
 }
 
@@ -394,43 +307,78 @@ function esperar(
 // CARRETÓN
 // ============================================================
 
-if (btnLeyenda1) {
+function mostrarCarreton() {
 
-  btnLeyenda1.addEventListener(
-    'click',
-    () => {
-
-      cerrarCamaraAR();
+  if (!areaTexto) return;
 
 
-      mostrarLeyenda(
+  areaTexto.innerHTML = `
 
-        'El Carretón de la Otra Vida',
+    <div class="vista-leyenda">
 
-        'Se escucha el crujir de las ruedas de madera acercándose en la oscuridad...',
 
-        `
+      ${crearCabeceraLeyenda({
 
-        <div class="historia-leyenda">
+        etiqueta:
+          'LEYENDA TRADICIONAL CRUCEÑA',
 
-          <h3>
-            La Leyenda del Carretón
-          </h3>
+        titulo:
+          'El Carretón de la Otra Vida',
+
+        descripcion:
+          'El crujir de unas antiguas ruedas rompe el silencio de la noche y anuncia el paso de un misterioso carretón.',
+
+        icono:
+          '🛞'
+
+      })}
+
+
+      <div class="historia-leyenda">
+
+        <h3>
+          La leyenda
+        </h3>
+
+        <p>
+          Cuenta la tradición que durante las noches
+          silenciosas puede escucharse el sonido de un
+          antiguo carretón avanzando lentamente por las
+          calles. El sonido de sus ruedas de madera se
+          aproxima en medio de la oscuridad, pero quienes
+          intentan descubrir su origen pocas veces logran
+          encontrarlo.
+        </p>
+
+      </div>
+
+
+      <div class="estado-proximamente">
+
+        <div class="icono">
+          🎮
+        </div>
+
+        <div>
+
+          <strong>
+            Experiencia interactiva en preparación
+          </strong>
 
           <p>
-            Cuenta la tradición que durante las noches
-            silenciosas puede escucharse el sonido de
-            un carretón que avanza por las calles.
+            Esta sección está preparada para incorporar
+            posteriormente audio, animación o una experiencia
+            de realidad aumentada del Carretón.
           </p>
 
         </div>
 
-        `
+      </div>
 
-      );
 
-    }
-  );
+    </div>
+
+  `;
 
 }
 
@@ -439,1082 +387,554 @@ if (btnLeyenda1) {
 // GUAJOJÓ
 // ============================================================
 
-if (btnLeyenda2) {
+function mostrarGuajojo() {
 
-  btnLeyenda2.addEventListener(
-    'click',
-    async () => {
-
-      cerrarCamaraAR();
+  if (!areaTexto) return;
 
 
-      // ======================================================
-      // CARGAR MINDAR ANTES DE CREAR LA ESCENA
-      // ======================================================
+  areaTexto.innerHTML = `
 
-      try {
-
-        await cargarMindAR();
-
-      } catch (error) {
-
-        console.error(
-          error
-        );
+    <div class="vista-leyenda">
 
 
-        mostrarLeyenda(
+      ${crearCabeceraLeyenda({
 
+        etiqueta:
+          'LEYENDA DEL ORIENTE BOLIVIANO',
+
+        titulo:
           'El Guajojó',
 
-          'No fue posible cargar el sistema de realidad aumentada.',
+        descripcion:
+          'Un canto melancólico se escucha entre la vegetación. Encuentra la imagen objetivo y descubre al Guajojó mediante realidad aumentada.',
 
-          `
+        icono:
+          '🌙'
 
-          <div
-            style="
-              margin-top: 20px;
-              padding: 15px;
-              background: #ffebee;
-              border: 2px solid #c62828;
-              border-radius: 12px;
-              color: #b71c1c;
-            "
-          >
-
-            <strong>
-              Error:
-            </strong>
-
-            ${error.message}
-
-          </div>
-
-          `
-
-        );
+      })}
 
 
-        return;
-      }
+      <!-- TARGET -->
+
+      <div class="panel-target">
 
 
-      // ======================================================
-      // MOSTRAR CONTENIDO
-      // ======================================================
-
-      mostrarLeyenda(
-
-        'El Guajojó',
-
-        'Un canto melancólico resuena en la selva. Encuentra la imagen escondida para descubrir al Guajojó.',
-
-        `
-
-
-        <!-- ================================================= -->
-        <!-- EXPLICACIÓN                                       -->
-        <!-- ================================================= -->
-
-        <div
-          style="
-            margin: 20px 0;
-            padding: 15px;
-            background: #f4f8f4;
-            border-left: 5px solid #1b5e20;
-            border-radius: 10px;
-          "
+        <img
+          src="/guajojo-target.jpg"
+          alt="Imagen objetivo para encontrar al Guajojó"
+          class="imagen-target"
         >
 
-          <strong>
-            🔎 ¿Cómo funciona?
-          </strong>
 
-          <p
-            style="
-              margin: 8px 0 0 0;
-            "
+        <div class="info-target">
+
+          <span class="sobrelinea">
+            EXPERIENCIA AR
+          </span>
+
+
+          <h3>
+            Encuentra al Guajojó
+          </h3>
+
+
+          <p>
+            Busca físicamente esta imagen con la cámara.
+            Cuando el sistema la reconozca, el modelo 3D
+            del Guajojó aparecerá anclado sobre ella.
+          </p>
+
+
+          <button
+            id="btn-abrir-ar"
+            class="btn-ver-ar"
+            type="button"
           >
+            <span>
+              📱
+            </span>
 
-            Busca con la cámara la imagen objetivo.
+            INICIAR EXPERIENCIA AR
+          </button>
 
-            Cuando la cámara la reconozca,
-            el Guajojó aparecerá sobre ella.
+        </div>
 
+
+      </div>
+
+
+
+      <!-- CONTENIDO CAPTURADO -->
+
+      <div id="contenido-capturado">
+
+
+        <div class="mensaje-capturado">
+
+          <h3>
+            ✨ ¡Guajojó capturado!
+          </h3>
+
+          <p>
+            Has descubierto una de las leyendas más
+            conocidas del oriente boliviano.
           </p>
 
         </div>
 
 
-        <!-- ================================================= -->
-        <!-- MINIATURA DEL OBJETIVO                             -->
-        <!-- ================================================= -->
 
-        <div
-          style="
-            text-align: center;
-            margin: 20px 0;
-          "
-        >
+        <div class="multimedia-leyenda">
 
-          <p
-            style="
-              font-weight: bold;
-              margin-bottom: 10px;
-            "
-          >
 
-            Imagen que debes encontrar:
+          <div class="reproductor-leyenda">
 
-          </p>
+            <span class="sobrelinea">
+              EXPERIENCIA SONORA
+            </span>
+
+            <h3>
+              Escucha su canto
+            </h3>
+
+            <p>
+              Reproduce el audio y escucha el característico
+              sonido asociado al Guajojó.
+            </p>
+
+
+            <audio
+              id="audio-guajojo"
+              controls
+            >
+
+              <source
+                src="/audio-guajojo.mp3"
+                type="audio/mpeg"
+              >
+
+              Tu navegador no soporta audio.
+
+            </audio>
+
+          </div>
 
 
           <img
-
-            src="${CONFIG_AR.targetImagen}"
-
-            alt="Imagen objetivo del Guajojó"
-
-            style="
-              width: 180px;
-              max-width: 70%;
-              border-radius: 12px;
-              border: 3px solid #1b5e20;
-              box-shadow: 0 4px 14px rgba(0,0,0,0.25);
-            "
-
+            src="/foto-guajojo.jpg"
+            alt="Fotografía del Guajojó"
+            class="foto-leyenda"
           >
-
-        </div>
-
-
-        <!-- ================================================= -->
-        <!-- BOTÓN ABRIR AR                                    -->
-        <!-- ================================================= -->
-
-        <button
-
-          id="btn-abrir-ar"
-
-          class="btn-ver-ar"
-
-          type="button"
-
-        >
-
-          📱 BUSCAR AL GUAJOJÓ EN AR
-
-        </button>
-
-
-
-        <!-- ================================================= -->
-        <!-- PANTALLA AR                                       -->
-        <!-- ================================================= -->
-
-        <div
-
-          id="pantalla-ar"
-
-          style="
-            display: none;
-            position: fixed;
-            inset: 0;
-            width: 100%;
-            height: 100%;
-            background: #000;
-            z-index: 9999;
-            overflow: hidden;
-          "
-
-        >
-
-
-          <!-- =============================================== -->
-          <!-- ESCENA MINDAR                                   -->
-          <!-- =============================================== -->
-
-          <a-scene
-
-            id="escena-guajojo"
-
-            embedded
-
-            mindar-image="
-              imageTargetSrc: ${CONFIG_AR.targetMind};
-              autoStart: false;
-              maxTrack: 1;
-            "
-
-            color-space="sRGB"
-
-            renderer="
-              colorManagement: true;
-              physicallyCorrectLights: true;
-              alpha: true;
-              antialias: true;
-            "
-
-            vr-mode-ui="
-              enabled: false
-            "
-
-            device-orientation-permission-ui="
-              enabled: false
-            "
-
-            style="
-              position: absolute;
-              inset: 0;
-              width: 100%;
-              height: 100%;
-              z-index: 1;
-            "
-
-          >
-
-
-            <!-- ============================================= -->
-            <!-- RECURSOS                                      -->
-            <!-- ============================================= -->
-
-            <a-assets
-              timeout="20000"
-            >
-
-              <a-asset-item
-
-                id="modelo-guajojo-asset"
-
-                src="${CONFIG_AR.modelo}"
-
-              ></a-asset-item>
-
-            </a-assets>
-
-
-
-            <!-- ============================================= -->
-            <!-- CÁMARA                                        -->
-            <!-- ============================================= -->
-            <!--                                               -->
-            <!-- IMPORTANTE:                                   -->
-            <!--                                               -->
-            <!-- look-controls DESACTIVADO.                    -->
-            <!-- No usamos giroscopio.                         -->
-            <!--                                               -->
-            <!-- ============================================= -->
-
-            <a-camera
-
-              id="camara-mindar"
-
-              position="0 0 0"
-
-              look-controls="
-                enabled: false
-              "
-
-              wasd-controls="
-                enabled: false
-              "
-
-            ></a-camera>
-
-
-
-            <!-- ============================================= -->
-            <!-- IMAGEN OBJETIVO                               -->
-            <!-- ============================================= -->
-            <!--                                               -->
-            <!-- MindAR moverá automáticamente esta entidad    -->
-            <!-- cuando encuentre la imagen.                   -->
-            <!--                                               -->
-            <!-- ============================================= -->
-
-            <a-entity
-
-              id="target-guajojo"
-
-              mindar-image-target="
-                targetIndex: 0
-              "
-
-            >
-
-
-              <!-- =========================================== -->
-              <!-- GUAJOJÓ                                     -->
-              <!-- =========================================== -->
-
-              <a-entity
-
-                id="modelo-guajojo"
-
-                gltf-model="#modelo-guajojo-asset"
-
-                position="
-                  ${CONFIG_AR.posicionX}
-                  ${CONFIG_AR.posicionY}
-                  ${CONFIG_AR.posicionZ}
-                "
-
-                rotation="
-                  ${CONFIG_AR.rotacion}
-                "
-
-                scale="
-                  ${CONFIG_AR.escala}
-                  ${CONFIG_AR.escala}
-                  ${CONFIG_AR.escala}
-                "
-
-              ></a-entity>
-
-
-              <!-- =========================================== -->
-              <!-- SOMBRA / BASE SUAVE                         -->
-              <!-- =========================================== -->
-
-              <a-circle
-
-                position="0 0 0.02"
-
-                rotation="0 0 0"
-
-                radius="0.28"
-
-                color="#000000"
-
-                opacity="0.15"
-
-              ></a-circle>
-
-
-            </a-entity>
-
-
-
-            <!-- ============================================= -->
-            <!-- LUCES                                         -->
-            <!-- ============================================= -->
-
-            <a-light
-
-              type="ambient"
-
-              color="#ffffff"
-
-              intensity="2"
-
-            ></a-light>
-
-
-            <a-light
-
-              type="directional"
-
-              color="#ffffff"
-
-              intensity="1.4"
-
-              position="1 2 3"
-
-            ></a-light>
-
-
-          </a-scene>
-
-
-
-          <!-- =============================================== -->
-          <!-- INTERFAZ                                        -->
-          <!-- =============================================== -->
-
-          <div
-
-            id="mensaje-ar"
-
-            style="
-              position: absolute;
-              top: 24px;
-              left: 50%;
-              transform: translateX(-50%);
-              width: max-content;
-              max-width: 72%;
-              padding: 12px 20px;
-              background: rgba(0,0,0,0.82);
-              color: white;
-              border-radius: 30px;
-              font-size: 16px;
-              font-weight: bold;
-              text-align: center;
-              z-index: 100;
-              pointer-events: none;
-              box-shadow: 0 4px 15px rgba(0,0,0,0.4);
-            "
-
-          >
-
-            ⏳ Iniciando cámara...
-
-          </div>
-
-
-
-          <!-- =============================================== -->
-          <!-- ESTADO SECUNDARIO                               -->
-          <!-- =============================================== -->
-
-          <div
-
-            id="estado-target"
-
-            style="
-              position: absolute;
-              top: 90px;
-              left: 50%;
-              transform: translateX(-50%);
-              padding: 8px 14px;
-              background: rgba(0,0,0,0.60);
-              color: white;
-              border-radius: 20px;
-              font-size: 13px;
-              text-align: center;
-              z-index: 100;
-              pointer-events: none;
-              white-space: nowrap;
-            "
-
-          >
-
-            🔎 Preparando reconocimiento...
-
-          </div>
-
-
-
-          <!-- =============================================== -->
-          <!-- MIRA                                            -->
-          <!-- =============================================== -->
-
-          <div
-
-            id="mira-ar"
-
-            style="
-              position: absolute;
-              top: 50%;
-              left: 50%;
-              width: 86px;
-              height: 86px;
-              transform: translate(-50%, -50%);
-              border: 2px solid rgba(255,255,255,0.8);
-              border-radius: 18px;
-              z-index: 90;
-              pointer-events: none;
-              box-sizing: border-box;
-            "
-
-          ></div>
-
-
-          <div
-
-            style="
-              position: absolute;
-              top: 50%;
-              left: 50%;
-              width: 8px;
-              height: 8px;
-              transform: translate(-50%, -50%);
-              background: #ffffff;
-              border-radius: 50%;
-              z-index: 90;
-              pointer-events: none;
-            "
-
-          ></div>
-
-
-
-          <!-- =============================================== -->
-          <!-- BOTÓN CAPTURAR                                  -->
-          <!-- =============================================== -->
-
-          <button
-
-            id="btn-capturar"
-
-            type="button"
-
-            disabled
-
-            style="
-              position: absolute;
-              bottom: 38px;
-              left: 50%;
-              transform: translateX(-50%);
-              background: #555555;
-              color: white;
-              border: none;
-              padding: 16px 30px;
-              border-radius: 50px;
-              font-size: 17px;
-              font-weight: bold;
-              z-index: 110;
-              opacity: 0.65;
-              white-space: nowrap;
-              box-shadow: 0 5px 18px rgba(0,0,0,0.5);
-              transition: all 0.25s ease;
-            "
-
-          >
-
-            👀 Busca la imagen...
-
-          </button>
-
-
-
-          <!-- =============================================== -->
-          <!-- CERRAR                                          -->
-          <!-- =============================================== -->
-
-          <button
-
-            id="btn-cerrar-ar"
-
-            type="button"
-
-            aria-label="Cerrar realidad aumentada"
-
-            style="
-              position: absolute;
-              top: 18px;
-              right: 16px;
-              width: 50px;
-              height: 50px;
-              background: rgba(0,0,0,0.78);
-              color: white;
-              border: none;
-              border-radius: 50%;
-              font-size: 27px;
-              line-height: 50px;
-              z-index: 120;
-            "
-
-          >
-
-            ✕
-
-          </button>
 
 
         </div>
 
 
 
-        <!-- ================================================= -->
-        <!-- CONTENIDO DESBLOQUEADO                            -->
-        <!-- ================================================= -->
+        <div class="historia-leyenda">
 
-        <div
+          <h3>
+            La Leyenda del Guajojó
+          </h3>
 
-          id="contenido-capturado"
 
-          style="
-            display: none;
-            margin-top: 20px;
-          "
+          <p>
+            Cuenta la leyenda que hace muchos años,
+            en una antigua tribu de la selva oriental,
+            la hermosa hija del cacique se enamoró
+            perdidamente de un joven guerrero.
+          </p>
 
-        >
+          <br>
 
 
-          <!-- MENSAJE -->
+          <p>
+            Al enterarse de este romance prohibido,
+            el cacique enfureció y llevó al joven guerrero
+            a lo más profundo de la selva.
+          </p>
 
-          <div
+          <br>
 
-            style="
-              background: #e8f5e9;
-              border: 2px solid #2e7d32;
-              border-radius: 16px;
-              padding: 16px;
-              text-align: center;
-              margin-bottom: 20px;
-            "
 
-          >
+          <p>
+            La muchacha salió desesperada en busca de
+            su amado y finalmente encontró su cuerpo
+            sin vida.
+          </p>
 
-            <h3
+          <br>
 
-              style="
-                color: #1b5e20;
-                margin: 0 0 8px 0;
-              "
 
-            >
+          <p>
+            Su llanto fue tan profundo que los espíritus
+            de la selva la transformaron en un ave.
+          </p>
 
-              ✨ ¡CAPTURADO!
+          <br>
 
-            </h3>
 
-
-            <p
-
-              style="
-                margin: 0;
-                color: #333333;
-              "
-
-            >
-
-              Has descubierto al Guajojó
-
-            </p>
-
-          </div>
-
-
-
-          <!-- MULTIMEDIA -->
-
-          <div
-            class="multimedia-leyenda"
-          >
-
-
-            <div
-              class="reproductor-leyenda"
-            >
-
-              <h3>
-                Escucha su canto original
-              </h3>
-
-
-              <audio
-
-                id="audio-guajojo"
-
-                controls
-
-              >
-
-                <source
-
-                  src="/audio-guajojo.mp3"
-
-                  type="audio/mpeg"
-
-                >
-
-                Tu navegador no soporta audio.
-
-              </audio>
-
-            </div>
-
-
-
-            <img
-
-              src="/foto-guajojo.jpg"
-
-              alt="Fotografía del Guajojó"
-
-              class="foto-leyenda"
-
-            >
-
-
-          </div>
-
-
-
-          <!-- HISTORIA -->
-
-          <div
-            class="historia-leyenda"
-          >
-
-            <h3>
-              La Leyenda del Guajojó
-            </h3>
-
-
-            <p>
-              Cuenta la leyenda que hace muchos años,
-              en una antigua tribu de la selva oriental,
-              la hermosa hija del cacique se enamoró
-              perdidamente de un joven guerrero.
-            </p>
-
-            <br>
-
-
-            <p>
-              Al enterarse de este romance prohibido,
-              el cacique enfureció y llevó al joven
-              guerrero a lo más profundo de la selva.
-            </p>
-
-            <br>
-
-
-            <p>
-              La muchacha salió desesperada en busca
-              de su amado y finalmente encontró su
-              cuerpo sin vida.
-            </p>
-
-            <br>
-
-
-            <p>
-              Su llanto fue tan profundo que los
-              espíritus de la selva la transformaron
-              en un ave.
-            </p>
-
-            <br>
-
-
-            <p>
-              Desde entonces, durante las noches,
-              puede escucharse su triste canto:
-
-              <strong>
-                ¡Gua... jo... jó!
-              </strong>
-
-            </p>
-
-          </div>
-
+          <p>
+            Desde entonces, durante las noches,
+            puede escucharse su triste canto:
+            <strong>
+              ¡Gua... jo... jó!
+            </strong>
+          </p>
 
         </div>
 
-        `
 
-      );
+      </div>
 
 
-      // ======================================================
-      // ESPERAR A QUE EL DOM DINÁMICO EXISTA
-      // ======================================================
+    </div>
 
-      setTimeout(
-        configurarARGuajojo,
-        150
-      );
+  `;
 
-    }
+
+  // ==========================================================
+  // BOTÓN AR
+  // ==========================================================
+
+  const btnAbrirAR =
+    document.getElementById(
+      'btn-abrir-ar'
+    );
+
+
+  btnAbrirAR?.addEventListener(
+    'click',
+    iniciarCamaraAR
   );
 
 }
 
 
 // ============================================================
-// CONFIGURAR MINDAR
+// DUENDE
 // ============================================================
 
-function configurarARGuajojo() {
+function mostrarDuende() {
 
-  const btnAbrir =
-    document.getElementById(
-      'btn-abrir-ar'
-    );
+  if (!areaTexto) return;
 
 
-  const btnCerrar =
-    document.getElementById(
-      'btn-cerrar-ar'
-    );
+  areaTexto.innerHTML = `
+
+    <div class="vista-leyenda">
 
 
-  const btnCapturar =
-    document.getElementById(
-      'btn-capturar'
-    );
+      ${crearCabeceraLeyenda({
+
+        etiqueta:
+          'MISTERIOS DEL MONTE',
+
+        titulo:
+          'El Duende',
+
+        descripcion:
+          'Una nueva leyenda se incorpora a la experiencia. Esta sección está preparada para desarrollar su historia, contenido multimedia y futura interacción.',
+
+        icono:
+          '🌿'
+
+      })}
 
 
-  const escena =
-    document.getElementById(
-      'escena-guajojo'
-    );
+      <div class="estado-proximamente">
+
+        <div class="icono">
+          🌿
+        </div>
+
+        <div>
+
+          <strong>
+            El Duende será la próxima experiencia
+          </strong>
+
+          <p>
+            Aquí podremos agregar su historia completa,
+            fotografías, sonidos, modelo 3D y una mecánica
+            interactiva propia.
+          </p>
+
+        </div>
+
+      </div>
 
 
-  const target =
-    document.getElementById(
-      'target-guajojo'
-    );
+    </div>
+
+  `;
+
+}
 
 
-  const modelo =
-    document.getElementById(
-      'modelo-guajojo'
-    );
+// ============================================================
+// VIUDITA
+// ============================================================
+
+function mostrarViudita() {
+
+  if (!areaTexto) return;
 
 
-  // ==========================================================
-  // BOTONES
-  // ==========================================================
+  areaTexto.innerHTML = `
 
-  if (btnAbrir) {
+    <div class="vista-leyenda">
 
-    btnAbrir.onclick =
-      iniciarCamaraAR;
+
+      ${crearCabeceraLeyenda({
+
+        etiqueta:
+          'RELATOS DE LA NOCHE',
+
+        titulo:
+          'La Viudita',
+
+        descripcion:
+          'Una misteriosa figura vinculada a los relatos nocturnos se incorpora al recorrido de Leyendas de Santa Cruz.',
+
+        icono:
+          '🕯️'
+
+      })}
+
+
+      <div class="estado-proximamente">
+
+        <div class="icono">
+          🕯️
+        </div>
+
+        <div>
+
+          <strong>
+            Experiencia de La Viudita en desarrollo
+          </strong>
+
+          <p>
+            Esta sección está lista para incorporar su
+            narración, recursos multimedia y una futura
+            experiencia inmersiva.
+          </p>
+
+        </div>
+
+      </div>
+
+
+    </div>
+
+  `;
+
+}
+
+
+// ============================================================
+// JICHI
+// ============================================================
+
+function mostrarJichi() {
+
+  if (!areaTexto) return;
+
+
+  areaTexto.innerHTML = `
+
+    <div class="vista-leyenda">
+
+
+      ${crearCabeceraLeyenda({
+
+        etiqueta:
+          'GUARDIÁN DE LAS AGUAS',
+
+        titulo:
+          'El Jichi',
+
+        descripcion:
+          'La experiencia incorpora al Jichi como una nueva historia dentro del recorrido de mitos y leyendas del oriente boliviano.',
+
+        icono:
+          '💧'
+
+      })}
+
+
+      <div class="estado-proximamente">
+
+        <div class="icono">
+          💧
+        </div>
+
+        <div>
+
+          <strong>
+            Experiencia del Jichi en preparación
+          </strong>
+
+          <p>
+            Más adelante podremos crear una experiencia
+            vinculada al agua, sonidos ambientales y un
+            modelo 3D interactivo.
+          </p>
+
+        </div>
+
+      </div>
+
+
+    </div>
+
+  `;
+
+}
+
+
+// ============================================================
+// INICIAR MINDAR
+// ============================================================
+
+async function iniciarCamaraAR() {
+
+  if (
+    arActivo ||
+    arIniciando
+  ) {
+
+    return;
 
   }
 
 
-  if (btnCerrar) {
+  if (
+    !pantallaAR ||
+    !escenaAR
+  ) {
 
-    btnCerrar.onclick =
-      cerrarCamaraAR;
+    alert(
+      'No se encontró la escena de realidad aumentada.'
+    );
+
+    return;
 
   }
 
 
-  if (btnCapturar) {
-
-    btnCapturar.onclick =
-      capturarGuajojo;
-
-  }
+  arIniciando =
+    true;
 
 
-  // ==========================================================
-  // MODELO CARGADO
-  // ==========================================================
-
-  if (modelo) {
-
-    modelo.addEventListener(
-      'model-loaded',
-      () => {
-
-        console.log(
-          '✅ guajojo.glb cargado correctamente.'
-        );
-
-      }
-    );
+  targetVisible =
+    false;
 
 
-    modelo.addEventListener(
-      'model-error',
-      error => {
-
-        console.error(
-          '❌ Error cargando guajojo.glb:',
-          error
-        );
+  deshabilitarCaptura();
 
 
-        actualizarMensajeAR(
-          '❌ Error cargando el modelo del Guajojó'
-        );
-
-      }
-    );
-
-  }
+  actualizarMensajeAR(
+    'Iniciando cámara...'
+  );
 
 
-  // ==========================================================
-  // MINDAR PREPARADO
-  // ==========================================================
-
-  if (escena) {
-
-    escena.addEventListener(
-      'arReady',
-      () => {
-
-        console.log(
-          '✅ MindAR está listo.'
-        );
+  actualizarEstadoTarget(
+    '🔎 Preparando reconocimiento...'
+  );
 
 
-        actualizarMensajeAR(
-          '🔎 Busca la imagen escondida'
-        );
+  pantallaAR.style.display =
+    'block';
 
 
-        actualizarEstadoTarget(
-          '📷 Apunta la cámara hacia la imagen'
-        );
-
-      }
-    );
+  try {
 
 
     // ========================================================
-    // ERROR MINDAR
+    // ESPERAR ESCENA
     // ========================================================
 
-    escena.addEventListener(
-      'arError',
-      () => {
-
-        console.error(
-          '❌ MindAR no pudo iniciar.'
-        );
-
-
-        actualizarMensajeAR(
-          '❌ No se pudo iniciar la cámara AR'
-        );
-
-
-        actualizarEstadoTarget(
-          'Comprueba el permiso de cámara'
-        );
-
-
-        arIniciando =
-          false;
-
-      }
-    );
-
-  }
-
-
-  // ==========================================================
-  // IMAGEN ENCONTRADA
-  // ==========================================================
-
-  if (target) {
-
-    target.addEventListener(
-      'targetFound',
-      () => {
-
-        console.log(
-          '🦉 IMAGEN OBJETIVO ENCONTRADA'
-        );
-
-
-        targetVisible =
-          true;
-
-
-        actualizarMensajeAR(
-          '🦉 ¡Encontraste al Guajojó!'
-        );
-
-
-        actualizarEstadoTarget(
-          '✅ Imagen reconocida'
-        );
-
-
-        const mira =
-          document.getElementById(
-            'mira-ar'
-          );
-
-
-        if (mira) {
-
-          mira.style.border =
-            '3px solid #4caf50';
-
-        }
-
-
-        // Esperar un momento antes
-        // de permitir captura.
-        if (temporizadorCaptura) {
-
-          clearTimeout(
-            temporizadorCaptura
-          );
-
-        }
-
-
-        temporizadorCaptura =
-          setTimeout(
-            () => {
-
-              if (
-                targetVisible
-              ) {
-
-                habilitarCaptura();
-
-              }
-
-            },
-            CONFIG_AR.tiempoParaCapturar
-          );
-
-      }
-    );
+    await esperarEscenaAR();
 
 
     // ========================================================
-    // IMAGEN PERDIDA
+    // SISTEMA MINDAR
     // ========================================================
 
-    target.addEventListener(
-      'targetLost',
-      () => {
-
-        console.log(
-          '👀 Imagen objetivo perdida'
-        );
+    const sistemaAR =
+      escenaAR.systems[
+        'mindar-image-system'
+      ];
 
 
-        targetVisible =
-          false;
+    if (!sistemaAR) {
+
+      throw new Error(
+        'MindAR no se inicializó correctamente.'
+      );
+
+    }
 
 
-        if (temporizadorCaptura) {
+    // ========================================================
+    // INICIAR
+    // ========================================================
 
-          clearTimeout(
-            temporizadorCaptura
-          );
-
-
-          temporizadorCaptura =
-            null;
-
-        }
+    await sistemaAR.start();
 
 
-        deshabilitarCaptura();
+    arActivo =
+      true;
 
 
-        actualizarMensajeAR(
-          '👀 Se perdió el Guajojó'
-        );
-
-
-        actualizarEstadoTarget(
-          '🔎 Vuelve a buscar la imagen'
-        );
-
-
-        const mira =
-          document.getElementById(
-            'mira-ar'
-          );
-
-
-        if (mira) {
-
-          mira.style.border =
-            '2px solid rgba(255,255,255,0.8)';
-
-        }
-
-      }
+    actualizarMensajeAR(
+      'Busca la imagen objetivo'
     );
+
+
+    actualizarEstadoTarget(
+      '📷 Apunta la cámara hacia la imagen'
+    );
+
+
+    console.log(
+      '✅ MindAR iniciado'
+    );
+
+
+  } catch (error) {
+
+
+    console.error(
+      'Error iniciando AR:',
+      error
+    );
+
+
+    pantallaAR.style.display =
+      'none';
+
+
+    arActivo =
+      false;
+
+
+    alert(
+
+      'No se pudo iniciar la realidad aumentada.\n\n' +
+
+      error.message
+
+    );
+
+
+  } finally {
+
+
+    arIniciando =
+      false;
 
   }
 
@@ -1522,36 +942,27 @@ function configurarARGuajojo() {
 
 
 // ============================================================
-// ESPERAR A QUE UNA ESCENA A-FRAME ESTÉ CARGADA
+// ESPERAR ESCENA
 // ============================================================
 
-function esperarEscena(
-  escena
-) {
+function esperarEscenaAR() {
 
   return new Promise(
     resolve => {
 
+
       if (
-        escena &&
-        escena.hasLoaded
+        escenaAR.hasLoaded
       ) {
 
         resolve();
 
         return;
+
       }
 
 
-      if (!escena) {
-
-        resolve();
-
-        return;
-      }
-
-
-      escena.addEventListener(
+      escenaAR.addEventListener(
         'loaded',
         () => {
 
@@ -1570,328 +981,223 @@ function esperarEscena(
 
 
 // ============================================================
-// INICIAR AR CON MINDAR
+// TARGET ENCONTRADO
 // ============================================================
 
-async function iniciarCamaraAR() {
-
-  if (
-    arIniciando ||
-    arActivo
-  ) {
-
-    return;
-
-  }
+targetGuajojo?.addEventListener(
+  'targetFound',
+  () => {
 
 
-  const pantalla =
-    document.getElementById(
-      'pantalla-ar'
+    console.log(
+      '🦉 Target encontrado'
     );
 
 
-  const escena =
-    document.getElementById(
-      'escena-guajojo'
-    );
-
-
-  const btnAbrir =
-    document.getElementById(
-      'btn-abrir-ar'
-    );
-
-
-  if (
-    !pantalla ||
-    !escena
-  ) {
-
-    return;
-
-  }
-
-
-  arIniciando =
-    true;
-
-
-  if (btnAbrir) {
-
-    btnAbrir.disabled =
+    targetVisible =
       true;
-
-  }
-
-
-  try {
-
-    // ========================================================
-    // MOSTRAR PANTALLA ANTES DE INICIAR
-    // ========================================================
-
-    pantalla.style.display =
-      'block';
-
-
-    document.body.style.overflow =
-      'hidden';
 
 
     actualizarMensajeAR(
-      '⏳ Iniciando cámara...'
+      '¡Encontraste al Guajojó!'
     );
 
 
     actualizarEstadoTarget(
-      '🔎 Cargando reconocimiento de imagen'
+      '✅ Imagen reconocida'
     );
 
 
-    deshabilitarCaptura();
+    // Esperamos un poco para evitar
+    // detecciones instantáneas inestables.
 
+    if (temporizadorCaptura) {
 
-    // ========================================================
-    // ESPERAR A-FRAME
-    // ========================================================
-
-    await esperarEscena(
-      escena
-    );
-
-
-    // ========================================================
-    // OBTENER SISTEMA MINDAR
-    // ========================================================
-
-    const arSystem =
-      escena.systems[
-        'mindar-image-system'
-      ];
-
-
-    if (!arSystem) {
-
-      throw new Error(
-        'No se encontró mindar-image-system.'
+      clearTimeout(
+        temporizadorCaptura
       );
 
     }
 
 
-    // ========================================================
-    // INICIAR MINDAR
-    // ========================================================
-    //
-    // MindAR se encarga de abrir la cámara.
-    //
-    // YA NO usamos:
-    //
-    // navigator.mediaDevices.getUserMedia()
-    // DeviceOrientationEvent
-    // Gyroscope
-    // immersive-ar
-    //
-    // ========================================================
-
-    arSystem.start();
+    temporizadorCaptura =
+      setTimeout(
+        () => {
 
 
-    arActivo =
-      true;
+          if (
+            targetVisible
+          ) {
+
+            habilitarCaptura();
+
+          }
+
+        },
+        450
+      );
+
+  }
+);
+
+
+// ============================================================
+// TARGET PERDIDO
+// ============================================================
+
+targetGuajojo?.addEventListener(
+  'targetLost',
+  () => {
 
 
     console.log(
-      '✅ MindAR iniciado.'
+      'Target perdido'
     );
 
 
-  } catch (error) {
-
-    console.error(
-      '❌ Error iniciando MindAR:',
-      error
-    );
-
-
-    pantalla.style.display =
-      'none';
-
-
-    document.body.style.overflow =
-      '';
-
-
-    arActivo =
+    targetVisible =
       false;
 
 
-    alert(
+    if (temporizadorCaptura) {
 
-      'No se pudo iniciar la realidad aumentada.\n\n' +
-
-      error.message
-
-    );
+      clearTimeout(
+        temporizadorCaptura
+      );
 
 
-  } finally {
-
-    arIniciando =
-      false;
-
-
-    if (btnAbrir) {
-
-      btnAbrir.disabled =
-        false;
+      temporizadorCaptura =
+        null;
 
     }
 
-  }
 
-}
+    deshabilitarCaptura();
 
 
-// ============================================================
-// MENSAJE PRINCIPAL
-// ============================================================
-
-function actualizarMensajeAR(
-  texto
-) {
-
-  const mensaje =
-    document.getElementById(
-      'mensaje-ar'
+    actualizarMensajeAR(
+      'Busca la imagen objetivo'
     );
 
 
-  if (mensaje) {
-
-    mensaje.innerText =
-      texto;
+    actualizarEstadoTarget(
+      '🔎 Vuelve a enfocar la imagen'
+    );
 
   }
-
-}
+);
 
 
 // ============================================================
-// ESTADO DE TARGET
+// MINDAR LISTO
 // ============================================================
 
-function actualizarEstadoTarget(
-  texto
-) {
+escenaAR?.addEventListener(
+  'arReady',
+  () => {
 
-  const estado =
-    document.getElementById(
-      'estado-target'
+
+    console.log(
+      '✅ Cámara MindAR preparada'
     );
 
 
-  if (estado) {
-
-    estado.innerText =
-      texto;
-
-  }
-
-}
-
-
-// ============================================================
-// HABILITAR CAPTURA
-// ============================================================
-
-function habilitarCaptura() {
-
-  const btn =
-    document.getElementById(
-      'btn-capturar'
+    actualizarMensajeAR(
+      'Busca la imagen objetivo'
     );
 
 
-  if (!btn) {
-    return;
+    actualizarEstadoTarget(
+      '📷 Apunta hacia la imagen'
+    );
+
   }
-
-
-  btn.disabled =
-    false;
-
-
-  btn.style.background =
-    '#1b5e20';
-
-
-  btn.style.opacity =
-    '1';
-
-
-  btn.innerText =
-    '✨ CAPTURAR';
-
-}
+);
 
 
 // ============================================================
-// DESHABILITAR CAPTURA
+// ERROR AR
 // ============================================================
 
-function deshabilitarCaptura() {
+escenaAR?.addEventListener(
+  'arError',
+  event => {
 
-  const btn =
-    document.getElementById(
-      'btn-capturar'
+
+    console.error(
+      'Error MindAR:',
+      event
     );
 
 
-  if (!btn) {
-    return;
+    actualizarMensajeAR(
+      'No se pudo iniciar AR'
+    );
+
+
+    actualizarEstadoTarget(
+      '❌ Comprueba el permiso de cámara'
+    );
+
   }
-
-
-  btn.disabled =
-    true;
-
-
-  btn.style.background =
-    '#555555';
-
-
-  btn.style.opacity =
-    '0.65';
-
-
-  btn.innerText =
-    '👀 Busca la imagen...';
-
-}
+);
 
 
 // ============================================================
-// CAPTURAR GUAJOJÓ
+// MODELO CARGADO
 // ============================================================
+
+modeloGuajojo?.addEventListener(
+  'model-loaded',
+  () => {
+
+    console.log(
+      '✅ guajojo.glb cargado'
+    );
+
+  }
+);
+
+
+// ============================================================
+// ERROR MODELO
+// ============================================================
+
+modeloGuajojo?.addEventListener(
+  'model-error',
+  event => {
+
+
+    console.error(
+      'Error cargando guajojo.glb:',
+      event
+    );
+
+
+    actualizarMensajeAR(
+      'Error cargando el Guajojó'
+    );
+
+  }
+);
+
+
+// ============================================================
+// CAPTURAR
+// ============================================================
+
+btnCapturar?.addEventListener(
+  'click',
+  capturarGuajojo
+);
+
 
 function capturarGuajojo() {
 
-  const btnCapturar =
-    document.getElementById(
-      'btn-capturar'
-    );
-
-
-  // ==========================================================
-  // SOLO CAPTURAR SI LA IMAGEN SIGUE DETECTADA
-  // ==========================================================
 
   if (
-    !btnCapturar ||
-    btnCapturar.disabled ||
-    !targetVisible
+    !targetVisible ||
+    btnCapturar.disabled
   ) {
 
     return;
@@ -1904,41 +1210,8 @@ function capturarGuajojo() {
   );
 
 
-  // ==========================================================
-  // CERRAR AR
-  // ==========================================================
-
   cerrarCamaraAR();
 
-
-  // ==========================================================
-  // OCULTAR BOTÓN DE AR
-  // ==========================================================
-
-  const btnAbrir =
-    document.getElementById(
-      'btn-abrir-ar'
-    );
-
-
-  if (btnAbrir) {
-
-    btnAbrir.style.display =
-      'none';
-
-  }
-
-
-  // ==========================================================
-  // OCULTAR IMAGEN OBJETIVO PREVIA
-  // ==========================================================
-
-  // Dejamos visible únicamente el contenido desbloqueado.
-
-
-  // ==========================================================
-  // MOSTRAR CONTENIDO
-  // ==========================================================
 
   const contenido =
     document.getElementById(
@@ -1948,24 +1221,44 @@ function capturarGuajojo() {
 
   if (contenido) {
 
+
     contenido.style.display =
       'block';
 
 
-    contenido.scrollIntoView({
-      behavior:
-        'smooth',
+    setTimeout(
+      () => {
 
-      block:
-        'start'
-    });
+        contenido.scrollIntoView({
+
+          behavior:
+            'smooth',
+
+          block:
+            'start'
+
+        });
+
+      },
+      200
+    );
 
   }
 
 
-  // ==========================================================
-  // REPRODUCIR AUDIO
-  // ==========================================================
+  const btnAbrirAR =
+    document.getElementById(
+      'btn-abrir-ar'
+    );
+
+
+  if (btnAbrirAR) {
+
+    btnAbrirAR.style.display =
+      'none';
+
+  }
+
 
   const audio =
     document.getElementById(
@@ -1973,22 +1266,11 @@ function capturarGuajojo() {
     );
 
 
-  if (audio) {
-
-    audio
-      .play()
-      .catch(
-        error => {
-
-          console.warn(
-            'No se pudo reproducir automáticamente el audio:',
-            error
-          );
-
-        }
-      );
-
-  }
+  audio
+    ?.play()
+    .catch(
+      () => {}
+    );
 
 }
 
@@ -1997,21 +1279,21 @@ function capturarGuajojo() {
 // CERRAR AR
 // ============================================================
 
+btnCerrarAR?.addEventListener(
+  'click',
+  cerrarCamaraAR
+);
+
+
 function cerrarCamaraAR() {
+
 
   targetVisible =
     false;
 
 
-  arIniciando =
-    false;
-
-
-  // ==========================================================
-  // CANCELAR TEMPORIZADOR
-  // ==========================================================
-
   if (temporizadorCaptura) {
+
 
     clearTimeout(
       temporizadorCaptura
@@ -2024,52 +1306,29 @@ function cerrarCamaraAR() {
   }
 
 
-  // ==========================================================
-  // OBTENER ELEMENTOS
-  // ==========================================================
+  deshabilitarCaptura();
 
-  const pantalla =
-    document.getElementById(
-      'pantalla-ar'
-    );
-
-
-  const escena =
-    document.getElementById(
-      'escena-guajojo'
-    );
-
-
-  // ==========================================================
-  // DETENER MINDAR
-  // ==========================================================
 
   if (
     arActivo &&
-    escena &&
-    escena.systems &&
-    escena.systems[
+    escenaAR?.systems[
       'mindar-image-system'
     ]
   ) {
 
+
     try {
 
-      const arSystem =
-        escena.systems[
+
+      escenaAR
+        .systems[
           'mindar-image-system'
-        ];
-
-
-      arSystem.stop();
-
-
-      console.log(
-        '🛑 MindAR detenido.'
-      );
+        ]
+        .stop();
 
 
     } catch (error) {
+
 
       console.warn(
         'Error deteniendo MindAR:',
@@ -2085,36 +1344,134 @@ function cerrarCamaraAR() {
     false;
 
 
-  // ==========================================================
-  // OCULTAR AR
-  // ==========================================================
+  arIniciando =
+    false;
 
-  if (pantalla) {
 
-    pantalla.style.display =
+  if (pantallaAR) {
+
+    pantallaAR.style.display =
       'none';
 
   }
-
-
-  document.body.style.overflow =
-    '';
-
-
-  deshabilitarCaptura();
 
 }
 
 
 // ============================================================
-// CERRAR AR AL SALIR DE LA PÁGINA
+// MENSAJES AR
+// ============================================================
+
+function actualizarMensajeAR(
+  texto
+) {
+
+
+  if (mensajeAR) {
+
+    mensajeAR.textContent =
+      texto;
+
+  }
+
+}
+
+
+function actualizarEstadoTarget(
+  texto
+) {
+
+
+  if (estadoTarget) {
+
+    estadoTarget.textContent =
+      texto;
+
+  }
+
+}
+
+
+// ============================================================
+// BOTÓN CAPTURA
+// ============================================================
+
+function habilitarCaptura() {
+
+
+  if (!btnCapturar) {
+    return;
+  }
+
+
+  btnCapturar.disabled =
+    false;
+
+
+  btnCapturar.innerHTML =
+    `
+      <span>
+        ✨
+      </span>
+
+      CAPTURAR
+    `;
+
+}
+
+
+function deshabilitarCaptura() {
+
+
+  if (!btnCapturar) {
+    return;
+  }
+
+
+  btnCapturar.disabled =
+    true;
+
+
+  btnCapturar.innerHTML =
+    `
+      <span>
+        👀
+      </span>
+
+      Busca la imagen...
+    `;
+
+}
+
+
+// ============================================================
+// CERRAR AL ABANDONAR PÁGINA
 // ============================================================
 
 window.addEventListener(
   'beforeunload',
   () => {
 
-    cerrarCamaraAR();
+
+    if (
+      arActivo
+    ) {
+
+      try {
+
+        escenaAR
+          ?.systems[
+            'mindar-image-system'
+          ]
+          ?.stop();
+
+      } catch {
+
+        // No hacer nada.
+
+      }
+
+    }
 
   }
 );
