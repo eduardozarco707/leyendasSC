@@ -2,7 +2,7 @@ import './style.css';
 
 
 // ============================================================
-// ELEMENTOS GENERALES
+// ELEMENTOS PRINCIPALES
 // ============================================================
 
 const sidebar =
@@ -10,15 +10,18 @@ const sidebar =
     'sidebar'
   );
 
+
 const btnMenu =
   document.getElementById(
     'btn-menu'
   );
 
+
 const areaTexto =
   document.getElementById(
     'contenido-dinamico'
   );
+
 
 const botonesLeyenda =
   document.querySelectorAll(
@@ -35,50 +38,72 @@ const pantallaAR =
     'pantalla-ar'
   );
 
+
 const escenaAR =
   document.getElementById(
     'escena-ar'
   );
 
-const targetGuajojo =
-  document.getElementById(
-    'target-guajojo'
-  );
 
 const targetCarreton =
   document.getElementById(
     'target-carreton'
   );
 
-const modeloGuajojo =
+
+const targetGuajojo =
   document.getElementById(
-    'modelo-guajojo'
+    'target-guajojo'
   );
+
 
 const modeloCarreton =
   document.getElementById(
     'modelo-carreton'
   );
 
+
+const modeloGuajojo =
+  document.getElementById(
+    'modelo-guajojo'
+  );
+
+
+const contenedorCarreton =
+  document.getElementById(
+    'contenedor-modelo-carreton'
+  );
+
+
+const contenedorGuajojo =
+  document.getElementById(
+    'contenedor-modelo-guajojo'
+  );
+
+
 const btnCerrarAR =
   document.getElementById(
     'btn-cerrar-ar'
   );
+
 
 const btnCapturar =
   document.getElementById(
     'btn-capturar'
   );
 
+
 const mensajeAR =
   document.getElementById(
     'mensaje-ar'
   );
 
+
 const estadoTarget =
   document.getElementById(
     'estado-target'
   );
+
 
 const textoInstruccionAR =
   document.getElementById(
@@ -87,62 +112,49 @@ const textoInstruccionAR =
 
 
 // ============================================================
-// VARIABLES
+// ESTADO
 // ============================================================
 
-let arActivo = false;
+let arActivo =
+  false;
 
-let arIniciando = false;
 
-let targetVisible = false;
+let arIniciando =
+  false;
 
-let experienciaARActiva = null;
 
-let temporizadorCaptura = null;
+let experienciaActiva =
+  null;
+
+
+let targetEncontrado =
+  false;
+
+
+let temporizadorCaptura =
+  null;
 
 
 // ============================================================
-// CONFIGURACIÓN
+// ESTADO DE MODELOS
+// ============================================================
+
+const modelosCargados = {
+
+  carreton:
+    false,
+
+  guajojo:
+    false
+
+};
+
+
+// ============================================================
+// CONFIGURACIÓN EXPERIENCIAS
 // ============================================================
 
 const experiencias = {
-
-  guajojo: {
-
-    nombre:
-      'Guajojó',
-
-    modelo:
-      modeloGuajojo,
-
-    target:
-      targetGuajojo,
-
-    botonAbrirId:
-      'btn-abrir-ar-guajojo',
-
-    contenidoId:
-      'contenido-capturado-guajojo',
-
-    audioId:
-      'audio-guajojo',
-
-    mensajeBuscar:
-      'Busca al Guajojó',
-
-    mensajeEncontrado:
-      '🦉 ¡Encontraste al Guajojó!',
-
-    instruccion:
-      'Apunta hacia la imagen del Guajojó',
-
-    textoCapturar:
-      'CAPTURAR GUAJOJÓ',
-
-    icono:
-      '🦉'
-
-  },
 
 
   carreton: {
@@ -153,10 +165,13 @@ const experiencias = {
     modelo:
       modeloCarreton,
 
+    contenedor:
+      contenedorCarreton,
+
     target:
       targetCarreton,
 
-    botonAbrirId:
+    botonId:
       'btn-abrir-ar-carreton',
 
     contenidoId:
@@ -165,20 +180,55 @@ const experiencias = {
     audioId:
       null,
 
-    mensajeBuscar:
+    buscar:
       'Busca el Carretón de la Otra Vida',
 
-    mensajeEncontrado:
+    encontrado:
       '☠️ ¡Encontraste el Carretón!',
 
     instruccion:
       'Apunta hacia la imagen del Carretón',
 
-    textoCapturar:
-      'CAPTURAR CARRETÓN',
+    captura:
+      '☠️ CAPTURAR CARRETÓN'
 
-    icono:
-      '☠️'
+  },
+
+
+  guajojo: {
+
+    nombre:
+      'Guajojó',
+
+    modelo:
+      modeloGuajojo,
+
+    contenedor:
+      contenedorGuajojo,
+
+    target:
+      targetGuajojo,
+
+    botonId:
+      'btn-abrir-ar-guajojo',
+
+    contenidoId:
+      'contenido-capturado-guajojo',
+
+    audioId:
+      'audio-guajojo',
+
+    buscar:
+      'Busca al Guajojó',
+
+    encontrado:
+      '🦉 ¡Encontraste al Guajojó!',
+
+    instruccion:
+      'Apunta hacia la imagen del Guajojó',
+
+    captura:
+      '🦉 CAPTURAR GUAJOJÓ'
 
   }
 
@@ -193,9 +243,11 @@ btnMenu?.addEventListener(
   'click',
   () => {
 
+
     sidebar?.classList.toggle(
       'abierto'
     );
+
 
   }
 );
@@ -208,22 +260,93 @@ btnMenu?.addEventListener(
 botonesLeyenda.forEach(
   boton => {
 
+
     boton.addEventListener(
       'click',
       () => {
+
 
         const leyenda =
           boton.dataset.legend;
 
 
-        seleccionarLeyenda(
-          leyenda
-        );
+        cerrarCamaraAR();
 
 
         marcarBotonActivo(
           boton
         );
+
+
+        switch (leyenda) {
+
+
+          case 'carreton':
+
+            mostrarCarreton();
+
+            break;
+
+
+          case 'guajojo':
+
+            mostrarGuajojo();
+
+            break;
+
+
+          case 'duende':
+
+            mostrarProximamente(
+
+              'El Duende',
+
+              'MISTERIOS DEL MONTE',
+
+              '🌿',
+
+              'Esta experiencia será incorporada próximamente.'
+
+            );
+
+            break;
+
+
+          case 'viudita':
+
+            mostrarProximamente(
+
+              'La Viudita',
+
+              'RELATOS DE LA NOCHE',
+
+              '🕯️',
+
+              'Esta experiencia será incorporada próximamente.'
+
+            );
+
+            break;
+
+
+          case 'jichi':
+
+            mostrarProximamente(
+
+              'El Jichi',
+
+              'GUARDIÁN DE LAS AGUAS',
+
+              '💧',
+
+              'Esta experiencia será incorporada próximamente.'
+
+            );
+
+            break;
+
+
+        }
 
 
         if (
@@ -236,8 +359,10 @@ botonesLeyenda.forEach(
 
         }
 
+
       }
     );
+
 
   }
 );
@@ -248,97 +373,50 @@ botonesLeyenda.forEach(
 // ============================================================
 
 function marcarBotonActivo(
-  botonSeleccionado
+  seleccionado
 ) {
+
 
   botonesLeyenda.forEach(
     boton => {
+
 
       boton.classList.remove(
         'activo'
       );
 
+
     }
   );
 
 
-  botonSeleccionado.classList.add(
+  seleccionado.classList.add(
     'activo'
   );
 
-}
-
-
-// ============================================================
-// SELECCIONAR LEYENDA
-// ============================================================
-
-function seleccionarLeyenda(
-  leyenda
-) {
-
-  cerrarCamaraAR();
-
-
-  switch (leyenda) {
-
-    case 'carreton':
-
-      mostrarCarreton();
-
-      break;
-
-
-    case 'guajojo':
-
-      mostrarGuajojo();
-
-      break;
-
-
-    case 'duende':
-
-      mostrarDuende();
-
-      break;
-
-
-    case 'viudita':
-
-      mostrarViudita();
-
-      break;
-
-
-    case 'jichi':
-
-      mostrarJichi();
-
-      break;
-
-  }
 
 }
 
 
 // ============================================================
-// CABECERA
+// CABECERA DE LEYENDA
 // ============================================================
 
-function crearCabeceraLeyenda({
-
+function crearCabecera({
   etiqueta,
   titulo,
   descripcion,
   icono
-
 }) {
+
 
   return `
 
     <div class="cabecera-leyenda">
 
+
       <div class="titulo-leyenda">
+
 
         <span class="sobrelinea">
 
@@ -360,17 +438,17 @@ function crearCabeceraLeyenda({
 
         </p>
 
+
       </div>
 
 
-      <div
-        class="insignia-leyenda"
-        aria-hidden="true"
-      >
+
+      <div class="insignia-leyenda">
 
         ${icono}
 
       </div>
+
 
     </div>
 
@@ -378,6 +456,7 @@ function crearCabeceraLeyenda({
     <div class="barra-leyenda"></div>
 
   `;
+
 
 }
 
@@ -387,6 +466,7 @@ function crearCabeceraLeyenda({
 // ============================================================
 
 function mostrarCarreton() {
+
 
   if (!areaTexto) {
     return;
@@ -398,7 +478,7 @@ function mostrarCarreton() {
     <div class="vista-leyenda">
 
 
-      ${crearCabeceraLeyenda({
+      ${crearCabecera({
 
         etiqueta:
           'TRADICIÓN ORAL CRUCEÑA',
@@ -407,7 +487,7 @@ function mostrarCarreton() {
           'El Carretón de la Otra Vida',
 
         descripcion:
-          'Cuando llegaban las noches oscuras de sur y chilchi, el silencio podía romperse con el extraño chirriar de unos ejes y el restallar de un látigo.',
+          'Un misterioso carretón cuyo chirriar rompía el silencio de las antiguas noches cruceñas.',
 
         icono:
           '🛞'
@@ -423,33 +503,38 @@ function mostrarCarreton() {
 
           src="/carreton-target.jpg"
 
-          alt="Imagen objetivo del Carretón"
-
           class="imagen-target"
 
+          alt="Imagen objetivo del Carretón"
+
         >
+
 
 
         <div class="info-target">
 
 
           <span class="sobrelinea">
+
             EXPERIENCIA AR
+
           </span>
 
 
           <h3>
+
             Encuentra el Carretón
+
           </h3>
 
 
           <p>
 
-            Busca físicamente esta imagen con la cámara.
+            Busca esta imagen utilizando la cámara.
 
             Cuando sea reconocida,
             el Carretón de la Otra Vida
-            aparecerá sobre ella.
+            aparecerá en 3D sobre ella.
 
           </p>
 
@@ -477,19 +562,20 @@ function mostrarCarreton() {
 
 
       <div
-
         id="contenido-capturado-carreton"
-
-        style="display:none"
-
+        style="display: none;"
       >
 
 
         <div class="mensaje-capturado">
 
+
           <h3>
+
             ☠️ ¡Has encontrado el Carretón!
+
           </h3>
+
 
           <p>
 
@@ -497,6 +583,7 @@ function mostrarCarreton() {
             más inquietantes de la tradición cruceña.
 
           </p>
+
 
         </div>
 
@@ -506,38 +593,44 @@ function mostrarCarreton() {
 
 
           <span class="sobrelinea">
+
             TRADICIÓN ORAL
+
           </span>
 
 
           <h3>
+
             El Carretón de la Otra Vida
+
           </h3>
 
 
           <p>
 
-            Cuentan los antiguos relatos cruceños que,
+            Cuentan los antiguos relatos cruceños que
             en las noches más cerradas, especialmente
             cuando llegaban el sur y el chilchi,
             el silencio de la campiña era interrumpido
-            por el chirriar de unos ejes y el
-            restallar de un látigo.
+            por el agudo chirriar de unos ejes y
+            el violento restallar de un látigo.
 
           </p>
+
 
           <br>
 
 
           <p>
 
-            Los sonidos avanzaban lentamente entre
-            la oscuridad.
+            Los sonidos parecían avanzar lentamente
+            entre la oscuridad.
 
-            Se escuchaba además la voz de un extraño
-            carretero llamando a sus animales.
+            También podía escucharse la voz de un
+            extraño carretero llamando a sus animales.
 
           </p>
+
 
           <br>
 
@@ -545,21 +638,12 @@ function mostrarCarreton() {
           <p>
 
             Cuando algún relámpago iluminaba la noche,
-            podía distinguirse un antiguo carretón
-            avanzando entre las sombras.
+            quienes se atrevían a mirar alcanzaban
+            a distinguir un antiguo carretón
+            desplazándose entre las sombras.
 
           </p>
 
-          <br>
-
-
-          <p>
-
-            La aparición recorría también las afueras
-            de Santa Cruz, pasando por antiguos caminos
-            cercanos al cementerio y al Lazareto.
-
-          </p>
 
           <br>
 
@@ -569,18 +653,19 @@ function mostrarCarreton() {
             Una noche, un trasnochador decidió
             enfrentarse a la aparición.
 
-            Corrió hacia el misterioso vehículo
-            para descubrir qué era realmente.
+            Corrió hacia el vehículo para descubrir
+            qué era aquello que recorría los caminos.
 
           </p>
+
 
           <br>
 
 
           <p>
 
-            Entonces vio que el carretón parecía
-            construido con huesos humanos.
+            Entonces observó que aquel carretón
+            parecía estar construido con huesos humanos.
 
             Largos huesos ocupaban el lugar de las
             estacas y costillas desnudas formaban
@@ -588,12 +673,13 @@ function mostrarCarreton() {
 
           </p>
 
+
           <br>
 
 
           <p>
 
-            Al frente se encontraba el carretero.
+            Pero lo más aterrador era el carretero.
 
             En lugar de un rostro humano tenía
             una horrenda calavera y dentro de sus
@@ -602,6 +688,7 @@ function mostrarCarreton() {
 
           </p>
 
+
           <br>
 
 
@@ -609,10 +696,11 @@ function mostrarCarreton() {
 
             El hombre huyó aterrorizado.
 
-            Desde entonces, el chirriar de unas ruedas
-            durante una oscura noche de sur podía
-            significar que el Carretón de la Otra Vida
-            volvía a recorrer los caminos.
+            Desde entonces, escuchar unas ruedas
+            chirriando durante una oscura noche
+            de sur podía significar que el
+            Carretón de la Otra Vida volvía
+            a recorrer los caminos.
 
           </p>
 
@@ -636,12 +724,15 @@ function mostrarCarreton() {
       'click',
       () => {
 
+
         iniciarCamaraAR(
           'carreton'
         );
 
+
       }
     );
+
 
 }
 
@@ -651,6 +742,7 @@ function mostrarCarreton() {
 // ============================================================
 
 function mostrarGuajojo() {
+
 
   if (!areaTexto) {
     return;
@@ -662,7 +754,7 @@ function mostrarGuajojo() {
     <div class="vista-leyenda">
 
 
-      ${crearCabeceraLeyenda({
+      ${crearCabecera({
 
         etiqueta:
           'LEYENDA DEL ORIENTE BOLIVIANO',
@@ -671,7 +763,7 @@ function mostrarGuajojo() {
           'El Guajojó',
 
         descripcion:
-          'Un canto melancólico se escucha entre la vegetación. Encuentra la imagen objetivo y descubre al Guajojó mediante realidad aumentada.',
+          'Un canto melancólico continúa escuchándose entre los árboles del oriente boliviano.',
 
         icono:
           '🌙'
@@ -687,32 +779,37 @@ function mostrarGuajojo() {
 
           src="/guajojo-target.jpg"
 
-          alt="Imagen objetivo del Guajojó"
-
           class="imagen-target"
 
+          alt="Imagen objetivo del Guajojó"
+
         >
+
 
 
         <div class="info-target">
 
 
           <span class="sobrelinea">
+
             EXPERIENCIA AR
+
           </span>
 
 
           <h3>
+
             Encuentra al Guajojó
+
           </h3>
 
 
           <p>
 
-            Busca físicamente esta imagen con la cámara.
+            Busca esta imagen con la cámara.
 
-            Cuando sea reconocida,
-            el Guajojó 3D aparecerá sobre ella.
+            Cuando el sistema la reconozca,
+            el Guajojó aparecerá en 3D.
 
           </p>
 
@@ -743,23 +840,20 @@ function mostrarGuajojo() {
 
         id="contenido-capturado-guajojo"
 
-        style="display:none"
+        style="display: none;"
 
       >
 
 
         <div class="mensaje-capturado">
 
+
           <h3>
+
             ✨ ¡Guajojó capturado!
+
           </h3>
 
-          <p>
-
-            Has descubierto una de las leyendas
-            más conocidas del oriente boliviano.
-
-          </p>
 
         </div>
 
@@ -772,32 +866,36 @@ function mostrarGuajojo() {
 
 
             <span class="sobrelinea">
+
               EXPERIENCIA SONORA
+
             </span>
 
 
             <h3>
+
               Escucha su canto
+
             </h3>
 
 
-            <p>
-
-              Escucha el característico canto
-              asociado al Guajojó.
-
-            </p>
-
-
             <audio
+
               id="audio-guajojo"
+
               controls
+
             >
 
+
               <source
+
                 src="/audio-guajojo.mp3"
+
                 type="audio/mpeg"
+
               >
+
 
             </audio>
 
@@ -805,13 +903,14 @@ function mostrarGuajojo() {
           </div>
 
 
+
           <img
 
             src="/foto-guajojo.jpg"
 
-            alt="Fotografía del Guajojó"
-
             class="foto-leyenda"
+
+            alt="Guajojó"
 
           >
 
@@ -824,22 +923,16 @@ function mostrarGuajojo() {
 
 
           <h3>
+
             La Leyenda del Guajojó
+
           </h3>
 
 
           <p>
 
-            Cuenta la leyenda que hace muchos años,
-            la hija de un cacique se enamoró
-            de un joven.
-
-          </p>
-
-          <br>
-
-
-          <p>
+            Cuenta la tradición que la hija de un
+            cacique se enamoró de un joven.
 
             Su padre se opuso a aquella relación
             y terminó con la vida del muchacho
@@ -847,36 +940,33 @@ function mostrarGuajojo() {
 
           </p>
 
+
           <br>
 
 
           <p>
 
-            Cuando la joven descubrió lo ocurrido,
+            Cuando la joven descubrió lo ocurrido
             enfrentó a su padre.
-
-          </p>
-
-          <br>
-
-
-          <p>
 
             Para impedir que revelara lo sucedido,
             fue transformada en un ave nocturna.
 
           </p>
 
+
           <br>
 
 
           <p>
 
-            Desde entonces su triste canto
+            Desde entonces, su triste canto
             continúa escuchándose entre los árboles:
 
             <strong>
+
               ¡Gua... jo... jó!
+
             </strong>
 
           </p>
@@ -901,202 +991,285 @@ function mostrarGuajojo() {
       'click',
       () => {
 
+
         iniciarCamaraAR(
           'guajojo'
         );
 
+
       }
     );
 
-}
-
-
-// ============================================================
-// DUENDE
-// ============================================================
-
-function mostrarDuende() {
-
-  if (!areaTexto) return;
-
-
-  areaTexto.innerHTML = `
-
-    <div class="vista-leyenda">
-
-      ${crearCabeceraLeyenda({
-
-        etiqueta:
-          'MISTERIOS DEL MONTE',
-
-        titulo:
-          'El Duende',
-
-        descripcion:
-          'Próximamente experiencia interactiva.',
-
-        icono:
-          '🌿'
-
-      })}
-
-    </div>
-
-  `;
 
 }
 
 
 // ============================================================
-// VIUDITA
+// OTRAS LEYENDAS
 // ============================================================
 
-function mostrarViudita() {
-
-  if (!areaTexto) return;
-
-
-  areaTexto.innerHTML = `
-
-    <div class="vista-leyenda">
-
-      ${crearCabeceraLeyenda({
-
-        etiqueta:
-          'RELATOS DE LA NOCHE',
-
-        titulo:
-          'La Viudita',
-
-        descripcion:
-          'Próximamente experiencia interactiva.',
-
-        icono:
-          '🕯️'
-
-      })}
-
-    </div>
-
-  `;
-
-}
-
-
-// ============================================================
-// JICHI
-// ============================================================
-
-function mostrarJichi() {
-
-  if (!areaTexto) return;
-
-
-  areaTexto.innerHTML = `
-
-    <div class="vista-leyenda">
-
-      ${crearCabeceraLeyenda({
-
-        etiqueta:
-          'GUARDIÁN DE LAS AGUAS',
-
-        titulo:
-          'El Jichi',
-
-        descripcion:
-          'Próximamente experiencia interactiva.',
-
-        icono:
-          '💧'
-
-      })}
-
-    </div>
-
-  `;
-
-}
-
-
-// ============================================================
-// CONFIGURAR MODELOS
-// ============================================================
-//
-// IMPORTANTE:
-//
-// Durante una experiencia:
-// - modelo correcto = visible
-// - modelo incorrecto = oculto
-//
-// DESPUÉS NO VOLVEMOS A CAMBIAR SU VISIBILIDAD.
-//
-// MindAR se encarga de mostrar/ocultar EL TARGET.
-// ============================================================
-
-function prepararModeloParaExperiencia(
-  tipo
+function mostrarProximamente(
+  titulo,
+  etiqueta,
+  icono,
+  descripcion
 ) {
 
-  if (modeloGuajojo) {
 
-    modeloGuajojo.setAttribute(
-      'visible',
-      tipo === 'guajojo'
-    );
-
+  if (!areaTexto) {
+    return;
   }
 
 
-  if (modeloCarreton) {
+  areaTexto.innerHTML = `
 
-    modeloCarreton.setAttribute(
-      'visible',
-      tipo === 'carreton'
-    );
-
-  }
+    <div class="vista-leyenda">
 
 
-  console.log(
-    'MODELO ACTIVO:',
-    tipo
-  );
+      ${crearCabecera({
+
+        etiqueta,
+        titulo,
+        descripcion,
+        icono
+
+      })}
+
+
+      <div class="estado-proximamente">
+
+
+        <div class="icono">
+
+          ${icono}
+
+        </div>
+
+
+        <div>
+
+
+          <strong>
+
+            Próxima experiencia
+
+          </strong>
+
+
+          <p>
+
+            Estamos preparando su contenido
+            interactivo y experiencia AR.
+
+          </p>
+
+
+        </div>
+
+
+      </div>
+
+
+    </div>
+
+  `;
+
 
 }
 
 
 // ============================================================
-// ESPERAR A-FRAME
+// MODELO CARGADO
 // ============================================================
 
-function esperarEscenaAR() {
+function registrarModelo(
+  tipo,
+  modelo
+) {
 
-  return new Promise(
-    resolve => {
 
+  if (!modelo) {
+    return;
+  }
+
+
+  modelo.addEventListener(
+    'model-loaded',
+    () => {
+
+
+      modelosCargados[
+        tipo
+      ] = true;
+
+
+      console.log(
+        `✅ MODELO CARGADO: ${tipo}`
+      );
+
+
+      // Si esta es la experiencia activa,
+      // aseguramos que el modelo esté visible.
 
       if (
-        escenaAR?.hasLoaded
+        experienciaActiva ===
+        tipo
       ) {
 
-        resolve();
 
-        return;
+        modelo.setAttribute(
+          'visible',
+          true
+        );
+
+
+        if (
+          modelo.object3D
+        ) {
+
+          modelo.object3D.visible =
+            true;
+
+        }
+
 
       }
 
-
-      escenaAR?.addEventListener(
-        'loaded',
-        resolve,
-        {
-          once: true
-        }
-      );
 
     }
   );
+
+
+  modelo.addEventListener(
+    'model-error',
+    error => {
+
+
+      modelosCargados[
+        tipo
+      ] = false;
+
+
+      console.error(
+
+        `❌ ERROR CARGANDO MODELO: ${tipo}`,
+
+        error
+
+      );
+
+
+      if (
+        experienciaActiva ===
+        tipo
+      ) {
+
+
+        actualizarMensaje(
+          `❌ No se pudo cargar ${tipo}.glb`
+        );
+
+
+      }
+
+
+    }
+  );
+
+
+}
+
+
+// ============================================================
+// REGISTRAMOS GLB
+// ============================================================
+
+registrarModelo(
+  'carreton',
+  modeloCarreton
+);
+
+
+registrarModelo(
+  'guajojo',
+  modeloGuajojo
+);
+
+
+// ============================================================
+// ACTIVAR SOLO EL MODELO CORRECTO
+// ============================================================
+
+function activarModelo(
+  tipo
+) {
+
+
+  // ==========================================================
+  // CARRETÓN
+  // ==========================================================
+
+  if (
+    modeloCarreton
+  ) {
+
+
+    const visible =
+      tipo ===
+      'carreton';
+
+
+    modeloCarreton.setAttribute(
+      'visible',
+      visible
+    );
+
+
+    if (
+      modeloCarreton.object3D
+    ) {
+
+      modeloCarreton.object3D.visible =
+        visible;
+
+    }
+
+
+  }
+
+
+  // ==========================================================
+  // GUAJOJÓ
+  // ==========================================================
+
+  if (
+    modeloGuajojo
+  ) {
+
+
+    const visible =
+      tipo ===
+      'guajojo';
+
+
+    modeloGuajojo.setAttribute(
+      'visible',
+      visible
+    );
+
+
+    if (
+      modeloGuajojo.object3D
+    ) {
+
+      modeloGuajojo.object3D.visible =
+        visible;
+
+    }
+
+
+  }
+
 
 }
 
@@ -1108,6 +1281,7 @@ function esperarEscenaAR() {
 async function iniciarCamaraAR(
   tipo
 ) {
+
 
   if (
     arActivo ||
@@ -1127,8 +1301,8 @@ async function iniciarCamaraAR(
 
   if (
     !config ||
-    !escenaAR ||
-    !pantallaAR
+    !pantallaAR ||
+    !escenaAR
   ) {
 
     return;
@@ -1140,37 +1314,33 @@ async function iniciarCamaraAR(
     true;
 
 
-  experienciaARActiva =
+  experienciaActiva =
     tipo;
 
 
-  targetVisible =
+  targetEncontrado =
     false;
+
+
+  // ==========================================================
+  // ACTIVAMOS EL MODELO ANTES DE ARRANCAR MINDAR
+  // ==========================================================
+
+  activarModelo(
+    tipo
+  );
 
 
   deshabilitarCaptura();
 
 
-  // ==========================================================
-  // ESTA ES LA PARTE IMPORTANTE
-  // ==========================================================
-
-  prepararModeloParaExperiencia(
-    tipo
+  actualizarMensaje(
+    config.buscar
   );
 
 
-  pantallaAR.style.display =
-    'block';
-
-
-  actualizarMensajeAR(
-    config.mensajeBuscar
-  );
-
-
-  actualizarEstadoTarget(
-    '🔎 Preparando cámara...'
+  actualizarEstado(
+    '🔎 Preparando reconocimiento...'
   );
 
 
@@ -1178,41 +1348,70 @@ async function iniciarCamaraAR(
     textoInstruccionAR
   ) {
 
+
     textoInstruccionAR.textContent =
       config.instruccion;
 
+
   }
+
+
+  // ==========================================================
+  // MOSTRAR PANTALLA
+  // ==========================================================
+
+  pantallaAR.style.display =
+    'block';
+
+
+  // Como la escena estaba display:none,
+  // forzamos actualización del viewport.
+
+  await esperar(
+    50
+  );
+
+
+  window.dispatchEvent(
+    new Event(
+      'resize'
+    )
+  );
 
 
   try {
 
 
-    await esperarEscenaAR();
+    await esperarEscena();
 
 
-    const sistemaAR =
+    const sistema =
       escenaAR.systems[
         'mindar-image-system'
       ];
 
 
-    if (!sistemaAR) {
+    if (!sistema) {
+
 
       throw new Error(
-        'No se encontró MindAR.'
+        'No se encontró mindar-image-system.'
       );
+
 
     }
 
 
-    // Aseguramos nuevamente el modelo correcto
-    prepararModeloParaExperiencia(
+    // Volvemos a asegurarlo
+    // inmediatamente antes de start().
+
+    activarModelo(
       tipo
     );
 
 
     await Promise.resolve(
-      sistemaAR.start()
+      sistema.start()
     );
 
 
@@ -1220,23 +1419,27 @@ async function iniciarCamaraAR(
       true;
 
 
-    // ========================================================
-    // NO OCULTAR MODELOS AQUÍ
-    // ========================================================
-
-
-    actualizarMensajeAR(
-      config.mensajeBuscar
+    activarModelo(
+      tipo
     );
 
 
-    actualizarEstadoTarget(
-      '📷 Apunta hacia la imagen objetivo'
+    actualizarMensaje(
+      config.buscar
+    );
+
+
+    actualizarEstado(
+      modelosCargados[tipo]
+
+        ? '📷 Modelo 3D listo · busca la imagen'
+
+        : '⏳ Cargando modelo 3D...'
     );
 
 
     console.log(
-      `✅ Experiencia iniciada: ${tipo}`
+      `✅ AR iniciado: ${tipo}`
     );
 
 
@@ -1244,16 +1447,17 @@ async function iniciarCamaraAR(
 
 
     console.error(
+      '❌ ERROR AR:',
       error
     );
 
 
-    experienciaARActiva =
-      null;
-
-
     arActivo =
       false;
+
+
+    experienciaActiva =
+      null;
 
 
     pantallaAR.style.display =
@@ -1262,7 +1466,7 @@ async function iniciarCamaraAR(
 
     alert(
 
-      'Error iniciando realidad aumentada:\n\n' +
+      'No se pudo iniciar la realidad aumentada.\n\n' +
 
       error.message
 
@@ -1275,90 +1479,183 @@ async function iniciarCamaraAR(
     arIniciando =
       false;
 
+
   }
+
 
 }
 
 
 // ============================================================
-// TARGET FOUND / TARGET LOST
+// ESPERAR
 // ============================================================
 
-function registrarTarget(
-  tipo,
-  target
+function esperar(
+  tiempo
 ) {
 
-  if (!target) {
+
+  return new Promise(
+    resolve => {
+
+
+      setTimeout(
+        resolve,
+        tiempo
+      );
+
+
+    }
+  );
+
+
+}
+
+
+// ============================================================
+// ESPERAR ESCENA
+// ============================================================
+
+function esperarEscena() {
+
+
+  return new Promise(
+    resolve => {
+
+
+      if (
+        escenaAR?.hasLoaded
+      ) {
+
+
+        resolve();
+
+        return;
+
+
+      }
+
+
+      escenaAR?.addEventListener(
+        'loaded',
+        resolve,
+        {
+          once: true
+        }
+      );
+
+
+    }
+  );
+
+
+}
+
+
+// ============================================================
+// EVENTOS TARGET
+// ============================================================
+
+function configurarTarget(
+  tipo
+) {
+
+
+  const config =
+    experiencias[
+      tipo
+    ];
+
+
+  if (
+    !config?.target
+  ) {
+
     return;
+
   }
 
 
   // ==========================================================
-  // ENCONTRADO
+  // TARGET ENCONTRADO
   // ==========================================================
 
-  target.addEventListener(
+  config.target.addEventListener(
     'targetFound',
     () => {
 
 
       console.log(
-        'TARGET FOUND:',
-        tipo
+        `🎯 TARGET DETECTADO: ${tipo}`
       );
 
 
-      // Si no corresponde a la leyenda actual,
-      // lo ignoramos.
+      // Si el usuario está en la otra leyenda,
+      // no hacemos nada.
 
       if (
-        experienciaARActiva !==
+        experienciaActiva !==
         tipo
       ) {
 
+
         return;
+
 
       }
 
 
-      const config =
-        experiencias[
-          tipo
-        ];
-
-
-      targetVisible =
+      targetEncontrado =
         true;
 
 
       // ======================================================
-      // NO TOCAMOS visible AQUÍ
+      // IMPORTANTE:
       //
-      // MindAR acaba de hacer visible el TARGET padre.
-      //
-      // Como el modelo ya estaba preparado como visible,
-      // aparecerá automáticamente.
+      // No ocultamos el modelo.
+      // Nos aseguramos de que continúe visible.
       // ======================================================
 
-
-      actualizarMensajeAR(
-        config.mensajeEncontrado
+      activarModelo(
+        tipo
       );
 
 
-      actualizarEstadoTarget(
-        '✅ Imagen reconocida'
+      actualizarMensaje(
+        config.encontrado
       );
+
+
+      if (
+        modelosCargados[tipo]
+      ) {
+
+
+        actualizarEstado(
+          '✅ Imagen reconocida · modelo 3D visible'
+        );
+
+
+      } else {
+
+
+        actualizarEstado(
+          '✅ Imagen reconocida · cargando modelo 3D...'
+        );
+
+
+      }
 
 
       if (
         temporizadorCaptura
       ) {
 
+
         clearTimeout(
           temporizadorCaptura
         );
+
 
       }
 
@@ -1370,36 +1667,47 @@ function registrarTarget(
 
             if (
 
-              targetVisible &&
+              targetEncontrado &&
 
-              experienciaARActiva ===
+              experienciaActiva ===
               tipo
 
             ) {
 
-              habilitarCaptura();
+
+              activarModelo(
+                tipo
+              );
+
+
+              habilitarCaptura(
+                config
+              );
+
 
             }
 
+
           },
-          400
+          350
         );
+
 
     }
   );
 
 
   // ==========================================================
-  // PERDIDO
+  // TARGET PERDIDO
   // ==========================================================
 
-  target.addEventListener(
+  config.target.addEventListener(
     'targetLost',
     () => {
 
 
       if (
-        experienciaARActiva !==
+        experienciaActiva !==
         tipo
       ) {
 
@@ -1409,32 +1717,18 @@ function registrarTarget(
 
 
       console.log(
-        'TARGET LOST:',
-        tipo
+        `👀 TARGET PERDIDO: ${tipo}`
       );
 
 
-      const config =
-        experiencias[
-          tipo
-        ];
-
-
-      targetVisible =
+      targetEncontrado =
         false;
-
-
-      // ======================================================
-      // NO OCULTAMOS EL GLB AQUÍ.
-      //
-      // MindAR oculta automáticamente el target padre,
-      // por lo que el GLB desaparece igualmente.
-      // ======================================================
 
 
       if (
         temporizadorCaptura
       ) {
+
 
         clearTimeout(
           temporizadorCaptura
@@ -1444,23 +1738,32 @@ function registrarTarget(
         temporizadorCaptura =
           null;
 
+
       }
+
+
+      // NO ponemos modelo visible=false.
+      //
+      // MindAR oculta automáticamente
+      // el target padre.
 
 
       deshabilitarCaptura();
 
 
-      actualizarMensajeAR(
-        config.mensajeBuscar
+      actualizarMensaje(
+        config.buscar
       );
 
 
-      actualizarEstadoTarget(
+      actualizarEstado(
         '🔎 Vuelve a enfocar la imagen'
       );
 
+
     }
   );
+
 
 }
 
@@ -1469,149 +1772,36 @@ function registrarTarget(
 // REGISTRAR TARGETS
 // ============================================================
 
-registrarTarget(
-  'carreton',
-  targetCarreton
+configurarTarget(
+  'carreton'
 );
 
 
-registrarTarget(
-  'guajojo',
-  targetGuajojo
-);
-
-
-// ============================================================
-// MODELOS CARGADOS
-// ============================================================
-
-modeloGuajojo?.addEventListener(
-  'model-loaded',
-  () => {
-
-    console.log(
-      '✅ GUAJOJO GLB CARGADO'
-    );
-
-  }
-);
-
-
-modeloCarreton?.addEventListener(
-  'model-loaded',
-  () => {
-
-    console.log(
-      '✅ CARRETON GLB CARGADO'
-    );
-
-  }
+configurarTarget(
+  'guajojo'
 );
 
 
 // ============================================================
-// ERROR MODELOS
-// ============================================================
-
-modeloGuajojo?.addEventListener(
-  'model-error',
-  error => {
-
-    console.error(
-      '❌ ERROR GUAJOJO GLB',
-      error
-    );
-
-  }
-);
-
-
-modeloCarreton?.addEventListener(
-  'model-error',
-  error => {
-
-    console.error(
-      '❌ ERROR CARRETON GLB',
-      error
-    );
-
-  }
-);
-
-
-// ============================================================
-// MINDAR LISTO
-// ============================================================
-
-escenaAR?.addEventListener(
-  'arReady',
-  () => {
-
-
-    console.log(
-      '✅ MINDAR LISTO'
-    );
-
-
-    // ========================================================
-    // IMPORTANTE:
-    //
-    // NO ejecutar:
-    //
-    // ocultarTodosLosModelos()
-    //
-    // aquí.
-    // ========================================================
-
-
-    if (
-      !experienciaARActiva
-    ) {
-
-      return;
-
-    }
-
-
-    const config =
-      experiencias[
-        experienciaARActiva
-      ];
-
-
-    actualizarMensajeAR(
-      config.mensajeBuscar
-    );
-
-
-    actualizarEstadoTarget(
-      '📷 Apunta hacia la imagen objetivo'
-    );
-
-  }
-);
-
-
-// ============================================================
-// CAPTURAR
+// CAPTURA
 // ============================================================
 
 btnCapturar?.addEventListener(
   'click',
-  capturarExperiencia
+  capturar
 );
 
 
-function capturarExperiencia() {
+function capturar() {
 
 
   if (
 
-    !experienciaARActiva ||
+    !experienciaActiva ||
 
-    !targetVisible ||
+    !targetEncontrado ||
 
-    btnCapturar.disabled
+    btnCapturar?.disabled
 
   ) {
 
@@ -1621,7 +1811,7 @@ function capturarExperiencia() {
 
 
   const tipo =
-    experienciaARActiva;
+    experienciaActiva;
 
 
   const config =
@@ -1634,7 +1824,7 @@ function capturarExperiencia() {
 
 
   // ==========================================================
-  // MOSTRAR CONTENIDO
+  // MOSTRAR HISTORIA
   // ==========================================================
 
   const contenido =
@@ -1643,7 +1833,9 @@ function capturarExperiencia() {
     );
 
 
-  if (contenido) {
+  if (
+    contenido
+  ) {
 
 
     contenido.style.display =
@@ -1652,6 +1844,7 @@ function capturarExperiencia() {
 
     setTimeout(
       () => {
+
 
         contenido.scrollIntoView({
 
@@ -1663,35 +1856,39 @@ function capturarExperiencia() {
 
         });
 
+
       },
       200
     );
 
+
   }
 
 
   // ==========================================================
-  // OCULTAR BOTÓN AR
+  // OCULTAR BOTÓN
   // ==========================================================
 
-  const botonAbrir =
+  const boton =
     document.getElementById(
-      config.botonAbrirId
+      config.botonId
     );
 
 
   if (
-    botonAbrir
+    boton
   ) {
 
-    botonAbrir.style.display =
+
+    boton.style.display =
       'none';
+
 
   }
 
 
   // ==========================================================
-  // AUDIO GUAJOJÓ
+  // AUDIO
   // ==========================================================
 
   if (
@@ -1699,19 +1896,18 @@ function capturarExperiencia() {
   ) {
 
 
-    const audio =
-      document.getElementById(
+    document
+      .getElementById(
         config.audioId
-      );
-
-
-    audio
+      )
       ?.play()
       .catch(
         () => {}
       );
 
+
   }
+
 
 }
 
@@ -1729,13 +1925,14 @@ btnCerrarAR?.addEventListener(
 function cerrarCamaraAR() {
 
 
-  targetVisible =
+  targetEncontrado =
     false;
 
 
   if (
     temporizadorCaptura
   ) {
+
 
     clearTimeout(
       temporizadorCaptura
@@ -1744,6 +1941,7 @@ function cerrarCamaraAR() {
 
     temporizadorCaptura =
       null;
+
 
   }
 
@@ -1776,10 +1974,13 @@ function cerrarCamaraAR() {
 
 
       console.warn(
+        'Error cerrando MindAR:',
         error
       );
 
+
     }
+
 
   }
 
@@ -1792,18 +1993,28 @@ function cerrarCamaraAR() {
     false;
 
 
-  experienciaARActiva =
+  experienciaActiva =
     null;
+
+
+  // Ahora sí podemos ocultar los dos.
+
+  activarModelo(
+    null
+  );
 
 
   if (
     pantallaAR
   ) {
 
+
     pantallaAR.style.display =
       'none';
 
+
   }
+
 
 }
 
@@ -1812,48 +2023,57 @@ function cerrarCamaraAR() {
 // MENSAJES
 // ============================================================
 
-function actualizarMensajeAR(
+function actualizarMensaje(
   texto
 ) {
+
 
   if (
     mensajeAR
   ) {
 
+
     mensajeAR.textContent =
       texto;
 
+
   }
+
 
 }
 
 
-function actualizarEstadoTarget(
+function actualizarEstado(
   texto
 ) {
+
 
   if (
     estadoTarget
   ) {
 
+
     estadoTarget.textContent =
       texto;
 
+
   }
+
 
 }
 
 
 // ============================================================
-// CAPTURA
+// HABILITAR CAPTURA
 // ============================================================
 
-function habilitarCaptura() {
+function habilitarCaptura(
+  config
+) {
 
 
   if (
-    !btnCapturar ||
-    !experienciaARActiva
+    !btnCapturar
   ) {
 
     return;
@@ -1861,30 +2081,20 @@ function habilitarCaptura() {
   }
 
 
-  const config =
-    experiencias[
-      experienciaARActiva
-    ];
-
-
   btnCapturar.disabled =
     false;
 
 
-  btnCapturar.innerHTML = `
+  btnCapturar.textContent =
+    config.captura;
 
-    <span>
-
-      ${config.icono}
-
-    </span>
-
-    ${config.textoCapturar}
-
-  `;
 
 }
 
+
+// ============================================================
+// DESHABILITAR
+// ============================================================
 
 function deshabilitarCaptura() {
 
@@ -1902,21 +2112,15 @@ function deshabilitarCaptura() {
     true;
 
 
-  btnCapturar.innerHTML = `
+  btnCapturar.textContent =
+    '👀 Busca la imagen...';
 
-    <span>
-      👀
-    </span>
-
-    Busca la imagen...
-
-  `;
 
 }
 
 
 // ============================================================
-// SALIR
+// SALIR DE LA WEB
 // ============================================================
 
 window.addEventListener(
@@ -1939,6 +2143,7 @@ window.addEventListener(
       // Nada
 
     }
+
 
   }
 );
