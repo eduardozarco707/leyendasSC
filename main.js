@@ -6,16 +6,27 @@ import './style.css';
 // ============================================================
 
 const sidebar =
-  document.getElementById('sidebar');
+  document.getElementById(
+    'sidebar'
+  );
+
 
 const btnMenu =
-  document.getElementById('btn-menu');
+  document.getElementById(
+    'btn-menu'
+  );
+
 
 const areaTexto =
-  document.getElementById('contenido-dinamico');
+  document.getElementById(
+    'contenido-dinamico'
+  );
+
 
 const botonesLeyenda =
-  document.querySelectorAll('.btn-leyenda');
+  document.querySelectorAll(
+    '.btn-leyenda'
+  );
 
 
 // ============================================================
@@ -23,52 +34,93 @@ const botonesLeyenda =
 // ============================================================
 
 const pantallaAR =
-  document.getElementById('pantalla-ar');
+  document.getElementById(
+    'pantalla-ar'
+  );
+
 
 const escenaAR =
-  document.getElementById('escena-ar');
+  document.getElementById(
+    'escena-ar'
+  );
+
 
 const targetGuajojo =
-  document.getElementById('target-guajojo');
+  document.getElementById(
+    'target-guajojo'
+  );
+
 
 const targetCarreton =
-  document.getElementById('target-carreton');
+  document.getElementById(
+    'target-carreton'
+  );
+
 
 const modeloGuajojo =
-  document.getElementById('modelo-guajojo');
+  document.getElementById(
+    'modelo-guajojo'
+  );
+
 
 const modeloCarreton =
-  document.getElementById('modelo-carreton');
+  document.getElementById(
+    'modelo-carreton'
+  );
+
 
 const btnCerrarAR =
-  document.getElementById('btn-cerrar-ar');
+  document.getElementById(
+    'btn-cerrar-ar'
+  );
+
 
 const btnCapturar =
-  document.getElementById('btn-capturar');
+  document.getElementById(
+    'btn-capturar'
+  );
+
 
 const mensajeAR =
-  document.getElementById('mensaje-ar');
+  document.getElementById(
+    'mensaje-ar'
+  );
+
 
 const estadoTarget =
-  document.getElementById('estado-target');
+  document.getElementById(
+    'estado-target'
+  );
+
 
 const textoInstruccionAR =
-  document.getElementById('texto-instruccion-ar');
+  document.getElementById(
+    'texto-instruccion-ar'
+  );
 
 
 // ============================================================
-// VARIABLES AR
+// ESTADO AR
 // ============================================================
 
-let arActivo = false;
+let arActivo =
+  false;
 
-let arIniciando = false;
 
-let targetVisible = false;
+let arIniciando =
+  false;
 
-let experienciaARActiva = null;
 
-let temporizadorCaptura = null;
+let targetVisible =
+  false;
+
+
+let experienciaARActiva =
+  null;
+
+
+let temporizadorCaptura =
+  null;
 
 
 // ============================================================
@@ -76,6 +128,11 @@ let temporizadorCaptura = null;
 // ============================================================
 
 const experiencias = {
+
+
+  // ==========================================================
+  // GUAJOJÓ
+  // ==========================================================
 
   guajojo: {
 
@@ -104,10 +161,20 @@ const experiencias = {
       '🦉 ¡Encontraste al Guajojó!',
 
     instruccion:
-      'Apunta hacia la imagen del Guajojó'
+      'Apunta hacia la imagen del Guajojó',
+
+    textoCapturar:
+      'CAPTURAR GUAJOJÓ',
+
+    iconoCapturar:
+      '🦉'
 
   },
 
+
+  // ==========================================================
+  // CARRETÓN
+  // ==========================================================
 
   carreton: {
 
@@ -136,7 +203,13 @@ const experiencias = {
       '☠️ ¡Encontraste el Carretón!',
 
     instruccion:
-      'Apunta hacia la imagen del Carretón'
+      'Apunta hacia la imagen del Carretón',
+
+    textoCapturar:
+      'CAPTURAR CARRETÓN',
+
+    iconoCapturar:
+      '☠️'
 
   }
 
@@ -160,7 +233,7 @@ btnMenu?.addEventListener(
 
 
 // ============================================================
-// BOTONES DEL MENÚ
+// BOTONES DE LEYENDAS
 // ============================================================
 
 botonesLeyenda.forEach(
@@ -240,6 +313,7 @@ function seleccionarLeyenda(
 
   switch (leyenda) {
 
+
     case 'carreton':
 
       mostrarCarreton();
@@ -287,7 +361,7 @@ function seleccionarLeyenda(
 
 
 // ============================================================
-// CABECERA REUTILIZABLE
+// CABECERA DE LEYENDA
 // ============================================================
 
 function crearCabeceraLeyenda({
@@ -303,31 +377,44 @@ function crearCabeceraLeyenda({
 
     <div class="cabecera-leyenda">
 
+
       <div class="titulo-leyenda">
 
+
         <span class="sobrelinea">
+
           ${etiqueta}
+
         </span>
 
 
         <h2>
+
           ${titulo}
+
         </h2>
 
 
         <p class="descripcion-leyenda">
+
           ${descripcion}
+
         </p>
 
+
       </div>
+
 
 
       <div
         class="insignia-leyenda"
         aria-hidden="true"
       >
+
         ${icono}
+
       </div>
+
 
     </div>
 
@@ -354,22 +441,28 @@ function mostrarInicio() {
 
     <div class="contenido-inicio">
 
+
       <span class="sobrelinea">
+
         EXPERIENCIA CULTURAL INTERACTIVA
+
       </span>
 
 
       <h2>
+
         Patio de los Abuelos
+
       </h2>
 
 
       <p class="descripcion-principal">
 
-        Explora las leyendas y tradiciones de
-        Santa Cruz de la Sierra.
+        Explora las leyendas y tradiciones
+        de Santa Cruz de la Sierra.
 
       </p>
+
 
     </div>
 
@@ -379,7 +472,7 @@ function mostrarInicio() {
 
 
 // ============================================================
-// CARRETÓN DE LA OTRA VIDA
+// CARRETÓN
 // ============================================================
 
 function mostrarCarreton() {
@@ -413,7 +506,7 @@ function mostrarCarreton() {
 
 
       <!-- =================================================
-           EXPERIENCIA AR
+           TARGET CARRETÓN
            ================================================= -->
 
       <div class="panel-target">
@@ -423,33 +516,39 @@ function mostrarCarreton() {
 
           src="/carreton-target.jpg"
 
-          alt="Imagen objetivo del Carretón de la Otra Vida"
+          alt="Imagen objetivo del Carretón"
 
           class="imagen-target"
 
         >
 
 
+
         <div class="info-target">
 
 
           <span class="sobrelinea">
+
             EXPERIENCIA AR
+
           </span>
 
 
           <h3>
+
             Encuentra el Carretón
+
           </h3>
 
 
           <p>
 
-            Busca físicamente esta imagen con la cámara.
+            Busca físicamente esta imagen
+            con la cámara.
 
-            Cuando el sistema la reconozca,
-            el Carretón de la Otra Vida aparecerá
-            en realidad aumentada.
+            Cuando la imagen sea reconocida,
+            el modelo 3D del Carretón aparecerá
+            sobre ella.
 
           </p>
 
@@ -497,9 +596,13 @@ function mostrarCarreton() {
 
         <div class="mensaje-capturado">
 
+
           <h3>
+
             ☠️ ¡Has encontrado el Carretón!
+
           </h3>
+
 
           <p>
 
@@ -507,6 +610,7 @@ function mostrarCarreton() {
             inquietantes de la tradición cruceña.
 
           </p>
+
 
         </div>
 
@@ -516,18 +620,22 @@ function mostrarCarreton() {
 
 
           <span class="sobrelinea">
+
             TRADICIÓN ORAL
+
           </span>
 
 
           <h3>
+
             El Carretón de la Otra Vida
+
           </h3>
 
 
           <p>
 
-            Cuentan los antiguos relatos cruceños que
+            Cuentan los antiguos relatos cruceños que,
             en las noches más cerradas, especialmente
             cuando llegaban el sur y el chilchi, el
             silencio de la campiña era interrumpido
@@ -544,6 +652,13 @@ function mostrarCarreton() {
             Nadie necesitaba verlo para saber lo que
             se acercaba. Los ruidos parecían avanzar
             lentamente entre la oscuridad.
+
+          </p>
+
+          <br>
+
+
+          <p>
 
             Se escuchaba también la voz del extraño
             carretero llamando a sus animales, pero
@@ -625,9 +740,7 @@ function mostrarCarreton() {
             Pero lo más aterrador estaba al frente.
 
             Del carretero apenas podía distinguirse
-            el rostro:
-
-            una horrenda calavera.
+            el rostro: una horrenda calavera.
 
             Dentro de sus cuencas vacías brillaba
             un resplandor semejante al fuego.
@@ -639,12 +752,12 @@ function mostrarCarreton() {
 
           <p>
 
-            El hombre perdió inmediatamente toda su
-            valentía.
+            El hombre perdió inmediatamente toda
+            su valentía.
 
-            El miedo le devolvió la sobriedad y salió
-            huyendo desesperadamente hasta llegar a
-            su casa.
+            El miedo le devolvió la sobriedad
+            y salió huyendo desesperadamente
+            hasta llegar a su casa.
 
           </p>
 
@@ -653,47 +766,13 @@ function mostrarCarreton() {
 
           <p>
 
-            Desde entonces, el chirriar de unas ruedas
-            en medio de una noche de sur era suficiente
-            para recordar que quizás el Carretón de la
-            Otra Vida volvía a recorrer los caminos.
+            Desde entonces, el chirriar de unas
+            ruedas en medio de una noche de sur
+            era suficiente para recordar que quizás
+            el Carretón de la Otra Vida volvía
+            a recorrer los caminos.
 
           </p>
-
-
-        </div>
-
-
-
-        <div class="estado-proximamente">
-
-
-          <div class="icono">
-            📜
-          </div>
-
-
-          <div>
-
-
-            <strong>
-              Memoria histórica
-            </strong>
-
-
-            <p>
-
-              Una interpretación difundida sobre el
-              origen del relato relaciona la figura
-              del Carretón con las epidemias que
-              afectaron antiguamente a Santa Cruz y
-              con los vehículos utilizados para
-              trasladar enfermos y fallecidos.
-
-            </p>
-
-
-          </div>
 
 
         </div>
@@ -761,6 +840,10 @@ function mostrarGuajojo() {
 
 
 
+      <!-- =================================================
+           TARGET GUAJOJÓ
+           ================================================= -->
+
       <div class="panel-target">
 
 
@@ -775,26 +858,31 @@ function mostrarGuajojo() {
         >
 
 
+
         <div class="info-target">
 
 
           <span class="sobrelinea">
+
             EXPERIENCIA AR
+
           </span>
 
 
           <h3>
+
             Encuentra al Guajojó
+
           </h3>
 
 
           <p>
 
-            Busca físicamente esta imagen con la cámara.
+            Busca físicamente esta imagen
+            con la cámara.
 
-            Cuando el sistema la reconozca,
-            el modelo 3D del Guajojó aparecerá
-            anclado sobre ella.
+            Cuando la imagen sea reconocida,
+            el Guajojó 3D aparecerá sobre ella.
 
           </p>
 
@@ -825,6 +913,10 @@ function mostrarGuajojo() {
 
 
 
+      <!-- =================================================
+           CONTENIDO DESBLOQUEADO
+           ================================================= -->
+
       <div
 
         id="contenido-capturado-guajojo"
@@ -840,14 +932,16 @@ function mostrarGuajojo() {
 
 
           <h3>
+
             ✨ ¡Guajojó capturado!
+
           </h3>
 
 
           <p>
 
-            Has descubierto una de las leyendas más
-            conocidas del oriente boliviano.
+            Has descubierto una de las leyendas
+            más conocidas del oriente boliviano.
 
           </p>
 
@@ -863,12 +957,16 @@ function mostrarGuajojo() {
 
 
             <span class="sobrelinea">
+
               EXPERIENCIA SONORA
+
             </span>
 
 
             <h3>
+
               Escucha su canto
+
             </h3>
 
 
@@ -927,7 +1025,9 @@ function mostrarGuajojo() {
 
 
           <h3>
+
             La Leyenda del Guajojó
+
           </h3>
 
 
@@ -935,9 +1035,9 @@ function mostrarGuajojo() {
 
             Cuenta la leyenda que hace muchos años,
             en una antigua tribu del oriente,
-            la hija de un cacique se enamoró de un
-            joven a quien su padre consideraba indigno
-            de ella.
+            la hija de un cacique se enamoró de
+            un joven a quien su padre consideraba
+            indigno de ella.
 
           </p>
 
@@ -946,8 +1046,9 @@ function mostrarGuajojo() {
 
           <p>
 
-            El cacique descubrió la relación y acabó
-            con la vida del joven en la selva.
+            El cacique descubrió la relación
+            y acabó con la vida del joven
+            en la selva.
 
           </p>
 
@@ -967,8 +1068,8 @@ function mostrarGuajojo() {
           <p>
 
             Para impedir que revelara el crimen,
-            el cacique utilizó sus poderes y la
-            transformó en un ave nocturna.
+            el cacique utilizó sus poderes
+            y la transformó en un ave nocturna.
 
           </p>
 
@@ -982,7 +1083,9 @@ function mostrarGuajojo() {
             entre los árboles:
 
             <strong>
+
               ¡Gua... jo... jó!
+
             </strong>
 
           </p>
@@ -1134,12 +1237,11 @@ function mostrarViudita() {
             Próxima experiencia
           </strong>
 
-
           <p>
 
-            Aquí agregaremos la historia,
-            modelo 3D y experiencia
-            interactiva de La Viudita.
+            Aquí agregaremos la historia
+            y experiencia interactiva
+            de La Viudita.
 
           </p>
 
@@ -1199,11 +1301,9 @@ function mostrarJichi() {
 
         <div>
 
-
           <strong>
             Próxima experiencia
           </strong>
-
 
           <p>
 
@@ -1212,7 +1312,6 @@ function mostrarJichi() {
             del Jichi.
 
           </p>
-
 
         </div>
 
@@ -1223,65 +1322,6 @@ function mostrarJichi() {
     </div>
 
   `;
-
-}
-
-
-// ============================================================
-// FORZAR MODELO VISIBLE
-// ============================================================
-//
-// Este es uno de los cambios IMPORTANTES.
-//
-// No confiamos solamente en:
-//
-// modelo.setAttribute('visible', true)
-//
-// También modificamos directamente object3D.
-// ============================================================
-
-function forzarModeloVisible(
-  modelo
-) {
-
-  if (!modelo) {
-    return;
-  }
-
-
-  modelo.setAttribute(
-    'visible',
-    true
-  );
-
-
-  if (
-    modelo.object3D
-  ) {
-
-    modelo.object3D.visible =
-      true;
-
-
-    // ========================================================
-    // FORZAR VISIBILIDAD DE LAS MALLAS DEL GLB
-    // ========================================================
-
-    modelo.object3D.traverse(
-      objeto => {
-
-        objeto.visible =
-          true;
-
-      }
-    );
-
-
-    modelo.object3D.updateMatrixWorld(
-      true
-    );
-
-  }
 
 }
 
@@ -1318,50 +1358,64 @@ function ocultarModelo(
 
 
 // ============================================================
-// CONFIGURAR MODELOS SEGÚN EXPERIENCIA
+// MOSTRAR MODELO
 // ============================================================
 
-function prepararModelos(
-  tipo
+function mostrarModelo(
+  modelo
 ) {
 
-  if (
-    tipo ===
-    'guajojo'
-  ) {
-
-    forzarModeloVisible(
-      modeloGuajojo
-    );
-
-
-    ocultarModelo(
-      modeloCarreton
-    );
-
-
+  if (!modelo) {
     return;
   }
 
 
+  // ==========================================================
+  // A-FRAME
+  // ==========================================================
+
+  modelo.setAttribute(
+    'visible',
+    true
+  );
+
+
+  // ==========================================================
+  // THREE.JS
+  // ==========================================================
+
   if (
-    tipo ===
-    'carreton'
+    modelo.object3D
   ) {
 
-    forzarModeloVisible(
-      modeloCarreton
+    modelo.object3D.visible =
+      true;
+
+
+    modelo.object3D.traverse(
+      objeto => {
+
+        objeto.visible =
+          true;
+
+      }
     );
 
 
-    ocultarModelo(
-      modeloGuajojo
+    modelo.object3D.updateMatrixWorld(
+      true
     );
 
-
-    return;
   }
 
+}
+
+
+// ============================================================
+// OCULTAR TODOS LOS GLB
+// ============================================================
+
+function ocultarTodosLosModelos() {
 
   ocultarModelo(
     modeloGuajojo
@@ -1376,10 +1430,10 @@ function prepararModelos(
 
 
 // ============================================================
-// COMPROBAR QUE EL GLB EXISTE
+// COMPROBAR CARGA DEL MODELO
 // ============================================================
 
-function modeloEstaCargado(
+function modeloCargado(
   modelo
 ) {
 
@@ -1398,107 +1452,19 @@ function modeloEstaCargado(
 
 
 // ============================================================
-// ESPERAR A QUE CARGUE MODELO
+// INICIALIZACIÓN
+// ============================================================
+//
+// MUY IMPORTANTE:
+//
+// Al cargar la página los dos modelos empiezan ocultos.
 // ============================================================
 
-function esperarModelo(
-  modelo,
-  tiempoMaximo = 12000
-) {
-
-  return new Promise(
-    resolve => {
-
-
-      if (
-        modeloEstaCargado(
-          modelo
-        )
-      ) {
-
-        resolve(
-          true
-        );
-
-        return;
-      }
-
-
-      let terminado =
-        false;
-
-
-      const finalizar =
-        resultado => {
-
-
-          if (terminado) {
-            return;
-          }
-
-
-          terminado =
-            true;
-
-
-          resolve(
-            resultado
-          );
-
-      };
-
-
-      modelo.addEventListener(
-        'model-loaded',
-        () => {
-
-          finalizar(
-            true
-          );
-
-        },
-        {
-          once: true
-        }
-      );
-
-
-      modelo.addEventListener(
-        'model-error',
-        () => {
-
-          finalizar(
-            false
-          );
-
-        },
-        {
-          once: true
-        }
-      );
-
-
-      setTimeout(
-        () => {
-
-          finalizar(
-            modeloEstaCargado(
-              modelo
-            )
-          );
-
-        },
-        tiempoMaximo
-      );
-
-    }
-  );
-
-}
+ocultarTodosLosModelos();
 
 
 // ============================================================
-// INICIAR REALIDAD AUMENTADA
+// INICIAR CÁMARA AR
 // ============================================================
 
 async function iniciarCamaraAR(
@@ -1559,25 +1525,30 @@ async function iniciarCamaraAR(
     false;
 
 
+  // ==========================================================
+  // IMPORTANTE:
+  //
+  // NO mostramos el GLB aquí.
+  //
+  // El modelo SOLO aparecerá cuando MindAR dispare:
+  //
+  // targetFound
+  //
+  // ==========================================================
+
+  ocultarTodosLosModelos();
+
+
   deshabilitarCaptura();
 
 
-  // ==========================================================
-  // PREPARAR MODELO ANTES DE ABRIR AR
-  // ==========================================================
-
-  prepararModelos(
-    tipo
-  );
-
-
   actualizarMensajeAR(
-    '⏳ Iniciando cámara...'
+    config.mensajeBuscar
   );
 
 
   actualizarEstadoTarget(
-    '🔎 Preparando reconocimiento...'
+    '🔎 Buscando imagen...'
   );
 
 
@@ -1598,54 +1569,8 @@ async function iniciarCamaraAR(
   try {
 
 
-    // ========================================================
-    // ESPERAR ESCENA A-FRAME
-    // ========================================================
-
     await esperarEscenaAR();
 
-
-    // ========================================================
-    // COMPROBAR MODELO 3D
-    // ========================================================
-
-    const cargado =
-      await esperarModelo(
-        config.modelo
-      );
-
-
-    if (!cargado) {
-
-      console.warn(
-
-        `⚠️ El modelo ${config.nombre} todavía no está cargado.`
-
-      );
-
-    } else {
-
-      console.log(
-
-        `✅ Modelo preparado: ${config.nombre}`
-
-      );
-
-    }
-
-
-    // ========================================================
-    // VOLVER A FORZAR VISIBILIDAD
-    // ========================================================
-
-    prepararModelos(
-      tipo
-    );
-
-
-    // ========================================================
-    // SISTEMA MINDAR
-    // ========================================================
 
     const sistemaAR =
       escenaAR.systems[
@@ -1676,12 +1601,10 @@ async function iniciarCamaraAR(
 
 
     // ========================================================
-    // FORZAMOS DE NUEVO DESPUÉS DE START()
+    // SIGUEN OCULTOS
     // ========================================================
 
-    prepararModelos(
-      tipo
-    );
+    ocultarTodosLosModelos();
 
 
     actualizarMensajeAR(
@@ -1716,9 +1639,7 @@ async function iniciarCamaraAR(
       null;
 
 
-    prepararModelos(
-      null
-    );
+    ocultarTodosLosModelos();
 
 
     pantallaAR.style.display =
@@ -1785,7 +1706,7 @@ function esperarEscenaAR() {
 
 
 // ============================================================
-// REGISTRAR EVENTOS DE UN TARGET
+// REGISTRAR TARGET
 // ============================================================
 
 function registrarEventosTarget(
@@ -1808,13 +1729,12 @@ function registrarEventosTarget(
 
 
       console.log(
-        `🎯 MindAR detectó: ${tipo}`
+        `🎯 Imagen reconocida: ${tipo}`
       );
 
 
       // ======================================================
-      // SI ESTAMOS BUSCANDO OTRA LEYENDA,
-      // IGNORAMOS ESTE TARGET.
+      // NO ES LA LEYENDA QUE ESTAMOS BUSCANDO
       // ======================================================
 
       if (
@@ -1822,25 +1742,19 @@ function registrarEventosTarget(
         tipo
       ) {
 
-
-        const configIncorrecta =
-          experiencias[
-            tipo
-          ];
-
-
-        // Ocultamos explícitamente
-        // el modelo equivocado.
-
-        ocultarModelo(
-          configIncorrecta?.modelo
+        console.log(
+          `🚫 ${tipo} ignorado`
         );
 
 
-        console.log(
+        const modeloEquivocado =
+          experiencias[
+            tipo
+          ]?.modelo;
 
-          `🚫 Target ${tipo} ignorado porque estamos buscando ${experienciaARActiva}`
 
+        ocultarModelo(
+          modeloEquivocado
         );
 
 
@@ -1860,30 +1774,45 @@ function registrarEventosTarget(
 
 
       // ======================================================
-      // ESTA ES LA CORRECCIÓN PRINCIPAL
+      // 🔥 AQUÍ APARECE EL GLB
       // ======================================================
       //
-      // Cuando MindAR encuentra la imagen correcta,
-      // forzamos inmediatamente la visibilidad del GLB.
+      // Antes de targetFound estaba oculto.
+      //
+      // En el momento exacto en que MindAR reconoce
+      // la imagen, mostramos el modelo.
       //
       // ======================================================
 
-      prepararModelos(
-        tipo
-      );
+      ocultarTodosLosModelos();
 
 
-      forzarModeloVisible(
+      mostrarModelo(
         config.modelo
       );
 
 
+      actualizarMensajeAR(
+        config.mensajeEncontrado
+      );
+
+
+      actualizarEstadoTarget(
+        '✅ Imagen reconocida'
+      );
+
+
+      console.log(
+        `✅ Mostrando ${config.nombre}.glb`
+      );
+
+
       // ======================================================
-      // SI EL MODELO AÚN NO TERMINÓ DE CARGAR
+      // POR SI EL GLB TODAVÍA ESTÁ TERMINANDO DE CARGAR
       // ======================================================
 
       if (
-        !modeloEstaCargado(
+        !modeloCargado(
           config.modelo
         )
       ) {
@@ -1894,27 +1823,21 @@ function registrarEventosTarget(
         );
 
 
-        config.modelo.addEventListener(
-          'model-loaded',
+        const alCargar =
           () => {
 
 
             if (
 
               experienciaARActiva ===
-              tipo &&
+                tipo &&
 
               targetVisible
 
             ) {
 
 
-              prepararModelos(
-                tipo
-              );
-
-
-              forzarModeloVisible(
+              mostrarModelo(
                 config.modelo
               );
 
@@ -1923,34 +1846,20 @@ function registrarEventosTarget(
                 config.mensajeEncontrado
               );
 
-
             }
 
-          },
+          };
+
+
+        config.modelo.addEventListener(
+          'model-loaded',
+          alCargar,
           {
             once: true
           }
         );
 
-
-      } else {
-
-
-        actualizarMensajeAR(
-          config.mensajeEncontrado
-        );
-
       }
-
-
-      actualizarEstadoTarget(
-        '✅ Imagen reconocida'
-      );
-
-
-      console.log(
-        `✅ Modelo visible: ${config.nombre}`
-      );
 
 
       // ======================================================
@@ -1978,14 +1887,12 @@ function registrarEventosTarget(
               targetVisible &&
 
               experienciaARActiva ===
-              tipo
+                tipo
 
             ) {
 
 
-              // Volvemos a forzar por seguridad.
-
-              forzarModeloVisible(
+              mostrarModelo(
                 config.modelo
               );
 
@@ -2028,12 +1935,21 @@ function registrarEventosTarget(
 
 
       console.log(
-        `👀 Target perdido: ${tipo}`
+        `👀 Imagen perdida: ${tipo}`
       );
 
 
       targetVisible =
         false;
+
+
+      // ======================================================
+      // 🔥 CUANDO SE PIERDE LA IMAGEN, OCULTAMOS EL GLB
+      // ======================================================
+
+      ocultarModelo(
+        config.modelo
+      );
 
 
       if (
@@ -2049,19 +1965,6 @@ function registrarEventosTarget(
           null;
 
       }
-
-
-      // ======================================================
-      // IMPORTANTE
-      //
-      // NO ocultamos manualmente el modelo correcto aquí.
-      //
-      // MindAR ya oculta el target padre cuando pierde
-      // la imagen.
-      //
-      // Así evitamos que el GLB quede bloqueado en false
-      // cuando vuelva a encontrarlo.
-      // ======================================================
 
 
       deshabilitarCaptura();
@@ -2083,7 +1986,7 @@ function registrarEventosTarget(
 
 
 // ============================================================
-// EVENTOS DE LOS DOS TARGETS
+// REGISTRAR GUAJOJÓ
 // ============================================================
 
 registrarEventosTarget(
@@ -2092,6 +1995,10 @@ registrarEventosTarget(
 );
 
 
+// ============================================================
+// REGISTRAR CARRETÓN
+// ============================================================
+
 registrarEventosTarget(
   'carreton',
   targetCarreton
@@ -2099,7 +2006,7 @@ registrarEventosTarget(
 
 
 // ============================================================
-// MINDAR LISTO
+// MINDAR PREPARADO
 // ============================================================
 
 escenaAR?.addEventListener(
@@ -2110,6 +2017,16 @@ escenaAR?.addEventListener(
     console.log(
       '✅ MindAR preparado'
     );
+
+
+    // ========================================================
+    // MUY IMPORTANTE:
+    //
+    // Aunque la cámara ya esté preparada,
+    // los GLB siguen ocultos.
+    // ========================================================
+
+    ocultarTodosLosModelos();
 
 
     if (
@@ -2127,15 +2044,6 @@ escenaAR?.addEventListener(
       ];
 
 
-    // ========================================================
-    // OTRA VEZ ASEGURAMOS MODELO ACTIVO
-    // ========================================================
-
-    prepararModelos(
-      experienciaARActiva
-    );
-
-
     actualizarMensajeAR(
       config.mensajeBuscar
     );
@@ -2150,7 +2058,7 @@ escenaAR?.addEventListener(
 
 
 // ============================================================
-// ERROR MINDAR
+// ERROR AR
 // ============================================================
 
 escenaAR?.addEventListener(
@@ -2162,6 +2070,9 @@ escenaAR?.addEventListener(
       '❌ Error MindAR:',
       event
     );
+
+
+    ocultarTodosLosModelos();
 
 
     actualizarMensajeAR(
@@ -2191,43 +2102,35 @@ modeloGuajojo?.addEventListener(
     );
 
 
+    // ========================================================
+    // NO mostrar automáticamente.
+    //
+    // Solo mostrar si:
+    //
+    // 1. estamos buscando Guajojó
+    // 2. el target está actualmente reconocido
+    // ========================================================
+
     if (
+
       experienciaARActiva ===
-      'guajojo'
+        'guajojo' &&
+
+      targetVisible
+
     ) {
 
-      forzarModeloVisible(
+
+      mostrarModelo(
         modeloGuajojo
       );
 
-    }
 
-  }
-);
+    } else {
 
 
-// ============================================================
-// ERROR GUAJOJÓ
-// ============================================================
-
-modeloGuajojo?.addEventListener(
-  'model-error',
-  event => {
-
-
-    console.error(
-      '❌ Error cargando guajojo.glb:',
-      event
-    );
-
-
-    if (
-      experienciaARActiva ===
-      'guajojo'
-    ) {
-
-      actualizarMensajeAR(
-        '❌ Error cargando guajojo.glb'
+      ocultarModelo(
+        modeloGuajojo
       );
 
     }
@@ -2251,11 +2154,24 @@ modeloCarreton?.addEventListener(
 
 
     if (
+
       experienciaARActiva ===
-      'carreton'
+        'carreton' &&
+
+      targetVisible
+
     ) {
 
-      forzarModeloVisible(
+
+      mostrarModelo(
+        modeloCarreton
+      );
+
+
+    } else {
+
+
+      ocultarModelo(
         modeloCarreton
       );
 
@@ -2266,8 +2182,22 @@ modeloCarreton?.addEventListener(
 
 
 // ============================================================
-// ERROR CARRETÓN
+// ERROR MODELOS
 // ============================================================
+
+modeloGuajojo?.addEventListener(
+  'model-error',
+  event => {
+
+
+    console.error(
+      '❌ Error guajojo.glb:',
+      event
+    );
+
+  }
+);
+
 
 modeloCarreton?.addEventListener(
   'model-error',
@@ -2275,21 +2205,9 @@ modeloCarreton?.addEventListener(
 
 
     console.error(
-      '❌ Error cargando carreton.glb:',
+      '❌ Error carreton.glb:',
       event
     );
-
-
-    if (
-      experienciaARActiva ===
-      'carreton'
-    ) {
-
-      actualizarMensajeAR(
-        '❌ Error cargando carreton.glb'
-      );
-
-    }
 
   }
 );
@@ -2309,9 +2227,13 @@ function capturarExperiencia() {
 
 
   if (
+
     !experienciaARActiva ||
+
     !targetVisible ||
+
     btnCapturar?.disabled
+
   ) {
 
     return;
@@ -2338,7 +2260,7 @@ function capturarExperiencia() {
 
 
   // ==========================================================
-  // MOSTRAR CONTENIDO
+  // MOSTRAR HISTORIA
   // ==========================================================
 
   const contenido =
@@ -2347,7 +2269,9 @@ function capturarExperiencia() {
     );
 
 
-  if (contenido) {
+  if (
+    contenido
+  ) {
 
 
     contenido.style.display =
@@ -2377,7 +2301,7 @@ function capturarExperiencia() {
 
 
   // ==========================================================
-  // OCULTAR BOTÓN AR
+  // OCULTAR BOTÓN DE AR
   // ==========================================================
 
   const btnAbrir =
@@ -2386,7 +2310,9 @@ function capturarExperiencia() {
     );
 
 
-  if (btnAbrir) {
+  if (
+    btnAbrir
+  ) {
 
     btnAbrir.style.display =
       'none';
@@ -2441,6 +2367,7 @@ function cerrarCamaraAR() {
     temporizadorCaptura
   ) {
 
+
     clearTimeout(
       temporizadorCaptura
     );
@@ -2456,14 +2383,24 @@ function cerrarCamaraAR() {
 
 
   // ==========================================================
+  // OCULTAR MODELOS
+  // ==========================================================
+
+  ocultarTodosLosModelos();
+
+
+  // ==========================================================
   // DETENER MINDAR
   // ==========================================================
 
   if (
+
     arActivo &&
+
     escenaAR?.systems[
       'mindar-image-system'
     ]
+
   ) {
 
 
@@ -2502,20 +2439,6 @@ function cerrarCamaraAR() {
     null;
 
 
-  // ==========================================================
-  // OCULTAMOS LOS DOS AL SALIR
-  // ==========================================================
-
-  ocultarModelo(
-    modeloGuajojo
-  );
-
-
-  ocultarModelo(
-    modeloCarreton
-  );
-
-
   if (
     pantallaAR
   ) {
@@ -2529,7 +2452,7 @@ function cerrarCamaraAR() {
 
 
 // ============================================================
-// ACTUALIZAR MENSAJE
+// MENSAJES
 // ============================================================
 
 function actualizarMensajeAR(
@@ -2548,10 +2471,6 @@ function actualizarMensajeAR(
 
 }
 
-
-// ============================================================
-// ESTADO TARGET
-// ============================================================
 
 function actualizarEstadoTarget(
   texto
@@ -2578,7 +2497,8 @@ function habilitarCaptura() {
 
 
   if (
-    !btnCapturar
+    !btnCapturar ||
+    !experienciaARActiva
   ) {
 
     return;
@@ -2586,41 +2506,27 @@ function habilitarCaptura() {
   }
 
 
+  const config =
+    experiencias[
+      experienciaARActiva
+    ];
+
+
   btnCapturar.disabled =
     false;
 
 
-  if (
-    experienciaARActiva ===
-    'carreton'
-  ) {
+  btnCapturar.innerHTML = `
 
+    <span>
 
-    btnCapturar.innerHTML = `
+      ${config.iconoCapturar}
 
-      <span>
-        ☠️
-      </span>
+    </span>
 
-      CAPTURAR CARRETÓN
+    ${config.textoCapturar}
 
-    `;
-
-
-  } else {
-
-
-    btnCapturar.innerHTML = `
-
-      <span>
-        ✨
-      </span>
-
-      CAPTURAR GUAJOJÓ
-
-    `;
-
-  }
+  `;
 
 }
 
@@ -2659,12 +2565,15 @@ function deshabilitarCaptura() {
 
 
 // ============================================================
-// CERRAR AL ABANDONAR LA WEB
+// SALIR
 // ============================================================
 
 window.addEventListener(
   'beforeunload',
   () => {
+
+
+    ocultarTodosLosModelos();
 
 
     try {
