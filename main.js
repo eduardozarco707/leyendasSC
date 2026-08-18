@@ -30,7 +30,7 @@ const botonesLeyenda =
 
 
 // ============================================================
-// ELEMENTOS AR
+// ELEMENTOS REALIDAD AUMENTADA
 // ============================================================
 
 const pantallaAR =
@@ -41,7 +41,7 @@ const pantallaAR =
 
 const escenaAR =
   document.getElementById(
-    'escena-guajojo'
+    'escena-ar'
   );
 
 
@@ -51,9 +51,21 @@ const targetGuajojo =
   );
 
 
+const targetCarreton =
+  document.getElementById(
+    'target-carreton'
+  );
+
+
 const modeloGuajojo =
   document.getElementById(
     'modelo-guajojo'
+  );
+
+
+const modeloCarreton =
+  document.getElementById(
+    'modelo-carreton'
   );
 
 
@@ -81,8 +93,14 @@ const estadoTarget =
   );
 
 
+const textoInstruccionAR =
+  document.getElementById(
+    'texto-instruccion-ar'
+  );
+
+
 // ============================================================
-// VARIABLES AR
+// ESTADO AR
 // ============================================================
 
 let arActivo =
@@ -97,12 +115,80 @@ let targetVisible =
   false;
 
 
-let leyendaActual =
+let experienciaARActiva =
   null;
 
 
 let temporizadorCaptura =
   null;
+
+
+// ============================================================
+// CONFIGURACIÓN DE EXPERIENCIAS
+// ============================================================
+
+const experiencias = {
+
+
+  guajojo: {
+
+    nombre:
+      'Guajojó',
+
+    target:
+      targetGuajojo,
+
+    modelo:
+      modeloGuajojo,
+
+    botonAbrirId:
+      'btn-abrir-ar-guajojo',
+
+    contenidoId:
+      'contenido-capturado-guajojo',
+
+    audioId:
+      'audio-guajojo',
+
+    mensajeBuscar:
+      'Busca al Guajojó',
+
+    instruccion:
+      'Apunta hacia la imagen del Guajojó'
+
+  },
+
+
+  carreton: {
+
+    nombre:
+      'Carretón de la Otra Vida',
+
+    target:
+      targetCarreton,
+
+    modelo:
+      modeloCarreton,
+
+    botonAbrirId:
+      'btn-abrir-ar-carreton',
+
+    contenidoId:
+      'contenido-capturado-carreton',
+
+    audioId:
+      null,
+
+    mensajeBuscar:
+      'Busca el Carretón de la Otra Vida',
+
+    instruccion:
+      'Apunta hacia la imagen del Carretón'
+
+  }
+
+
+};
 
 
 // ============================================================
@@ -122,7 +208,7 @@ btnMenu?.addEventListener(
 
 
 // ============================================================
-// SELECCIÓN DE LEYENDAS
+// BOTONES DE LEYENDAS
 // ============================================================
 
 botonesLeyenda.forEach(
@@ -146,7 +232,6 @@ botonesLeyenda.forEach(
         );
 
 
-        // En móvil cerramos el menú
         if (
           window.innerWidth <=
           768
@@ -166,7 +251,7 @@ botonesLeyenda.forEach(
 
 
 // ============================================================
-// MARCAR BOTÓN ACTIVO
+// MARCAR BOTÓN SELECCIONADO
 // ============================================================
 
 function marcarBotonActivo(
@@ -187,11 +272,12 @@ function marcarBotonActivo(
   botonSeleccionado.classList.add(
     'activo'
   );
+
 }
 
 
 // ============================================================
-// ELEGIR LEYENDA
+// SELECCIONAR LEYENDA
 // ============================================================
 
 function seleccionarLeyenda(
@@ -199,10 +285,6 @@ function seleccionarLeyenda(
 ) {
 
   cerrarCamaraAR();
-
-
-  leyendaActual =
-    leyenda;
 
 
   switch (leyenda) {
@@ -255,7 +337,7 @@ function seleccionarLeyenda(
 
 
 // ============================================================
-// CONTENIDO BASE DE LEYENDA
+// CABECERA DE LEYENDA
 // ============================================================
 
 function crearCabeceraLeyenda({
@@ -269,29 +351,42 @@ function crearCabeceraLeyenda({
 
     <div class="cabecera-leyenda">
 
+
       <div class="titulo-leyenda">
 
         <span class="sobrelinea">
+
           ${etiqueta}
+
         </span>
 
+
         <h2>
+
           ${titulo}
+
         </h2>
 
+
         <p class="descripcion-leyenda">
+
           ${descripcion}
+
         </p>
 
       </div>
+
 
 
       <div
         class="insignia-leyenda"
         aria-hidden="true"
       >
+
         ${icono}
+
       </div>
+
 
     </div>
 
@@ -304,76 +399,37 @@ function crearCabeceraLeyenda({
 
 
 // ============================================================
-// CARRETÓN
+// INICIO
 // ============================================================
 
-function mostrarCarreton() {
+function mostrarInicio() {
 
-  if (!areaTexto) return;
+  if (!areaTexto) {
+    return;
+  }
 
 
   areaTexto.innerHTML = `
 
-    <div class="vista-leyenda">
+    <div class="contenido-inicio">
 
 
-      ${crearCabeceraLeyenda({
-
-        etiqueta:
-          'LEYENDA TRADICIONAL CRUCEÑA',
-
-        titulo:
-          'El Carretón de la Otra Vida',
-
-        descripcion:
-          'El crujir de unas antiguas ruedas rompe el silencio de la noche y anuncia el paso de un misterioso carretón.',
-
-        icono:
-          '🛞'
-
-      })}
+      <span class="sobrelinea">
+        EXPERIENCIA CULTURAL INTERACTIVA
+      </span>
 
 
-      <div class="historia-leyenda">
-
-        <h3>
-          La leyenda
-        </h3>
-
-        <p>
-          Cuenta la tradición que durante las noches
-          silenciosas puede escucharse el sonido de un
-          antiguo carretón avanzando lentamente por las
-          calles. El sonido de sus ruedas de madera se
-          aproxima en medio de la oscuridad, pero quienes
-          intentan descubrir su origen pocas veces logran
-          encontrarlo.
-        </p>
-
-      </div>
+      <h2>
+        Patio de los Abuelos
+      </h2>
 
 
-      <div class="estado-proximamente">
+      <p class="descripcion-principal">
 
-        <div class="icono">
-          🎮
-        </div>
+        Explora las leyendas y tradiciones de
+        Santa Cruz de la Sierra.
 
-        <div>
-
-          <strong>
-            Experiencia interactiva en preparación
-          </strong>
-
-          <p>
-            Esta sección está preparada para incorporar
-            posteriormente audio, animación o una experiencia
-            de realidad aumentada del Carretón.
-          </p>
-
-        </div>
-
-      </div>
+      </p>
 
 
     </div>
@@ -384,12 +440,388 @@ function mostrarCarreton() {
 
 
 // ============================================================
+// CARRETÓN DE LA OTRA VIDA
+// ============================================================
+
+function mostrarCarreton() {
+
+  if (!areaTexto) {
+    return;
+  }
+
+
+  areaTexto.innerHTML = `
+
+    <div class="vista-leyenda">
+
+
+      ${crearCabeceraLeyenda({
+
+        etiqueta:
+          'TRADICIÓN ORAL CRUCEÑA',
+
+        titulo:
+          'El Carretón de la Otra Vida',
+
+        descripcion:
+          'Cuando llegaban las noches oscuras de sur y chilchi, el silencio de la campiña podía romperse con el extraño chirriar de unos ejes y el restallar de un látigo.',
+
+        icono:
+          '🛞'
+
+      })}
+
+
+
+      <!-- =================================================
+           PANEL AR CARRETÓN
+           ================================================= -->
+
+      <div class="panel-target">
+
+
+        <img
+
+          src="/carreton-target.jpg"
+
+          alt="Imagen objetivo del Carretón de la Otra Vida"
+
+          class="imagen-target"
+
+        >
+
+
+
+        <div class="info-target">
+
+
+          <span class="sobrelinea">
+            EXPERIENCIA AR
+          </span>
+
+
+          <h3>
+            Encuentra el Carretón
+          </h3>
+
+
+          <p>
+
+            Busca físicamente esta imagen con la cámara.
+            Cuando MindAR la reconozca, el Carretón de la
+            Otra Vida aparecerá en realidad aumentada.
+
+          </p>
+
+
+
+          <button
+
+            id="btn-abrir-ar-carreton"
+
+            class="btn-ver-ar"
+
+            type="button"
+
+          >
+
+            <span>
+              📱
+            </span>
+
+            BUSCAR EL CARRETÓN EN AR
+
+          </button>
+
+
+        </div>
+
+
+      </div>
+
+
+
+      <!-- =================================================
+           CONTENIDO BLOQUEADO
+           ================================================= -->
+
+      <div
+
+        id="contenido-capturado-carreton"
+
+        style="
+          display: none;
+        "
+
+      >
+
+
+        <!-- CAPTURADO -->
+
+        <div class="mensaje-capturado">
+
+          <h3>
+            ☠️ ¡Has encontrado el Carretón!
+          </h3>
+
+          <p>
+
+            Has desbloqueado uno de los relatos más
+            inquietantes de la tradición cruceña.
+
+          </p>
+
+        </div>
+
+
+
+        <!-- =================================================
+             HISTORIA TRADICIONAL
+             ================================================= -->
+
+        <div class="historia-leyenda">
+
+
+          <span class="sobrelinea">
+            TRADICIÓN ORAL
+          </span>
+
+
+          <h3>
+            El Carretón de la Otra Vida
+          </h3>
+
+
+          <p>
+
+            Cuentan los antiguos relatos cruceños que en las
+            noches más cerradas, especialmente cuando llegaban
+            el sur y el chilchi, el silencio de la campiña era
+            interrumpido de pronto por un agudo chirriar de
+            ejes y el violento restallar de un látigo.
+
+          </p>
+
+          <br>
+
+
+          <p>
+
+            Nadie necesitaba verlo para saber lo que se
+            acercaba. Los ruidos parecían avanzar lentamente
+            entre la oscuridad. Se escuchaba también la voz
+            del extraño carretero llamando a sus animales,
+            pero aquella voz no parecía salir de una garganta
+            humana.
+
+          </p>
+
+          <br>
+
+
+          <p>
+
+            Cuando algún relámpago iluminaba por unos segundos
+            la noche, quienes tenían el valor de mirar apenas
+            alcanzaban a distinguir la figura imprecisa de un
+            antiguo carretón desplazándose entre las sombras.
+
+          </p>
+
+          <br>
+
+
+          <p>
+
+            La aparición no pertenecía solamente a la
+            campiña. También se decía que recorría las
+            afueras de Santa Cruz, pasando por el antiguo
+            camino cercano al cementerio y avanzando en
+            dirección al Lazareto.
+
+          </p>
+
+          <br>
+
+
+          <p>
+
+            Una noche, un trasnochador que había pasado
+            varias horas bebiendo decidió enfrentarse a la
+            aparición. Al ver acercarse el misterioso
+            vehículo, reunió valor y corrió hacia él para
+            descubrir qué era realmente.
+
+          </p>
+
+          <br>
+
+
+          <p>
+
+            Entonces vio algo que jamás olvidaría.
+
+          </p>
+
+          <br>
+
+
+          <p>
+
+            El supuesto carretón no estaba construido como
+            uno común. Sus partes parecían formadas por
+            huesos humanos: largos huesos ocupaban el lugar
+            de las estacas y costillas desnudas componían
+            partes de su estructura.
+
+          </p>
+
+          <br>
+
+
+          <p>
+
+            Pero lo más aterrador estaba al frente.
+
+            Del carretero apenas podía distinguirse el
+            rostro: una horrenda calavera. Dentro de sus
+            cuencas vacías brillaba un resplandor semejante
+            al fuego.
+
+          </p>
+
+          <br>
+
+
+          <p>
+
+            El hombre perdió inmediatamente toda su valentía.
+            El miedo le devolvió la sobriedad y salió huyendo
+            desesperadamente hasta llegar a su casa.
+
+          </p>
+
+          <br>
+
+
+          <p>
+
+            Desde entonces, el chirriar de unas ruedas en
+            medio de una noche de sur era suficiente para
+            recordar a los cruceños que quizás el Carretón
+            de la Otra Vida volvía a recorrer los caminos.
+
+          </p>
+
+
+          <div class="barra-leyenda"></div>
+
+
+          <p
+            style="
+              font-family: Arial, sans-serif;
+              font-size: 0.82rem;
+              color: #6a746f;
+              text-align: left;
+              line-height: 1.6;
+            "
+          >
+
+            Relato adaptado de la tradición oral recopilada
+            por Hernando Sanabria Fernández en
+            <em>
+              Tradiciones, Leyendas y Casos de Santa Cruz
+              de la Sierra
+            </em>.
+
+          </p>
+
+
+        </div>
+
+
+
+        <!-- =================================================
+             CONTEXTO HISTÓRICO
+             ================================================= -->
+
+        <div class="estado-proximamente">
+
+
+          <div class="icono">
+            📜
+          </div>
+
+
+          <div>
+
+
+            <strong>
+              Tras la leyenda existe también una memoria histórica
+            </strong>
+
+
+            <p>
+
+              Una interpretación difundida sobre el origen del
+              mito lo relaciona con las epidemias de viruela que
+              golpearon Santa Cruz a finales del siglo XIX.
+
+              Los enfermos y moribundos eran trasladados fuera
+              de la ciudad y el paso de aquellos carretones,
+              asociado al miedo al contagio y a la muerte,
+              habría contribuido a alimentar la leyenda.
+
+            </p>
+
+
+          </div>
+
+
+        </div>
+
+
+      </div>
+
+
+    </div>
+
+  `;
+
+
+  // ==========================================================
+  // BOTÓN AR CARRETÓN
+  // ==========================================================
+
+  const btnAbrir =
+    document.getElementById(
+      'btn-abrir-ar-carreton'
+    );
+
+
+  btnAbrir?.addEventListener(
+    'click',
+    () => {
+
+      iniciarCamaraAR(
+        'carreton'
+      );
+
+    }
+  );
+
+}
+
+
+// ============================================================
 // GUAJOJÓ
 // ============================================================
 
 function mostrarGuajojo() {
 
-  if (!areaTexto) return;
+  if (!areaTexto) {
+    return;
+  }
 
 
   areaTexto.innerHTML = `
@@ -414,19 +846,28 @@ function mostrarGuajojo() {
       })}
 
 
-      <!-- TARGET -->
+
+      <!-- =================================================
+           PANEL TARGET
+           ================================================= -->
 
       <div class="panel-target">
 
 
         <img
+
           src="/guajojo-target.jpg"
-          alt="Imagen objetivo para encontrar al Guajojó"
+
+          alt="Imagen objetivo del Guajojó"
+
           class="imagen-target"
+
         >
 
 
+
         <div class="info-target">
+
 
           <span class="sobrelinea">
             EXPERIENCIA AR
@@ -439,23 +880,33 @@ function mostrarGuajojo() {
 
 
           <p>
+
             Busca físicamente esta imagen con la cámara.
-            Cuando el sistema la reconozca, el modelo 3D
-            del Guajojó aparecerá anclado sobre ella.
+            Cuando el sistema la reconozca, el modelo
+            3D del Guajojó aparecerá sobre ella.
+
           </p>
 
 
+
           <button
-            id="btn-abrir-ar"
+
+            id="btn-abrir-ar-guajojo"
+
             class="btn-ver-ar"
+
             type="button"
+
           >
+
             <span>
               📱
             </span>
 
-            INICIAR EXPERIENCIA AR
+            BUSCAR AL GUAJOJÓ EN AR
+
           </button>
+
 
         </div>
 
@@ -464,66 +915,104 @@ function mostrarGuajojo() {
 
 
 
-      <!-- CONTENIDO CAPTURADO -->
+      <!-- =================================================
+           CONTENIDO CAPTURADO
+           ================================================= -->
 
-      <div id="contenido-capturado">
+      <div
+
+        id="contenido-capturado-guajojo"
+
+        style="
+          display: none;
+        "
+
+      >
 
 
         <div class="mensaje-capturado">
+
 
           <h3>
             ✨ ¡Guajojó capturado!
           </h3>
 
+
           <p>
+
             Has descubierto una de las leyendas más
             conocidas del oriente boliviano.
+
           </p>
+
 
         </div>
 
 
+
+        <!-- MULTIMEDIA -->
 
         <div class="multimedia-leyenda">
 
 
           <div class="reproductor-leyenda">
 
+
             <span class="sobrelinea">
               EXPERIENCIA SONORA
             </span>
+
 
             <h3>
               Escucha su canto
             </h3>
 
+
             <p>
-              Reproduce el audio y escucha el característico
-              sonido asociado al Guajojó.
+
+              Escucha el característico canto asociado
+              al Guajojó.
+
             </p>
 
 
+
             <audio
+
               id="audio-guajojo"
+
               controls
+
             >
 
+
               <source
+
                 src="/audio-guajojo.mp3"
+
                 type="audio/mpeg"
+
               >
+
 
               Tu navegador no soporta audio.
 
+
             </audio>
+
 
           </div>
 
 
+
           <img
+
             src="/foto-guajojo.jpg"
+
             alt="Fotografía del Guajojó"
+
             class="foto-leyenda"
+
           >
 
 
@@ -531,7 +1020,10 @@ function mostrarGuajojo() {
 
 
 
+        <!-- HISTORIA -->
+
         <div class="historia-leyenda">
+
 
           <h3>
             La Leyenda del Guajojó
@@ -539,48 +1031,61 @@ function mostrarGuajojo() {
 
 
           <p>
+
             Cuenta la leyenda que hace muchos años,
-            en una antigua tribu de la selva oriental,
-            la hermosa hija del cacique se enamoró
-            perdidamente de un joven guerrero.
+            en una antigua tribu del oriente,
+            la hija de un cacique se enamoró de un
+            joven a quien su padre consideraba indigno
+            de ella.
+
           </p>
 
           <br>
 
 
           <p>
-            Al enterarse de este romance prohibido,
-            el cacique enfureció y llevó al joven guerrero
-            a lo más profundo de la selva.
+
+            El cacique descubrió la relación y acabó
+            con la vida del joven en la selva.
+
           </p>
 
           <br>
 
 
           <p>
-            La muchacha salió desesperada en busca de
-            su amado y finalmente encontró su cuerpo
-            sin vida.
+
+            Cuando la muchacha descubrió lo sucedido,
+            enfrentó a su padre.
+
           </p>
 
           <br>
 
 
           <p>
-            Su llanto fue tan profundo que los espíritus
-            de la selva la transformaron en un ave.
+
+            Para impedir que revelara el crimen,
+            el cacique utilizó sus poderes y la
+            transformó en un ave nocturna.
+
           </p>
 
           <br>
 
 
           <p>
+
             Desde entonces, durante las noches,
-            puede escucharse su triste canto:
+            su lamento continúa escuchándose entre
+            los árboles:
+
             <strong>
               ¡Gua... jo... jó!
             </strong>
+
           </p>
+
 
         </div>
 
@@ -594,18 +1099,24 @@ function mostrarGuajojo() {
 
 
   // ==========================================================
-  // BOTÓN AR
+  // BOTÓN AR GUAJOJÓ
   // ==========================================================
 
-  const btnAbrirAR =
+  const btnAbrir =
     document.getElementById(
-      'btn-abrir-ar'
+      'btn-abrir-ar-guajojo'
     );
 
 
-  btnAbrirAR?.addEventListener(
+  btnAbrir?.addEventListener(
     'click',
-    iniciarCamaraAR
+    () => {
+
+      iniciarCamaraAR(
+        'guajojo'
+      );
+
+    }
   );
 
 }
@@ -617,7 +1128,9 @@ function mostrarGuajojo() {
 
 function mostrarDuende() {
 
-  if (!areaTexto) return;
+  if (!areaTexto) {
+    return;
+  }
 
 
   areaTexto.innerHTML = `
@@ -634,7 +1147,7 @@ function mostrarDuende() {
           'El Duende',
 
         descripcion:
-          'Una nueva leyenda se incorpora a la experiencia. Esta sección está preparada para desarrollar su historia, contenido multimedia y futura interacción.',
+          'Una nueva leyenda se incorpora al recorrido interactivo de Santa Cruz.',
 
         icono:
           '🌿'
@@ -644,23 +1157,27 @@ function mostrarDuende() {
 
       <div class="estado-proximamente">
 
+
         <div class="icono">
           🌿
         </div>
 
+
         <div>
 
           <strong>
-            El Duende será la próxima experiencia
+            Próxima experiencia
           </strong>
 
           <p>
-            Aquí podremos agregar su historia completa,
-            fotografías, sonidos, modelo 3D y una mecánica
-            interactiva propia.
+
+            Aquí agregaremos la historia, modelo 3D
+            y experiencia AR del Duende.
+
           </p>
 
         </div>
+
 
       </div>
 
@@ -678,7 +1195,9 @@ function mostrarDuende() {
 
 function mostrarViudita() {
 
-  if (!areaTexto) return;
+  if (!areaTexto) {
+    return;
+  }
 
 
   areaTexto.innerHTML = `
@@ -695,7 +1214,7 @@ function mostrarViudita() {
           'La Viudita',
 
         descripcion:
-          'Una misteriosa figura vinculada a los relatos nocturnos se incorpora al recorrido de Leyendas de Santa Cruz.',
+          'Una misteriosa aparición de las antiguas noches cruceñas.',
 
         icono:
           '🕯️'
@@ -705,23 +1224,27 @@ function mostrarViudita() {
 
       <div class="estado-proximamente">
 
+
         <div class="icono">
           🕯️
         </div>
 
+
         <div>
 
           <strong>
-            Experiencia de La Viudita en desarrollo
+            Próxima experiencia
           </strong>
 
           <p>
-            Esta sección está lista para incorporar su
-            narración, recursos multimedia y una futura
-            experiencia inmersiva.
+
+            Aquí agregaremos la historia y experiencia
+            interactiva de La Viudita.
+
           </p>
 
         </div>
+
 
       </div>
 
@@ -739,7 +1262,9 @@ function mostrarViudita() {
 
 function mostrarJichi() {
 
-  if (!areaTexto) return;
+  if (!areaTexto) {
+    return;
+  }
 
 
   areaTexto.innerHTML = `
@@ -756,7 +1281,7 @@ function mostrarJichi() {
           'El Jichi',
 
         descripcion:
-          'La experiencia incorpora al Jichi como una nueva historia dentro del recorrido de mitos y leyendas del oriente boliviano.',
+          'Un ser ancestral relacionado con la protección del agua.',
 
         icono:
           '💧'
@@ -766,23 +1291,27 @@ function mostrarJichi() {
 
       <div class="estado-proximamente">
 
+
         <div class="icono">
           💧
         </div>
 
+
         <div>
 
           <strong>
-            Experiencia del Jichi en preparación
+            Próxima experiencia
           </strong>
 
           <p>
-            Más adelante podremos crear una experiencia
-            vinculada al agua, sonidos ambientales y un
-            modelo 3D interactivo.
+
+            Aquí agregaremos la historia, modelo 3D
+            y experiencia interactiva del Jichi.
+
           </p>
 
         </div>
+
 
       </div>
 
@@ -795,15 +1324,73 @@ function mostrarJichi() {
 
 
 // ============================================================
-// INICIAR MINDAR
+// MOSTRAR SOLO EL MODELO DE LA EXPERIENCIA ACTUAL
 // ============================================================
 
-async function iniciarCamaraAR() {
+function mostrarSoloModelo(
+  tipo
+) {
+
+  if (modeloGuajojo) {
+
+    modeloGuajojo.setAttribute(
+
+      'visible',
+
+      tipo ===
+      'guajojo'
+
+    );
+
+  }
+
+
+  if (modeloCarreton) {
+
+    modeloCarreton.setAttribute(
+
+      'visible',
+
+      tipo ===
+      'carreton'
+
+    );
+
+  }
+
+}
+
+
+// ============================================================
+// INICIAR REALIDAD AUMENTADA
+// ============================================================
+
+async function iniciarCamaraAR(
+  tipo
+) {
 
   if (
     arActivo ||
     arIniciando
   ) {
+
+    return;
+
+  }
+
+
+  const config =
+    experiencias[
+      tipo
+    ];
+
+
+  if (!config) {
+
+    console.error(
+      'Experiencia AR inexistente:',
+      tipo
+    );
 
     return;
 
@@ -828,21 +1415,38 @@ async function iniciarCamaraAR() {
     true;
 
 
+  experienciaARActiva =
+    tipo;
+
+
   targetVisible =
     false;
+
+
+  mostrarSoloModelo(
+    tipo
+  );
 
 
   deshabilitarCaptura();
 
 
   actualizarMensajeAR(
-    'Iniciando cámara...'
+    config.mensajeBuscar
   );
 
 
   actualizarEstadoTarget(
     '🔎 Preparando reconocimiento...'
   );
+
+
+  if (textoInstruccionAR) {
+
+    textoInstruccionAR.textContent =
+      config.instruccion;
+
+  }
 
 
   pantallaAR.style.display =
@@ -882,7 +1486,9 @@ async function iniciarCamaraAR() {
     // INICIAR
     // ========================================================
 
-    await sistemaAR.start();
+    await Promise.resolve(
+      sistemaAR.start()
+    );
 
 
     arActivo =
@@ -890,17 +1496,21 @@ async function iniciarCamaraAR() {
 
 
     actualizarMensajeAR(
-      'Busca la imagen objetivo'
+      config.mensajeBuscar
     );
 
 
     actualizarEstadoTarget(
-      '📷 Apunta la cámara hacia la imagen'
+      '📷 Apunta hacia la imagen objetivo'
     );
 
 
     console.log(
-      '✅ MindAR iniciado'
+
+      '✅ MindAR iniciado:',
+
+      tipo
+
     );
 
 
@@ -919,6 +1529,15 @@ async function iniciarCamaraAR() {
 
     arActivo =
       false;
+
+
+    experienciaARActiva =
+      null;
+
+
+    mostrarSoloModelo(
+      null
+    );
 
 
     alert(
@@ -942,7 +1561,7 @@ async function iniciarCamaraAR() {
 
 
 // ============================================================
-// ESPERAR ESCENA
+// ESPERAR ESCENA A-FRAME
 // ============================================================
 
 function esperarEscenaAR() {
@@ -981,110 +1600,188 @@ function esperarEscenaAR() {
 
 
 // ============================================================
-// TARGET ENCONTRADO
+// REGISTRAR TARGET
 // ============================================================
 
-targetGuajojo?.addEventListener(
-  'targetFound',
-  () => {
+function registrarEventosTarget(
+  tipo,
+  target
+) {
 
-
-    console.log(
-      '🦉 Target encontrado'
-    );
-
-
-    targetVisible =
-      true;
-
-
-    actualizarMensajeAR(
-      '¡Encontraste al Guajojó!'
-    );
-
-
-    actualizarEstadoTarget(
-      '✅ Imagen reconocida'
-    );
-
-
-    // Esperamos un poco para evitar
-    // detecciones instantáneas inestables.
-
-    if (temporizadorCaptura) {
-
-      clearTimeout(
-        temporizadorCaptura
-      );
-
-    }
-
-
-    temporizadorCaptura =
-      setTimeout(
-        () => {
-
-
-          if (
-            targetVisible
-          ) {
-
-            habilitarCaptura();
-
-          }
-
-        },
-        450
-      );
-
+  if (!target) {
+    return;
   }
-);
 
 
-// ============================================================
-// TARGET PERDIDO
-// ============================================================
+  // ==========================================================
+  // ENCONTRADO
+  // ==========================================================
 
-targetGuajojo?.addEventListener(
-  'targetLost',
-  () => {
-
-
-    console.log(
-      'Target perdido'
-    );
+  target.addEventListener(
+    'targetFound',
+    () => {
 
 
-    targetVisible =
-      false;
+      // Ignorar otros targets
+      if (
+        experienciaARActiva !==
+        tipo
+      ) {
+
+        return;
+
+      }
 
 
-    if (temporizadorCaptura) {
+      const config =
+        experiencias[
+          tipo
+        ];
 
-      clearTimeout(
-        temporizadorCaptura
+
+      console.log(
+        `✅ Target encontrado: ${tipo}`
       );
+
+
+      targetVisible =
+        true;
+
+
+      actualizarMensajeAR(
+
+        tipo === 'carreton'
+
+          ? '☠️ ¡Encontraste el Carretón!'
+
+          : '🦉 ¡Encontraste al Guajojó!'
+
+      );
+
+
+      actualizarEstadoTarget(
+        '✅ Imagen reconocida'
+      );
+
+
+      if (temporizadorCaptura) {
+
+        clearTimeout(
+          temporizadorCaptura
+        );
+
+      }
 
 
       temporizadorCaptura =
-        null;
+        setTimeout(
+          () => {
+
+
+            if (
+
+              targetVisible &&
+
+              experienciaARActiva ===
+              tipo
+
+            ) {
+
+              habilitarCaptura();
+
+            }
+
+          },
+          450
+        );
+
+
+      console.log(
+        config.nombre
+      );
 
     }
+  );
 
 
-    deshabilitarCaptura();
+  // ==========================================================
+  // PERDIDO
+  // ==========================================================
+
+  target.addEventListener(
+    'targetLost',
+    () => {
 
 
-    actualizarMensajeAR(
-      'Busca la imagen objetivo'
-    );
+      if (
+        experienciaARActiva !==
+        tipo
+      ) {
+
+        return;
+
+      }
 
 
-    actualizarEstadoTarget(
-      '🔎 Vuelve a enfocar la imagen'
-    );
+      const config =
+        experiencias[
+          tipo
+        ];
 
-  }
+
+      console.log(
+        `Target perdido: ${tipo}`
+      );
+
+
+      targetVisible =
+        false;
+
+
+      if (temporizadorCaptura) {
+
+        clearTimeout(
+          temporizadorCaptura
+        );
+
+
+        temporizadorCaptura =
+          null;
+
+      }
+
+
+      deshabilitarCaptura();
+
+
+      actualizarMensajeAR(
+        config.mensajeBuscar
+      );
+
+
+      actualizarEstadoTarget(
+        '🔎 Vuelve a enfocar la imagen'
+      );
+
+    }
+  );
+
+}
+
+
+// ============================================================
+// EVENTOS DE AMBOS TARGETS
+// ============================================================
+
+registrarEventosTarget(
+  'guajojo',
+  targetGuajojo
+);
+
+
+registrarEventosTarget(
+  'carreton',
+  targetCarreton
 );
 
 
@@ -1102,13 +1799,24 @@ escenaAR?.addEventListener(
     );
 
 
+    if (!experienciaARActiva) {
+      return;
+    }
+
+
+    const config =
+      experiencias[
+        experienciaARActiva
+      ];
+
+
     actualizarMensajeAR(
-      'Busca la imagen objetivo'
+      config.mensajeBuscar
     );
 
 
     actualizarEstadoTarget(
-      '📷 Apunta hacia la imagen'
+      '📷 Apunta hacia la imagen objetivo'
     );
 
   }
@@ -1144,7 +1852,7 @@ escenaAR?.addEventListener(
 
 
 // ============================================================
-// MODELO CARGADO
+// MODELO GUAJOJÓ
 // ============================================================
 
 modeloGuajojo?.addEventListener(
@@ -1159,23 +1867,47 @@ modeloGuajojo?.addEventListener(
 );
 
 
-// ============================================================
-// ERROR MODELO
-// ============================================================
-
 modeloGuajojo?.addEventListener(
   'model-error',
   event => {
 
+    console.error(
+      '❌ Error guajojo.glb:',
+      event
+    );
+
+  }
+);
+
+
+// ============================================================
+// MODELO CARRETÓN
+// ============================================================
+
+modeloCarreton?.addEventListener(
+  'model-loaded',
+  () => {
+
+    console.log(
+      '✅ carreton.glb cargado'
+    );
+
+  }
+);
+
+
+modeloCarreton?.addEventListener(
+  'model-error',
+  event => {
 
     console.error(
-      'Error cargando guajojo.glb:',
+      '❌ Error carreton.glb:',
       event
     );
 
 
     actualizarMensajeAR(
-      'Error cargando el Guajojó'
+      '❌ Error cargando el Carretón'
     );
 
   }
@@ -1188,14 +1920,15 @@ modeloGuajojo?.addEventListener(
 
 btnCapturar?.addEventListener(
   'click',
-  capturarGuajojo
+  capturarExperiencia
 );
 
 
-function capturarGuajojo() {
+function capturarExperiencia() {
 
 
   if (
+    !experienciaARActiva ||
     !targetVisible ||
     btnCapturar.disabled
   ) {
@@ -1205,17 +1938,32 @@ function capturarGuajojo() {
   }
 
 
+  // Guardar antes de cerrar AR
+  const tipo =
+    experienciaARActiva;
+
+
+  const config =
+    experiencias[
+      tipo
+    ];
+
+
   console.log(
-    '✨ Guajojó capturado'
+    `✨ Capturado: ${tipo}`
   );
 
 
   cerrarCamaraAR();
 
 
+  // ==========================================================
+  // MOSTRAR CONTENIDO DESBLOQUEADO
+  // ==========================================================
+
   const contenido =
     document.getElementById(
-      'contenido-capturado'
+      config.contenidoId
     );
 
 
@@ -1229,6 +1977,7 @@ function capturarGuajojo() {
     setTimeout(
       () => {
 
+
         contenido.scrollIntoView({
 
           behavior:
@@ -1239,6 +1988,7 @@ function capturarGuajojo() {
 
         });
 
+
       },
       200
     );
@@ -1246,31 +1996,46 @@ function capturarGuajojo() {
   }
 
 
-  const btnAbrirAR =
+  // ==========================================================
+  // OCULTAR BOTÓN AR
+  // ==========================================================
+
+  const btnAbrir =
     document.getElementById(
-      'btn-abrir-ar'
+      config.botonAbrirId
     );
 
 
-  if (btnAbrirAR) {
+  if (btnAbrir) {
 
-    btnAbrirAR.style.display =
+    btnAbrir.style.display =
       'none';
 
   }
 
 
-  const audio =
-    document.getElementById(
-      'audio-guajojo'
-    );
+  // ==========================================================
+  // AUDIO SI EXISTE
+  // ==========================================================
+
+  if (
+    config.audioId
+  ) {
 
 
-  audio
-    ?.play()
-    .catch(
-      () => {}
-    );
+    const audio =
+      document.getElementById(
+        config.audioId
+      );
+
+
+    audio
+      ?.play()
+      .catch(
+        () => {}
+      );
+
+  }
 
 }
 
@@ -1308,6 +2073,10 @@ function cerrarCamaraAR() {
 
   deshabilitarCaptura();
 
+
+  // ==========================================================
+  // DETENER MINDAR
+  // ==========================================================
 
   if (
     arActivo &&
@@ -1348,6 +2117,15 @@ function cerrarCamaraAR() {
     false;
 
 
+  experienciaARActiva =
+    null;
+
+
+  mostrarSoloModelo(
+    null
+  );
+
+
   if (pantallaAR) {
 
     pantallaAR.style.display =
@@ -1359,7 +2137,7 @@ function cerrarCamaraAR() {
 
 
 // ============================================================
-// MENSAJES AR
+// MENSAJES
 // ============================================================
 
 function actualizarMensajeAR(
@@ -1393,7 +2171,7 @@ function actualizarEstadoTarget(
 
 
 // ============================================================
-// BOTÓN CAPTURA
+// HABILITAR CAPTURA
 // ============================================================
 
 function habilitarCaptura() {
@@ -1408,17 +2186,44 @@ function habilitarCaptura() {
     false;
 
 
-  btnCapturar.innerHTML =
-    `
+  if (
+    experienciaARActiva ===
+    'carreton'
+  ) {
+
+
+    btnCapturar.innerHTML = `
+
+      <span>
+        ☠️
+      </span>
+
+      CAPTURAR CARRETÓN
+
+    `;
+
+
+  } else {
+
+
+    btnCapturar.innerHTML = `
+
       <span>
         ✨
       </span>
 
       CAPTURAR
+
     `;
+
+  }
 
 }
 
+
+// ============================================================
+// DESHABILITAR CAPTURA
+// ============================================================
 
 function deshabilitarCaptura() {
 
@@ -1432,20 +2237,21 @@ function deshabilitarCaptura() {
     true;
 
 
-  btnCapturar.innerHTML =
-    `
-      <span>
-        👀
-      </span>
+  btnCapturar.innerHTML = `
 
-      Busca la imagen...
-    `;
+    <span>
+      👀
+    </span>
+
+    Busca la imagen...
+
+  `;
 
 }
 
 
 // ============================================================
-// CERRAR AL ABANDONAR PÁGINA
+// SALIR
 // ============================================================
 
 window.addEventListener(
@@ -1453,23 +2259,24 @@ window.addEventListener(
   () => {
 
 
-    if (
-      arActivo
-    ) {
+    if (!arActivo) {
+      return;
+    }
 
-      try {
 
-        escenaAR
-          ?.systems[
-            'mindar-image-system'
-          ]
-          ?.stop();
+    try {
 
-      } catch {
 
-        // No hacer nada.
+      escenaAR
+        ?.systems[
+          'mindar-image-system'
+        ]
+        ?.stop();
 
-      }
+
+    } catch {
+
+      // Nada.
 
     }
 
