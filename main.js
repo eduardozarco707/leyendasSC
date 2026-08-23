@@ -779,74 +779,325 @@ function crearContenidoCapturado(
   }
 
 
-  if (
-    tipo === 'carreton'
-  ) {
+ if (
+  tipo === 'carreton'
+) {
 
-    return `
+  return `
 
-      <div class="mensaje-capturado">
+    <div class="mensaje-capturado">
 
-        <h3>
-          ☠️ ¡Carretón capturado!
-        </h3>
+      <h3>
+        ☠️ ¡Carretón capturado!
+      </h3>
 
-        <p>
-          Has desbloqueado su historia.
-        </p>
+      <p>
+        Has desbloqueado la historia del
+        Carretón de la Otra Vida.
+      </p>
 
-      </div>
+    </div>
 
 
-      <div class="historia-leyenda">
+    <div class="historia-leyenda">
 
-        <h3>
-          El Carretón de la Otra Vida
-        </h3>
 
-        <p>
+      <span class="sobrelinea">
+        HISTORIA Y TRADICIÓN ORAL CRUCEÑA
+      </span>
 
-          En las antiguas noches cruceñas, sobre todo
-          durante las noches de sur y chilchi,
-          se decía que podía escucharse el chirriar
-          de unos ejes y el restallar de un látigo
-          acercándose en medio de la oscuridad.
 
-        </p>
+      <h3>
+        El Carretón de la Otra Vida
+      </h3>
 
-        <br>
 
-        <p>
+      <p>
 
-          Un trasnochador decidió cierta vez
-          acercarse a la misteriosa aparición.
+        Corría el año 1861 y Santa Cruz de la Sierra
+        atravesaba uno de los momentos más difíciles
+        de su historia.
 
-          Al hacerlo descubrió que aquel carretón
-          parecía estar construido con huesos humanos:
-          tibias y peronés formaban sus estacas y
-          costillas descarnadas ocupaban otras partes.
+      </p>
 
-        </p>
 
-        <br>
+      <br>
 
-        <p>
 
-          El carretero era aún más aterrador:
-          su rostro era una calavera en cuyas
-          cuencas brillaba un resplandor semejante
-          al fuego.
+      <p>
 
-          El hombre huyó despavorido.
+        Una grave epidemia de viruela se extendía
+        entre la población.
 
-        </p>
+        Los conocimientos médicos eran todavía
+        limitados y el temor al contagio aumentaba
+        cada día.
 
-      </div>
+      </p>
 
-    `;
 
-  }
+      <br>
 
+
+      <p>
+
+        Durante aquellas jornadas, un carretón
+        recorría las calles transportando enfermos
+        y moribundos hacia las afueras de la ciudad,
+        en dirección al Lazareto.
+
+      </p>
+
+
+      <br>
+
+
+      <p>
+
+        Según los relatos que recuerdan aquella
+        época, el paso del vehículo era anunciado
+        para que los vecinos permanecieran alejados
+        y evitaran exponerse al contagio.
+
+      </p>
+
+
+      <br>
+
+
+      <p>
+
+        Las familias cerraban sus puertas y ventanas
+        mientras aquel carretón avanzaba por las
+        calles de una Santa Cruz golpeada por
+        la enfermedad y el miedo.
+
+      </p>
+
+
+      <br>
+
+
+      <p>
+
+        Con el paso de los años, aquel recuerdo
+        comenzó a mezclarse con la imaginación
+        y la tradición oral de los cruceños.
+
+      </p>
+
+
+      <br>
+
+
+      <p>
+
+        En las noches oscuras, especialmente durante
+        el sur y el chilchi, algunas personas
+        aseguraban escuchar nuevamente el chirriar
+        de unos ejes y el fuerte restallar
+        de un látigo.
+
+      </p>
+
+
+      <br>
+
+
+      <p>
+
+        El sonido parecía avanzar lentamente
+        por los caminos solitarios.
+
+      </p>
+
+
+      <br>
+
+
+      <p>
+
+        También se decía que podía escucharse
+        la extraña voz del carretero llamando
+        a sus animales.
+
+        Pero aquella voz no parecía pertenecer
+        a un ser humano.
+
+      </p>
+
+
+      <br>
+
+
+      <p>
+
+        En ocasiones, algún relámpago iluminaba
+        la noche durante unos segundos y permitía
+        distinguir la silueta de un antiguo
+        carretón avanzando entre las sombras.
+
+      </p>
+
+
+      <br>
+
+
+      <p>
+
+        Cuentan que una noche un trasnochador
+        decidió enfrentarse a la aparición.
+
+      </p>
+
+
+      <br>
+
+
+      <p>
+
+        Reuniendo valor, se acercó al misterioso
+        vehículo para descubrir qué era aquello
+        que recorría los caminos durante la noche.
+
+      </p>
+
+
+      <br>
+
+
+      <p>
+
+        Entonces vio algo aterrador.
+
+      </p>
+
+
+      <br>
+
+
+      <p>
+
+        El carretón ya no parecía construido
+        de madera como uno común.
+
+      </p>
+
+
+      <br>
+
+
+      <p>
+
+        Sus estacas parecían ser huesos humanos.
+
+        Tibias, peronés y costillas formaban
+        parte de aquella macabra estructura.
+
+      </p>
+
+
+      <br>
+
+
+      <p>
+
+        Pero lo más aterrador estaba al frente.
+
+      </p>
+
+
+      <br>
+
+
+      <p>
+
+        El carretero no tenía un rostro humano.
+
+        En su lugar había una horrenda calavera
+        y, dentro de sus cuencas vacías,
+        brillaba un resplandor semejante
+        al fuego.
+
+      </p>
+
+
+      <br>
+
+
+      <p>
+
+        El hombre perdió inmediatamente todo
+        su valor y huyó aterrorizado.
+
+      </p>
+
+
+      <br>
+
+
+      <p>
+
+        Desde entonces, el recuerdo de aquel
+        carretón relacionado con una época
+        de enfermedad y muerte terminó
+        transformándose en una de las apariciones
+        más temidas de la tradición cruceña.
+
+      </p>
+
+
+      <br>
+
+
+      <p>
+
+        Para algunos, aquel vehículo ya no
+        transportaba solamente enfermos o muertos.
+
+      </p>
+
+
+      <br>
+
+
+      <p>
+
+        Transportaba almas hacia la otra vida.
+
+      </p>
+
+
+      <br>
+
+
+      <p>
+
+        Y así, entre la memoria de una epidemia,
+        el miedo de las antiguas noches cruceñas
+        y la tradición transmitida de generación
+        en generación, nació la leyenda de:
+
+      </p>
+
+
+      <br>
+
+
+      <p class="frase-final-leyenda">
+
+        <strong>
+          El Carretón de la Otra Vida.
+        </strong>
+
+      </p>
+
+
+    </div>
+
+  `;
+
+}
 
   if (
     tipo === 'jichi'
