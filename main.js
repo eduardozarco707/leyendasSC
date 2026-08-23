@@ -2,7 +2,7 @@ import './style.css';
 
 
 // ============================================================
-// DOM PRINCIPAL
+// ELEMENTOS PRINCIPALES
 // ============================================================
 
 const sidebar =
@@ -19,7 +19,7 @@ const botonesLeyenda =
 
 
 // ============================================================
-// AR
+// ELEMENTOS AR
 // ============================================================
 
 const pantallaAR =
@@ -45,7 +45,36 @@ const btnCerrarAR =
 
 
 // ============================================================
-// CONFIGURACIÓN
+// IDIOMAS DEL AUDIOLIBRO
+// ============================================================
+
+const idiomas = {
+
+  es: {
+    nombre: 'Español',
+    bandera: '🇧🇴'
+  },
+
+  en: {
+    nombre: 'English',
+    bandera: '🇺🇸'
+  },
+
+  pt: {
+    nombre: 'Português',
+    bandera: '🇧🇷'
+  },
+
+  de: {
+    nombre: 'Deutsch',
+    bandera: '🇩🇪'
+  }
+
+};
+
+
+// ============================================================
+// CONFIGURACIÓN DE LAS LEYENDAS
 // ============================================================
 
 const experiencias = {
@@ -54,10 +83,7 @@ const experiencias = {
   carreton: {
 
     nombre:
-      'Carretón de la Otra Vida',
-
-    icono:
-      '☠️',
+      'El Carretón de la Otra Vida',
 
     archivo:
       '/carreton.glb',
@@ -95,10 +121,7 @@ const experiencias = {
   guajojo: {
 
     nombre:
-      'Guajojó',
-
-    icono:
-      '🦉',
+      'El Guajojó',
 
     archivo:
       '/guajojo.glb',
@@ -117,9 +140,6 @@ const experiencias = {
 
     contenidoId:
       'contenido-capturado-guajojo',
-
-    audioId:
-      'audio-guajojo',
 
     textoBuscar:
       'Busca al Guajojó',
@@ -140,9 +160,6 @@ const experiencias = {
 
     nombre:
       'El Duende',
-
-    icono:
-      '🌿',
 
     archivo:
       '/duende.glb',
@@ -182,9 +199,6 @@ const experiencias = {
     nombre:
       'La Viudita',
 
-    icono:
-      '🕯️',
-
     archivo:
       '/viudita.glb',
 
@@ -222,9 +236,6 @@ const experiencias = {
 
     nombre:
       'El Jichi',
-
-    icono:
-      '💧',
 
     archivo:
       '/jichi.glb',
@@ -265,36 +276,27 @@ const experiencias = {
 // ESTADO
 // ============================================================
 
-let experienciaActiva =
-  null;
+let experienciaActiva = null;
 
-let arActivo =
-  false;
+let arActivo = false;
 
-let arIniciando =
-  false;
+let arIniciando = false;
 
-let targetEncontrado =
-  false;
+let targetEncontrado = false;
 
-let temporizadorCaptura =
-  null;
+let temporizadorCaptura = null;
 
 
 // ============================================================
-// MODELOS YA DESCARGADOS
+// MODELOS CARGADOS
 // ============================================================
 
 const modelosCargados = {
 
   carreton: false,
-
   guajojo: false,
-
   duende: false,
-
   viudita: false,
-
   jichi: false
 
 };
@@ -308,16 +310,14 @@ btnMenu?.addEventListener(
   'click',
   () => {
 
-    sidebar?.classList.toggle(
-      'abierto'
-    );
+    sidebar?.classList.toggle('abierto');
 
   }
 );
 
 
 // ============================================================
-// SELECCIONAR LEYENDA
+// BOTONES DEL MENÚ
 // ============================================================
 
 botonesLeyenda.forEach(
@@ -388,7 +388,7 @@ function marcarActivo(
 
 
 // ============================================================
-// CABECERA
+// CABECERA DE CADA LEYENDA
 // ============================================================
 
 function crearCabecera(
@@ -397,16 +397,17 @@ function crearCabecera(
 
   const datos = {
 
+
     carreton: {
 
       etiqueta:
-        'TRADICIÓN ORAL CRUCEÑA',
+        'HISTORIA Y TRADICIÓN ORAL CRUCEÑA',
 
       titulo:
         'El Carretón de la Otra Vida',
 
       descripcion:
-        'El misterioso chirriar de unas ruedas anunciaba una de las apariciones más temidas de las antiguas noches cruceñas.',
+        'Una antigua aparición cruceña cuyo origen se relaciona con el recuerdo de las epidemias, la muerte y los carretones que recorrían Santa Cruz durante el siglo XIX.',
 
       icono:
         '🛞'
@@ -440,7 +441,7 @@ function crearCabecera(
         'El Duende',
 
       descripcion:
-        'Un pequeño y travieso personaje del imaginario cruceño, ligado a los montes, los niños y antiguas advertencias familiares.',
+        'Un pequeño y misterioso personaje relacionado con los montes y las antiguas advertencias familiares.',
 
       icono:
         '🌿'
@@ -457,7 +458,7 @@ function crearCabecera(
         'La Viudita',
 
       descripcion:
-        'Una misteriosa mujer que aparecía durante la noche y acostumbraba burlarse de ciertos trasnochadores.',
+        'Una misteriosa mujer que aparecía durante las antiguas noches cruceñas y encantaba a ciertos trasnochadores.',
 
       icono:
         '🕯️'
@@ -474,7 +475,7 @@ function crearCabecera(
         'El Jichi',
 
       descripcion:
-        'Un ser sobrenatural asociado a lagunas, pozas y madrejones y a la protección del agua.',
+        'Un misterioso ser sobrenatural asociado a lagunas, pozas y madrejones y a la protección del agua.',
 
       icono:
         '💧'
@@ -541,18 +542,13 @@ function crearPanelAR(
 
 
       <img
-
         src="${config.targetImagen}"
-
         class="imagen-target"
-
         alt="Imagen objetivo de ${config.nombre}"
-
       >
 
 
       <div class="info-target">
-
 
         <span class="sobrelinea">
           EXPERIENCIA AR
@@ -568,9 +564,11 @@ function crearPanelAR(
 
           Busca esta imagen con la cámara.
 
-          Cuando el sistema la reconozca,
-          el personaje aparecerá en 3D
-          sobre ella.
+          Cuando sea reconocida,
+          el personaje aparecerá en 3D.
+
+          Captúralo para desbloquear
+          su historia y audiolibro.
 
         </p>
 
@@ -588,6 +586,184 @@ function crearPanelAR(
           📱 INICIAR EXPERIENCIA AR
 
         </button>
+
+      </div>
+
+
+    </div>
+
+  `;
+
+}
+
+
+// ============================================================
+// CREAR AUDIOLIBRO
+// ============================================================
+
+function crearAudiolibro(
+  tipo
+) {
+
+  const config =
+    experiencias[tipo];
+
+
+  return `
+
+    <div class="audiolibro">
+
+
+      <div class="cabecera-audiolibro">
+
+
+        <div class="icono-audiolibro">
+          🎧
+        </div>
+
+
+        <div>
+
+          <span class="sobrelinea">
+            AUDIOLIBRO MULTILINGÜE
+          </span>
+
+          <h3>
+            ${config.nombre}
+          </h3>
+
+          <p>
+            Escucha la leyenda en el idioma que prefieras.
+          </p>
+
+        </div>
+
+
+      </div>
+
+
+
+      <div class="selector-idiomas">
+
+
+        <button
+          class="btn-idioma activo"
+          type="button"
+          data-audio-lang="es"
+          data-audio-tipo="${tipo}"
+        >
+
+          <span class="bandera-idioma">
+            🇧🇴
+          </span>
+
+          <span>
+            Español
+          </span>
+
+        </button>
+
+
+
+        <button
+          class="btn-idioma"
+          type="button"
+          data-audio-lang="en"
+          data-audio-tipo="${tipo}"
+        >
+
+          <span class="bandera-idioma">
+            🇺🇸
+          </span>
+
+          <span>
+            English
+          </span>
+
+        </button>
+
+
+
+        <button
+          class="btn-idioma"
+          type="button"
+          data-audio-lang="pt"
+          data-audio-tipo="${tipo}"
+        >
+
+          <span class="bandera-idioma">
+            🇧🇷
+          </span>
+
+          <span>
+            Português
+          </span>
+
+        </button>
+
+
+
+        <button
+          class="btn-idioma"
+          type="button"
+          data-audio-lang="de"
+          data-audio-tipo="${tipo}"
+        >
+
+          <span class="bandera-idioma">
+            🇩🇪
+          </span>
+
+          <span>
+            Deutsch
+          </span>
+
+        </button>
+
+
+      </div>
+
+
+
+      <div class="reproductor-audiolibro">
+
+
+        <div class="idioma-reproduccion">
+
+
+          <span>
+            🎙️ Narración:
+          </span>
+
+
+          <strong
+            id="idioma-audio-${tipo}"
+          >
+            🇧🇴 Español
+          </strong>
+
+
+        </div>
+
+
+
+        <audio
+
+          id="audiolibro-${tipo}"
+
+          class="audio-leyenda"
+
+          src="/audio/es/${tipo}.mp3"
+
+          controls
+
+          preload="metadata"
+
+        >
+
+          Tu navegador no soporta reproducción de audio.
+
+        </audio>
 
 
       </div>
@@ -608,8 +784,13 @@ function mostrarLeyenda(
   tipo
 ) {
 
-  if (!areaTexto) {
+  if (
+    !areaTexto ||
+    !experiencias[tipo]
+  ) {
+
     return;
+
   }
 
 
@@ -632,7 +813,7 @@ function mostrarLeyenda(
 
         id="${config.contenidoId}"
 
-        style="display: none;"
+        style="display:none"
 
       >
 
@@ -645,6 +826,10 @@ function mostrarLeyenda(
 
   `;
 
+
+  // ==========================================================
+  // BOTÓN PARA ABRIR AR
+  // ==========================================================
 
   document
     .getElementById(
@@ -661,6 +846,15 @@ function mostrarLeyenda(
       }
     );
 
+
+  // ==========================================================
+  // PREPARAMOS AUDIOLIBRO
+  // ==========================================================
+
+  configurarAudiolibro(
+    tipo
+  );
+
 }
 
 
@@ -672,6 +866,299 @@ function crearContenidoCapturado(
   tipo
 ) {
 
+
+  // ==========================================================
+  // CARRETÓN
+  // ==========================================================
+
+  if (
+    tipo === 'carreton'
+  ) {
+
+    return `
+
+      <div class="mensaje-capturado">
+
+        <h3>
+          ☠️ ¡Carretón capturado!
+        </h3>
+
+        <p>
+          Has desbloqueado su historia y audiolibro.
+        </p>
+
+      </div>
+
+
+      ${crearAudiolibro(tipo)}
+
+
+      <div class="historia-leyenda">
+
+
+        <span class="sobrelinea">
+          HISTORIA Y TRADICIÓN ORAL CRUCEÑA
+        </span>
+
+
+        <h3>
+          El Carretón de la Otra Vida
+        </h3>
+
+
+        <p>
+
+          Corría el año 1861 y Santa Cruz de la Sierra
+          atravesaba uno de los momentos más difíciles
+          de su historia.
+
+        </p>
+
+        <br>
+
+
+        <p>
+
+          Una grave epidemia de viruela se extendía
+          entre la población.
+
+          Los conocimientos médicos eran todavía
+          limitados y el temor al contagio aumentaba
+          cada día.
+
+        </p>
+
+        <br>
+
+
+        <p>
+
+          Durante aquellas jornadas, un carretón
+          recorría las calles transportando enfermos
+          y moribundos hacia las afueras de la ciudad,
+          en dirección al Lazareto.
+
+        </p>
+
+        <br>
+
+
+        <p>
+
+          Según los relatos que recuerdan aquella
+          época, el paso del vehículo era anunciado
+          para que los vecinos permanecieran alejados
+          y evitaran exponerse al contagio.
+
+        </p>
+
+        <br>
+
+
+        <p>
+
+          Las familias cerraban sus puertas y ventanas
+          mientras aquel carretón avanzaba por las
+          calles de una Santa Cruz golpeada por
+          la enfermedad y el miedo.
+
+        </p>
+
+        <br>
+
+
+        <p>
+
+          Con el paso de los años, aquel recuerdo
+          comenzó a mezclarse con la imaginación
+          y la tradición oral de los cruceños.
+
+        </p>
+
+        <br>
+
+
+        <p>
+
+          En las noches oscuras, especialmente durante
+          el sur y el chilchi, algunas personas
+          aseguraban escuchar nuevamente el chirriar
+          de unos ejes y el fuerte restallar
+          de un látigo.
+
+        </p>
+
+        <br>
+
+
+        <p>
+
+          El sonido parecía avanzar lentamente
+          por los caminos solitarios.
+
+        </p>
+
+        <br>
+
+
+        <p>
+
+          También se decía que podía escucharse
+          la extraña voz del carretero llamando
+          a sus animales.
+
+          Pero aquella voz no parecía pertenecer
+          a un ser humano.
+
+        </p>
+
+        <br>
+
+
+        <p>
+
+          En ocasiones, algún relámpago iluminaba
+          la noche durante unos segundos y permitía
+          distinguir la silueta de un antiguo
+          carretón avanzando entre las sombras.
+
+        </p>
+
+        <br>
+
+
+        <p>
+
+          Cuentan que una noche un trasnochador
+          decidió enfrentarse a la aparición.
+
+        </p>
+
+        <br>
+
+
+        <p>
+
+          Reuniendo valor, se acercó al misterioso
+          vehículo para descubrir qué era aquello
+          que recorría los caminos durante la noche.
+
+        </p>
+
+        <br>
+
+
+        <p>
+          Entonces vio algo aterrador.
+        </p>
+
+        <br>
+
+
+        <p>
+
+          El carretón ya no parecía construido
+          de madera como uno común.
+
+        </p>
+
+        <br>
+
+
+        <p>
+
+          Sus estacas parecían ser huesos humanos.
+
+          Tibias, peronés y costillas formaban
+          parte de aquella macabra estructura.
+
+        </p>
+
+        <br>
+
+
+        <p>
+          Pero lo más aterrador estaba al frente.
+        </p>
+
+        <br>
+
+
+        <p>
+
+          El carretero no tenía un rostro humano.
+
+          En su lugar había una horrenda calavera
+          y, dentro de sus cuencas vacías,
+          brillaba un resplandor semejante al fuego.
+
+        </p>
+
+        <br>
+
+
+        <p>
+
+          El hombre perdió inmediatamente todo
+          su valor y huyó aterrorizado.
+
+        </p>
+
+        <br>
+
+
+        <p>
+
+          Desde entonces, el recuerdo de aquel
+          carretón relacionado con una época
+          de enfermedad y muerte terminó
+          transformándose en una de las apariciones
+          más temidas de la tradición cruceña.
+
+        </p>
+
+        <br>
+
+
+        <p>
+
+          Para algunos, aquel vehículo ya no
+          transportaba solamente enfermos o muertos.
+
+        </p>
+
+        <br>
+
+
+        <p>
+          Transportaba almas hacia la otra vida.
+        </p>
+
+        <br>
+
+
+        <p>
+
+          Y así, entre la memoria de una epidemia,
+          el miedo de las antiguas noches cruceñas
+          y la tradición transmitida de generación
+          en generación, nació la leyenda de
+          El Carretón de la Otra Vida.
+
+        </p>
+
+
+      </div>
+
+    `;
+
+  }
+
+
+  // ==========================================================
+  // GUAJOJÓ
+  // ==========================================================
+
   if (
     tipo === 'guajojo'
   ) {
@@ -681,56 +1168,17 @@ function crearContenidoCapturado(
       <div class="mensaje-capturado">
 
         <h3>
-          ✨ ¡Guajojó capturado!
+          🦉 ¡Guajojó capturado!
         </h3>
 
         <p>
-          Has desbloqueado su historia.
+          Has desbloqueado su historia y audiolibro.
         </p>
 
       </div>
 
 
-      <div class="multimedia-leyenda">
-
-
-        <div class="reproductor-leyenda">
-
-          <span class="sobrelinea">
-            EXPERIENCIA SONORA
-          </span>
-
-          <h3>
-            Escucha su canto
-          </h3>
-
-          <audio
-            id="audio-guajojo"
-            controls
-          >
-
-            <source
-              src="/audio-guajojo.mp3"
-              type="audio/mpeg"
-            >
-
-          </audio>
-
-        </div>
-
-
-        <img
-
-          src="/foto-guajojo.jpg"
-
-          class="foto-leyenda"
-
-          alt="Guajojó"
-
-        >
-
-
-      </div>
+      ${crearAudiolibro(tipo)}
 
 
       <div class="historia-leyenda">
@@ -739,38 +1187,141 @@ function crearContenidoCapturado(
           La Leyenda del Guajojó
         </h3>
 
+
         <p>
 
-          La tradición cuenta que la hija de un
-          cacique se enamoró de un joven de su tribu.
-          El padre, que además era hechicero,
-          desaprobó el romance y llevó al joven
-          a la espesura, donde le dio muerte.
+          Cuenta la tradición que hace muchos años,
+          en las tierras del oriente boliviano,
+          la hija de un cacique se enamoró
+          profundamente de un joven de su tribu.
 
         </p>
 
         <br>
+
+
+        <p>
+
+          Sin embargo, su padre desaprobaba
+          aquella relación.
+
+        </p>
+
+        <br>
+
+
+        <p>
+
+          El cacique, que además poseía poderes
+          de hechicero, decidió terminar con
+          aquel romance.
+
+          Engañó al joven y lo llevó hasta
+          la espesura de la selva,
+          donde acabó con su vida.
+
+        </p>
+
+        <br>
+
 
         <p>
 
           Cuando la muchacha descubrió lo sucedido,
-          amenazó con revelar el crimen.
-
-          Su padre la transformó entonces en un ave
-          nocturna para impedir que pudiera contar
-          lo ocurrido.
+          quedó destrozada por el dolor.
 
         </p>
 
         <br>
 
+
         <p>
 
-          Sin embargo, su voz permaneció en el ave
-          y desde entonces su triste lamento continúa
-          escuchándose en la selva.
+          Furiosa, enfrentó a su padre y amenazó
+          con contar a todos los habitantes
+          de la tribu el terrible crimen
+          que había cometido.
 
         </p>
+
+        <br>
+
+
+        <p>
+
+          El cacique, temiendo que su hija revelara
+          la verdad, utilizó sus poderes
+          y la transformó en un ave nocturna.
+
+        </p>
+
+        <br>
+
+
+        <p>
+
+          Pero hubo algo que el hechicero
+          no pudo quitarle:
+
+          su voz.
+
+        </p>
+
+        <br>
+
+
+        <p>
+
+          Desde entonces, durante las noches
+          silenciosas del bosque, puede escucharse
+          el triste lamento de aquella joven
+          transformada en ave.
+
+        </p>
+
+        <br>
+
+
+        <p>
+
+          Un canto profundo y melancólico
+          que parece repetir entre los árboles:
+
+          <strong>
+            ¡Gua... jo... jó!
+          </strong>
+
+        </p>
+
+      </div>
+
+
+      <div class="multimedia-leyenda">
+
+        <div class="reproductor-leyenda">
+
+          <span class="sobrelinea">
+            SONIDO DEL GUAJOJÓ
+          </span>
+
+          <h3>
+            Escucha su canto
+          </h3>
+
+          <audio
+            controls
+            preload="metadata"
+            src="/audio-guajojo.mp3"
+          ></audio>
+
+        </div>
+
+
+        <img
+          src="/foto-guajojo.jpg"
+          class="foto-leyenda"
+          alt="Guajojó"
+        >
 
       </div>
 
@@ -779,328 +1330,12 @@ function crearContenidoCapturado(
   }
 
 
- if (
-  tipo === 'carreton'
-) {
-
-  return `
-
-    <div class="mensaje-capturado">
-
-      <h3>
-        ☠️ ¡Carretón capturado!
-      </h3>
-
-      <p>
-        Has desbloqueado la historia del
-        Carretón de la Otra Vida.
-      </p>
-
-    </div>
-
-
-    <div class="historia-leyenda">
-
-
-      <span class="sobrelinea">
-        HISTORIA Y TRADICIÓN ORAL CRUCEÑA
-      </span>
-
-
-      <h3>
-        El Carretón de la Otra Vida
-      </h3>
-
-
-      <p>
-
-        Corría el año 1861 y Santa Cruz de la Sierra
-        atravesaba uno de los momentos más difíciles
-        de su historia.
-
-      </p>
-
-
-      <br>
-
-
-      <p>
-
-        Una grave epidemia de viruela se extendía
-        entre la población.
-
-        Los conocimientos médicos eran todavía
-        limitados y el temor al contagio aumentaba
-        cada día.
-
-      </p>
-
-
-      <br>
-
-
-      <p>
-
-        Durante aquellas jornadas, un carretón
-        recorría las calles transportando enfermos
-        y moribundos hacia las afueras de la ciudad,
-        en dirección al Lazareto.
-
-      </p>
-
-
-      <br>
-
-
-      <p>
-
-        Según los relatos que recuerdan aquella
-        época, el paso del vehículo era anunciado
-        para que los vecinos permanecieran alejados
-        y evitaran exponerse al contagio.
-
-      </p>
-
-
-      <br>
-
-
-      <p>
-
-        Las familias cerraban sus puertas y ventanas
-        mientras aquel carretón avanzaba por las
-        calles de una Santa Cruz golpeada por
-        la enfermedad y el miedo.
-
-      </p>
-
-
-      <br>
-
-
-      <p>
-
-        Con el paso de los años, aquel recuerdo
-        comenzó a mezclarse con la imaginación
-        y la tradición oral de los cruceños.
-
-      </p>
-
-
-      <br>
-
-
-      <p>
-
-        En las noches oscuras, especialmente durante
-        el sur y el chilchi, algunas personas
-        aseguraban escuchar nuevamente el chirriar
-        de unos ejes y el fuerte restallar
-        de un látigo.
-
-      </p>
-
-
-      <br>
-
-
-      <p>
-
-        El sonido parecía avanzar lentamente
-        por los caminos solitarios.
-
-      </p>
-
-
-      <br>
-
-
-      <p>
-
-        También se decía que podía escucharse
-        la extraña voz del carretero llamando
-        a sus animales.
-
-        Pero aquella voz no parecía pertenecer
-        a un ser humano.
-
-      </p>
-
-
-      <br>
-
-
-      <p>
-
-        En ocasiones, algún relámpago iluminaba
-        la noche durante unos segundos y permitía
-        distinguir la silueta de un antiguo
-        carretón avanzando entre las sombras.
-
-      </p>
-
-
-      <br>
-
-
-      <p>
-
-        Cuentan que una noche un trasnochador
-        decidió enfrentarse a la aparición.
-
-      </p>
-
-
-      <br>
-
-
-      <p>
-
-        Reuniendo valor, se acercó al misterioso
-        vehículo para descubrir qué era aquello
-        que recorría los caminos durante la noche.
-
-      </p>
-
-
-      <br>
-
-
-      <p>
-
-        Entonces vio algo aterrador.
-
-      </p>
-
-
-      <br>
-
-
-      <p>
-
-        El carretón ya no parecía construido
-        de madera como uno común.
-
-      </p>
-
-
-      <br>
-
-
-      <p>
-
-        Sus estacas parecían ser huesos humanos.
-
-        Tibias, peronés y costillas formaban
-        parte de aquella macabra estructura.
-
-      </p>
-
-
-      <br>
-
-
-      <p>
-
-        Pero lo más aterrador estaba al frente.
-
-      </p>
-
-
-      <br>
-
-
-      <p>
-
-        El carretero no tenía un rostro humano.
-
-        En su lugar había una horrenda calavera
-        y, dentro de sus cuencas vacías,
-        brillaba un resplandor semejante
-        al fuego.
-
-      </p>
-
-
-      <br>
-
-
-      <p>
-
-        El hombre perdió inmediatamente todo
-        su valor y huyó aterrorizado.
-
-      </p>
-
-
-      <br>
-
-
-      <p>
-
-        Desde entonces, el recuerdo de aquel
-        carretón relacionado con una época
-        de enfermedad y muerte terminó
-        transformándose en una de las apariciones
-        más temidas de la tradición cruceña.
-
-      </p>
-
-
-      <br>
-
-
-      <p>
-
-        Para algunos, aquel vehículo ya no
-        transportaba solamente enfermos o muertos.
-
-      </p>
-
-
-      <br>
-
-
-      <p>
-
-        Transportaba almas hacia la otra vida.
-
-      </p>
-
-
-      <br>
-
-
-      <p>
-
-        Y así, entre la memoria de una epidemia,
-        el miedo de las antiguas noches cruceñas
-        y la tradición transmitida de generación
-        en generación, nació la leyenda de:
-
-      </p>
-
-
-      <br>
-
-
-      <p class="frase-final-leyenda">
-
-        <strong>
-          El Carretón de la Otra Vida.
-        </strong>
-
-      </p>
-
-
-    </div>
-
-  `;
-
-}
+  // ==========================================================
+  // DUENDE
+  // ==========================================================
 
   if (
-    tipo === 'jichi'
+    tipo === 'duende'
   ) {
 
     return `
@@ -1108,65 +1343,124 @@ function crearContenidoCapturado(
       <div class="mensaje-capturado">
 
         <h3>
-          💧 ¡Jichi capturado!
+          🌿 ¡Duende capturado!
         </h3>
 
         <p>
-          Has encontrado al guardián de las aguas.
+          Has desbloqueado su historia y audiolibro.
         </p>
 
       </div>
 
 
+      ${crearAudiolibro(tipo)}
+
+
       <div class="historia-leyenda">
 
         <h3>
-          El Jichi
+          La Leyenda del Duende
         </h3>
 
+
         <p>
 
-          Según antiguas tradiciones compartidas por
-          pueblos del oriente boliviano, en las lagunas,
-          charcos y madrejones podía habitar un ser
-          sobrenatural encargado de proteger el agua:
-          el Jichi.
+          El Duende forma parte de los antiguos
+          relatos tradicionales cruceños.
 
         </p>
 
         <br>
 
+
         <p>
 
-          Se lo describía como una criatura extraña,
-          con rasgos de culebra y saurio, cuerpo
-          alargado y una apariencia que podía
-          confundirse con el agua.
+          Se lo describe como un ser pequeño,
+          de apariencia infantil y carácter travieso.
+
+          En muchos relatos aparece vestido
+          con ropa clara y cubierto por
+          un gran sombrero de saó.
 
         </p>
 
         <br>
 
+
         <p>
 
-          Mientras el Jichi permanecía en su morada,
-          el agua se conservaba.
-
-          Pero si se desperdiciaba o se destruían
-          las plantas de aquel lugar, el guardián
-          podía marcharse.
+          Se decía que habitaba cerca de los montes,
+          caminos solitarios y lugares apartados.
 
         </p>
 
         <br>
 
+
         <p>
 
-          Cuando el Jichi abandonaba la laguna,
-          el agua comenzaba a disminuir hasta
-          terminar por agotarse.
+          Una de sus travesuras favoritas consistía
+          en acercarse a los niños cuando estos
+          se alejaban demasiado de sus casas.
 
         </p>
+
+        <br>
+
+
+        <p>
+
+          El Duende trataba de ganarse su confianza
+          ofreciéndoles dulces, juguetes
+          o invitándolos a jugar.
+
+        </p>
+
+        <br>
+
+
+        <p>
+
+          Por esta razón, los mayores advertían
+          a los niños que nunca debían seguir
+          a un desconocido ni internarse solos
+          en el monte.
+
+        </p>
+
+        <br>
+
+
+        <p>
+
+          También existía la creencia de que,
+          durante la noche, podía ingresar
+          a corrales y establos.
+
+        </p>
+
+        <br>
+
+
+        <p>
+
+          A la mañana siguiente, los propietarios
+          encontraban las crines y las colas
+          de sus caballos cuidadosamente trenzadas.
+
+        </p>
+
+        <br>
+
+
+        <p>
+
+          Algunos aseguraban que aquellas trenzas
+          eran una señal inequívoca de que
+          el Duende había visitado el lugar.
+
+        </p>
+
 
       </div>
 
@@ -1174,6 +1468,10 @@ function crearContenidoCapturado(
 
   }
 
+
+  // ==========================================================
+  // VIUDITA
+  // ==========================================================
 
   if (
     tipo === 'viudita'
@@ -1188,64 +1486,160 @@ function crearContenidoCapturado(
         </h3>
 
         <p>
-          Has desbloqueado su historia.
+          Has desbloqueado su historia y audiolibro.
         </p>
 
       </div>
 
 
+      ${crearAudiolibro(tipo)}
+
+
       <div class="historia-leyenda">
 
         <h3>
-          La Viudita
+          La Leyenda de La Viudita
         </h3>
+
 
         <p>
 
-          En la tradición cruceña, La Viudita
-          no era presentada solamente como una
-          aparición aterradora.
+          En las antiguas noches de Santa Cruz
+          se contaba la historia de una misteriosa
+          mujer conocida como La Viudita.
 
-          Su atención recaía especialmente sobre
-          hombres trasnochadores que buscaban
+        </p>
+
+        <br>
+
+
+        <p>
+
+          No era simplemente una aparición aterradora.
+
+        </p>
+
+        <br>
+
+
+        <p>
+
+          La tradición decía que solía aparecer
+          especialmente ante hombres trasnochadores,
+          parranderos o aquellos que recorrían
+          las calles durante la noche buscando
           conquistas amorosas.
 
         </p>
 
         <br>
 
+
+        <p>
+
+          En medio de la oscuridad aparecía
+          una misteriosa mujer.
+
+        </p>
+
+        <br>
+
+
+        <p>
+
+          Su presencia resultaba irresistible
+          para quien la encontraba.
+
+        </p>
+
+        <br>
+
+
         <p>
 
           Bajo una especie de encantamiento,
-          el hombre creía acompañarla hacia un
-          sitio agradable y confortable.
-
-          Pero al recuperar la conciencia,
-          descubría que la realidad era muy distinta.
+          el hombre aceptaba acompañarla
+          sin sospechar lo que estaba
+          a punto de suceder.
 
         </p>
 
         <br>
 
+
         <p>
 
-          Lo que había imaginado como una elegante
-          estancia podía resultar ser un matorral
-          lleno de espinas, y el cómodo lecho
-          en el que creía haber descansado,
-          un simple barrial.
+          Creía caminar junto a ella hacia
+          un lugar agradable, elegante
+          y confortable.
 
         </p>
 
         <br>
 
+
+        <p>
+          Todo parecía perfecto.
+        </p>
+
+        <br>
+
+
+        <p>
+          Pero el encantamiento no duraba para siempre.
+        </p>
+
+        <br>
+
+
         <p>
 
-          La Viudita desaparecía sin dejar rastro,
-          dejando a su víctima únicamente con
-          la vergüenza y la lección de aquella noche.
+          Cuando finalmente recuperaba la conciencia,
+          descubría que la realidad era
+          completamente diferente.
 
         </p>
+
+        <br>
+
+
+        <p>
+
+          Aquello que había imaginado como una
+          elegante estancia podía ser simplemente
+          un matorral lleno de espinas.
+
+        </p>
+
+        <br>
+
+
+        <p>
+
+          El cómodo lecho donde creía haber descansado
+          podía resultar ser un barrial,
+          un terreno abandonado
+          o cualquier lugar desagradable.
+
+        </p>
+
+        <br>
+
+
+        <p>
+
+          Y de aquella misteriosa mujer
+          ya no quedaba ninguna señal.
+
+        </p>
+
+        <br>
+
+
+        <p>
+          La Viudita había desaparecido sin dejar rastro.
+        </p>
+
 
       </div>
 
@@ -1254,77 +1648,344 @@ function crearContenidoCapturado(
   }
 
 
-  // DUENDE
+  // ==========================================================
+  // JICHI
+  // ==========================================================
 
   return `
 
     <div class="mensaje-capturado">
 
       <h3>
-        🌿 ¡Duende capturado!
+        💧 ¡Jichi capturado!
       </h3>
 
       <p>
-        Has desbloqueado su historia.
+        Has desbloqueado su historia y audiolibro.
       </p>
 
     </div>
+
+
+    ${crearAudiolibro(tipo)}
 
 
     <div class="historia-leyenda">
 
       <h3>
-        El Duende
+        La Leyenda del Jichi
       </h3>
 
+
       <p>
 
-        El Duende forma parte de los relatos
-        tradicionales cruceños.
-
-        Se lo describe como un ser pequeño,
-        de apariencia infantil y carácter
-        travieso, frecuentemente representado
-        con ropa clara y un gran sombrero de saó.
+        Según antiguas tradiciones compartidas
+        por pueblos del oriente boliviano,
+        las lagunas, pozas, charcos y madrejones
+        no eran solamente depósitos de agua.
 
       </p>
 
       <br>
 
+
       <p>
 
-        En muchos relatos aparecía cerca de
-        montes o lugares apartados y trataba
-        de atraer a los niños ofreciéndoles
-        dulces, juguetes o invitándolos a jugar.
+        En algunos de ellos podía habitar
+        un misterioso ser sobrenatural
+        conocido como el Jichi.
 
       </p>
 
       <br>
 
+
       <p>
 
-        También existe la creencia de que
-        podía realizar travesuras durante la
-        noche, incluyendo trenzar las crines
-        de los caballos.
+        El Jichi era considerado
+        el guardián de las aguas.
 
       </p>
 
       <br>
 
+
       <p>
 
-        La leyenda servía además como advertencia
-        para que los niños obedecieran a sus
-        padres y no se alejaran solos hacia
-        lugares desconocidos.
+        Se lo describía como una criatura extraña,
+        difícil de comparar con cualquier animal
+        conocido.
 
       </p>
+
+      <br>
+
+
+      <p>
+
+        Su cuerpo era alargado,
+        con características que recordaban
+        a una enorme culebra y,
+        al mismo tiempo, a un saurio.
+
+      </p>
+
+      <br>
+
+
+      <p>
+
+        Su apariencia podía confundirse con el agua,
+        haciendo muy difícil poder observarlo.
+
+      </p>
+
+      <br>
+
+
+      <p>
+
+        Mientras el Jichi permanecía en su morada,
+        el agua se conservaba.
+
+      </p>
+
+      <br>
+
+
+      <p>
+
+        Por esta razón, las personas debían respetar
+        el lugar donde habitaba.
+
+        No debían desperdiciar el agua
+        ni destruir la vegetación que crecía
+        alrededor de la laguna.
+
+      </p>
+
+      <br>
+
+
+      <p>
+
+        Si las personas abusaban de aquellos recursos
+        o destruían su entorno,
+        el Jichi podía molestarse.
+
+      </p>
+
+      <br>
+
+
+      <p>
+
+        Entonces el guardián abandonaba su morada.
+
+      </p>
+
+      <br>
+
+
+      <p>
+
+        Después de su partida,
+        el nivel del agua comenzaba lentamente
+        a disminuir hasta terminar por agotarse.
+
+      </p>
+
+      <br>
+
+
+      <p>
+
+        De generación en generación quedó
+        una sencilla advertencia:
+
+      </p>
+
+      <br>
+
+
+      <p>
+
+        <strong>
+
+          Mientras el Jichi permanezca,
+          el agua permanecerá.
+
+          Pero si el Jichi se marcha,
+          el agua también.
+
+        </strong>
+
+      </p>
+
 
     </div>
 
   `;
+
+}
+
+
+// ============================================================
+// CONFIGURAR AUDIOLIBRO
+// ============================================================
+
+function configurarAudiolibro(
+  tipo
+) {
+
+  const audio =
+    document.getElementById(
+      `audiolibro-${tipo}`
+    );
+
+
+  const indicador =
+    document.getElementById(
+      `idioma-audio-${tipo}`
+    );
+
+
+  const botones =
+    document.querySelectorAll(
+      `[data-audio-tipo="${tipo}"]`
+    );
+
+
+  if (
+    !audio ||
+    !botones.length
+  ) {
+
+    return;
+
+  }
+
+
+  botones.forEach(
+    boton => {
+
+      boton.addEventListener(
+        'click',
+        () => {
+
+          const idioma =
+            boton.dataset.audioLang;
+
+
+          if (
+            !idiomas[idioma]
+          ) {
+
+            return;
+
+          }
+
+
+          const estabaReproduciendo =
+            !audio.paused;
+
+
+          // ==================================================
+          // CAMBIAR BOTÓN ACTIVO
+          // ==================================================
+
+          botones.forEach(
+            otro => {
+
+              otro.classList.remove(
+                'activo'
+              );
+
+            }
+          );
+
+
+          boton.classList.add(
+            'activo'
+          );
+
+
+          // ==================================================
+          // NUEVA RUTA
+          // ==================================================
+
+          const nuevaRuta =
+            `/audio/${idioma}/${tipo}.mp3`;
+
+
+          audio.pause();
+
+
+          audio.src =
+            nuevaRuta;
+
+
+          audio.load();
+
+
+          // ==================================================
+          // INDICADOR
+          // ==================================================
+
+          if (
+            indicador
+          ) {
+
+            indicador.textContent =
+              `${idiomas[idioma].bandera} ${idiomas[idioma].nombre}`;
+
+          }
+
+
+          // ==================================================
+          // SI ESTABA REPRODUCIENDO,
+          // CONTINUAMOS AUTOMÁTICAMENTE
+          // ==================================================
+
+          if (
+            estabaReproduciendo
+          ) {
+
+            audio
+              .play()
+              .catch(
+                () => {}
+              );
+
+          }
+
+
+          console.log(
+            `🎧 ${tipo} → ${idioma}`
+          );
+
+        }
+      );
+
+    }
+  );
+
+
+  // ==========================================================
+  // ERROR DEL MP3
+  // ==========================================================
+
+  audio.addEventListener(
+    'error',
+    () => {
+
+      console.error(
+        '❌ No se pudo cargar:',
+        audio.src
+      );
+
+    }
+  );
 
 }
 
@@ -1345,7 +2006,7 @@ function obtenerModelo(
 
 
 // ============================================================
-// PREPARAR VISIBILIDAD
+// PREPARAR MODELOS
 // ============================================================
 
 function prepararModelos(
@@ -1392,7 +2053,7 @@ function prepararModelos(
 
 
 // ============================================================
-// CARGAR MODELO ACTIVO
+// CARGAR MODELO
 // ============================================================
 
 function cargarModelo(
@@ -1419,7 +2080,7 @@ function cargarModelo(
 
 
   // ==========================================================
-  // SI YA SE CARGÓ ANTES
+  // YA ESTÁ CARGADO
   // ==========================================================
 
   if (
@@ -1440,7 +2101,6 @@ function cargarModelo(
   return new Promise(
     (resolve, reject) => {
 
-
       let terminado =
         false;
 
@@ -1448,8 +2108,12 @@ function cargarModelo(
       const listo =
         () => {
 
-          if (terminado) {
+          if (
+            terminado
+          ) {
+
             return;
+
           }
 
 
@@ -1461,19 +2125,13 @@ function cargarModelo(
             true;
 
 
-          modelo.removeEventListener(
-            'model-error',
-            error
-          );
-
-
           prepararModelos(
             tipo
           );
 
 
           console.log(
-            `✅ ${config.archivo} cargado`
+            `✅ Modelo cargado: ${tipo}`
           );
 
 
@@ -1485,8 +2143,12 @@ function cargarModelo(
       const error =
         evento => {
 
-          if (terminado) {
+          if (
+            terminado
+          ) {
+
             return;
+
           }
 
 
@@ -1527,10 +2189,6 @@ function cargarModelo(
       );
 
 
-      // ======================================================
-      // ACTIVAMOS GLB SOLO PARA ESTA LEYENDA
-      // ======================================================
-
       modelo.setAttribute(
         'gltf-model',
         config.archivo
@@ -1542,8 +2200,6 @@ function cargarModelo(
         true
       );
 
-
-      // Timeout de seguridad
 
       setTimeout(
         () => {
@@ -1634,15 +2290,21 @@ async function iniciarCamaraAR(
   );
 
 
-  textoInstruccionAR.textContent =
-    config.instruccion;
+  if (
+    textoInstruccionAR
+  ) {
+
+    textoInstruccionAR.textContent =
+      config.instruccion;
+
+  }
 
 
   try {
 
 
     // ========================================================
-    // CARGAR GLB
+    // MODELO
     // ========================================================
 
     await cargarModelo(
@@ -1674,7 +2336,9 @@ async function iniciarCamaraAR(
       ];
 
 
-    if (!sistema) {
+    if (
+      !sistema
+    ) {
 
       throw new Error(
         'MindAR no se inicializó correctamente.'
@@ -1758,18 +2422,21 @@ function esperar(
 ) {
 
   return new Promise(
-    resolve =>
+    resolve => {
+
       setTimeout(
         resolve,
         tiempo
-      )
+      );
+
+    }
   );
 
 }
 
 
 // ============================================================
-// ESPERAR A-FRAME
+// ESPERAR ESCENA
 // ============================================================
 
 function esperarEscena() {
@@ -1777,9 +2444,8 @@ function esperarEscena() {
   return new Promise(
     resolve => {
 
-
       if (
-        escenaAR.hasLoaded
+        escenaAR?.hasLoaded
       ) {
 
         resolve();
@@ -1789,7 +2455,7 @@ function esperarEscena() {
       }
 
 
-      escenaAR.addEventListener(
+      escenaAR?.addEventListener(
         'loaded',
         resolve,
         {
@@ -1804,14 +2470,13 @@ function esperarEscena() {
 
 
 // ============================================================
-// EVENTOS DE TARGET
+// TARGETS
 // ============================================================
 
 Object.keys(
   experiencias
 ).forEach(
   tipo => {
-
 
     const config =
       experiencias[tipo];
@@ -1823,19 +2488,22 @@ Object.keys(
       );
 
 
-    if (!target) {
+    if (
+      !target
+    ) {
+
       return;
+
     }
 
 
     // ========================================================
-    // ENCONTRADO
+    // TARGET ENCONTRADO
     // ========================================================
 
     target.addEventListener(
       'targetFound',
       () => {
-
 
         console.log(
           `🎯 Detectado: ${tipo}`
@@ -1885,7 +2553,6 @@ Object.keys(
           setTimeout(
             () => {
 
-
               if (
                 targetEncontrado &&
                 experienciaActiva === tipo
@@ -1906,13 +2573,12 @@ Object.keys(
 
 
     // ========================================================
-    // PERDIDO
+    // TARGET PERDIDO
     // ========================================================
 
     target.addEventListener(
       'targetLost',
       () => {
-
 
         if (
           experienciaActiva !== tipo
@@ -1976,7 +2642,7 @@ function capturar() {
   if (
     !experienciaActiva ||
     !targetEncontrado ||
-    btnCapturar.disabled
+    btnCapturar?.disabled
   ) {
 
     return;
@@ -2044,27 +2710,11 @@ function capturar() {
 
   }
 
-
-  if (
-    config.audioId
-  ) {
-
-    document
-      .getElementById(
-        config.audioId
-      )
-      ?.play()
-      .catch(
-        () => {}
-      );
-
-  }
-
 }
 
 
 // ============================================================
-// CERRAR
+// CERRAR AR
 // ============================================================
 
 btnCerrarAR?.addEventListener(
@@ -2153,7 +2803,7 @@ function cerrarCamaraAR() {
 
 
 // ============================================================
-// UI
+// UI AR
 // ============================================================
 
 function actualizarMensaje(
@@ -2233,7 +2883,7 @@ function deshabilitarCaptura() {
 
 
 // ============================================================
-// CERRAR AL SALIR
+// SALIR DE LA WEB
 // ============================================================
 
 window.addEventListener(
