@@ -1717,3 +1717,335 @@ body {
 
 
 }
+/* =========================================================
+   AUDIOLIBRO MULTILINGÜE
+   ========================================================= */
+
+.audiolibro {
+
+  margin-top: 30px;
+
+  padding: 28px;
+
+  background:
+    linear-gradient(
+      145deg,
+      #ffffff,
+      #f8f5eb
+    );
+
+  border:
+    1px solid rgba(6,64,43,0.14);
+
+  border-radius: 20px;
+
+  box-shadow:
+    0 14px 35px rgba(5,46,35,0.10);
+
+}
+
+
+/* =========================================================
+   CABECERA AUDIOLIBRO
+   ========================================================= */
+
+.cabecera-audiolibro {
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 18px;
+
+  margin-bottom: 25px;
+
+}
+
+
+.icono-audiolibro {
+
+  width: 66px;
+  height: 66px;
+
+  flex-shrink: 0;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 18px;
+
+  background:
+    linear-gradient(
+      145deg,
+      #07563b,
+      #052e23
+    );
+
+  font-size: 1.8rem;
+
+  box-shadow:
+    0 8px 20px rgba(5,46,35,0.18);
+
+}
+
+
+.cabecera-audiolibro h3 {
+
+  margin: 0 0 6px 0;
+
+  color: #063b2b;
+
+  font-family:
+    Georgia,
+    serif;
+
+  font-size: 1.55rem;
+
+  font-weight: 400;
+
+}
+
+
+.cabecera-audiolibro p {
+
+  margin: 0;
+
+  color: #6a746f;
+
+  line-height: 1.5;
+
+}
+
+
+/* =========================================================
+   IDIOMAS
+   ========================================================= */
+
+.selector-idiomas {
+
+  display: grid;
+
+  grid-template-columns:
+    repeat(4, 1fr);
+
+  gap: 10px;
+
+  margin-bottom: 24px;
+
+}
+
+
+.btn-idioma {
+
+  min-height: 54px;
+
+  padding: 8px 12px;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  gap: 8px;
+
+  border:
+    1px solid rgba(6,64,43,0.15);
+
+  border-radius: 13px;
+
+  background:
+    white;
+
+  color:
+    #37443e;
+
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition:
+    transform 0.2s ease,
+    background 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+
+}
+
+
+.btn-idioma:hover {
+
+  transform:
+    translateY(-2px);
+
+  border-color:
+    #c9a33c;
+
+  box-shadow:
+    0 6px 16px rgba(5,46,35,0.08);
+
+}
+
+
+/* IDIOMA SELECCIONADO */
+
+.btn-idioma.activo {
+
+  color:
+    white;
+
+  border-color:
+    #07563b;
+
+  background:
+    linear-gradient(
+      135deg,
+      #087547,
+      #052e23
+    );
+
+  box-shadow:
+    0 8px 20px rgba(5,46,35,0.18);
+
+}
+
+
+.bandera-idioma {
+
+  font-size: 1.25rem;
+
+}
+
+
+/* =========================================================
+   REPRODUCTOR
+   ========================================================= */
+
+.reproductor-audiolibro {
+
+  padding: 20px;
+
+  background:
+    rgba(6,59,43,0.055);
+
+  border:
+    1px solid rgba(6,64,43,0.10);
+
+  border-radius: 16px;
+
+}
+
+
+.idioma-reproduccion {
+
+  margin-bottom: 12px;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 7px;
+
+  color:
+    #6a746f;
+
+  font-size: 0.9rem;
+
+}
+
+
+.idioma-reproduccion strong {
+
+  color:
+    #07563b;
+
+}
+
+
+.audio-leyenda {
+
+  width: 100%;
+
+  display: block;
+
+}
+
+
+/* =========================================================
+   MÓVIL
+   ========================================================= */
+
+@media screen and (max-width: 768px) {
+
+  .audiolibro {
+
+    padding: 20px;
+
+  }
+
+
+  .selector-idiomas {
+
+    grid-template-columns:
+      repeat(2, 1fr);
+
+  }
+
+
+  .cabecera-audiolibro {
+
+    align-items: flex-start;
+
+  }
+
+
+  .icono-audiolibro {
+
+    width: 54px;
+    height: 54px;
+
+    border-radius: 15px;
+
+    font-size: 1.5rem;
+
+  }
+
+
+  .cabecera-audiolibro h3 {
+
+    font-size: 1.3rem;
+
+  }
+
+}
+
+
+/* =========================================================
+   MÓVIL PEQUEÑO
+   ========================================================= */
+
+@media screen and (max-width: 390px) {
+
+  .selector-idiomas {
+
+    grid-template-columns:
+      1fr 1fr;
+
+    gap: 8px;
+
+  }
+
+
+  .btn-idioma {
+
+    min-height: 50px;
+
+    padding: 7px;
+
+    font-size: 0.82rem;
+
+  }
+
+}
