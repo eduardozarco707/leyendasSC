@@ -20,27 +20,19 @@
   </title>
 
 
-  <!-- =====================================================
-       A-FRAME
-       ===================================================== -->
+  <!-- A-FRAME -->
 
   <script
     src="https://aframe.io/releases/1.5.0/aframe.min.js"
   ></script>
 
 
-  <!-- =====================================================
-       MINDAR
-       ===================================================== -->
+  <!-- MINDAR -->
 
   <script
     src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"
   ></script>
 
-
-  <!-- =====================================================
-       CSS
-       ===================================================== -->
 
   <link
     rel="stylesheet"
@@ -54,7 +46,7 @@
 
 
   <!-- =====================================================
-       PÁGINA PRINCIPAL
+       WEB PRINCIPAL
        ===================================================== -->
 
   <div class="contenedor-principal">
@@ -69,7 +61,6 @@
 
       <div class="panel-izquierdo">
 
-
         <div class="contenedor-logo">
 
           <img
@@ -79,7 +70,6 @@
           >
 
         </div>
-
 
       </div>
 
@@ -114,9 +104,9 @@
 
           <p>
 
-            Descubre historias que forman parte
-            de la memoria y tradición del
-            oriente boliviano.
+            Explora personajes y relatos que forman
+            parte de la memoria cultural del oriente
+            boliviano.
 
           </p>
 
@@ -132,15 +122,13 @@
 
 
     <!-- ===================================================
-         CONTENIDO
+         CONTENIDO INFERIOR
          =================================================== -->
 
     <main class="seccion-inferior">
 
 
-      <!-- =================================================
-           MENÚ LATERAL
-           ================================================= -->
+      <!-- SIDEBAR -->
 
       <aside
         class="sidebar-verde"
@@ -157,7 +145,6 @@
             aria-label="Abrir o cerrar menú"
           >
 
-
             <span class="icono-menu">
               ☰
             </span>
@@ -166,7 +153,6 @@
             <span class="texto-menu">
               Leyendas
             </span>
-
 
           </button>
 
@@ -186,11 +172,9 @@
             type="button"
           >
 
-
             <span class="icono-leyenda">
               🛞
             </span>
-
 
             <span class="contenido-btn-menu">
 
@@ -204,7 +188,6 @@
 
             </span>
 
-
           </button>
 
 
@@ -217,11 +200,9 @@
             type="button"
           >
 
-
             <span class="icono-leyenda">
               🌙
             </span>
-
 
             <span class="contenido-btn-menu">
 
@@ -235,7 +216,6 @@
 
             </span>
 
-
           </button>
 
 
@@ -248,11 +228,9 @@
             type="button"
           >
 
-
             <span class="icono-leyenda">
               🌿
             </span>
-
 
             <span class="contenido-btn-menu">
 
@@ -266,7 +244,6 @@
 
             </span>
 
-
           </button>
 
 
@@ -279,11 +256,9 @@
             type="button"
           >
 
-
             <span class="icono-leyenda">
               🕯️
             </span>
-
 
             <span class="contenido-btn-menu">
 
@@ -297,7 +272,6 @@
 
             </span>
 
-
           </button>
 
 
@@ -310,11 +284,9 @@
             type="button"
           >
 
-
             <span class="icono-leyenda">
               💧
             </span>
-
 
             <span class="contenido-btn-menu">
 
@@ -328,7 +300,6 @@
 
             </span>
 
-
           </button>
 
 
@@ -338,18 +309,13 @@
 
         <div class="pie-sidebar">
 
-
           <span class="simbolo-sidebar">
             ✦
           </span>
 
-
           <span class="texto-pie-sidebar">
-
             Santa Cruz de la Sierra
-
           </span>
-
 
         </div>
 
@@ -358,9 +324,7 @@
 
 
 
-      <!-- =================================================
-           CONTENIDO DINÁMICO
-           ================================================= -->
+      <!-- CONTENIDO DINÁMICO -->
 
       <section
         class="area-texto"
@@ -379,19 +343,16 @@
 
 
           <h2>
-
             Patio de los Abuelos
-
           </h2>
 
 
           <p class="descripcion-principal">
 
             Bienvenido al núcleo de nuestras tradiciones.
-
-            Explora las leyendas, escucha sus relatos
-            y descubre nuevas formas de vivir las
-            historias de Santa Cruz.
+            Selecciona una leyenda, encuentra su imagen
+            mediante la cámara y descubre al personaje
+            en realidad aumentada.
 
           </p>
 
@@ -402,74 +363,53 @@
 
             <article class="tarjeta-caracteristica">
 
-
               <div class="icono-caracteristica">
                 📖
               </div>
 
-
               <h3>
-                Historias
+                Leyendas
               </h3>
 
-
               <p>
-
-                Descubre relatos transmitidos
-                durante generaciones.
-
+                Descubre relatos tradicionales de Santa Cruz.
               </p>
-
 
             </article>
 
 
 
             <article class="tarjeta-caracteristica">
-
 
               <div class="icono-caracteristica">
-                🎧
+                🔎
               </div>
 
-
               <h3>
-                Sonidos
+                Explora
               </h3>
 
-
               <p>
-
-                Escucha los sonidos relacionados
-                con cada leyenda.
-
+                Encuentra las imágenes escondidas.
               </p>
-
 
             </article>
 
 
 
             <article class="tarjeta-caracteristica">
-
 
               <div class="icono-caracteristica">
                 📱
               </div>
 
-
               <h3>
                 Realidad aumentada
               </h3>
 
-
               <p>
-
-                Encuentra personajes mediante
-                reconocimiento de imágenes.
-
+                Haz aparecer cada personaje en 3D.
               </p>
-
 
             </article>
 
@@ -491,23 +431,15 @@
 
 
   <!-- =====================================================
-       PANTALLA DE REALIDAD AUMENTADA
+       PANTALLA AR
        ===================================================== -->
 
   <div
-
     id="pantalla-ar"
-
     class="pantalla-ar"
-
     style="display: none;"
-
   >
 
-
-    <!-- ===================================================
-         ESCENA
-         =================================================== -->
 
     <a-scene
 
@@ -530,143 +462,64 @@
 
       color-space="sRGB"
 
-      vr-mode-ui="
-        enabled: false;
-      "
+      vr-mode-ui="enabled: false"
 
-      xr-mode-ui="
-        enabled: false;
-      "
+      xr-mode-ui="enabled: false"
 
       device-orientation-permission-ui="
-        enabled: false;
+        enabled: false
       "
 
       loading-screen="
-        enabled: false;
+        enabled: false
       "
 
     >
 
 
-      <!-- =================================================
-           ARCHIVOS 3D
-           ================================================= -->
-
-      <a-assets timeout="60000">
-
-
-        <!-- CARRETÓN -->
-
-        <a-asset-item
-
-          id="asset-carreton"
-
-          src="/carreton.glb"
-
-        ></a-asset-item>
-
-
-
-        <!-- GUAJOJÓ -->
-
-        <a-asset-item
-
-          id="asset-guajojo"
-
-          src="/guajojo.glb"
-
-        ></a-asset-item>
-
-
-      </a-assets>
-
-
-
-      <!-- =================================================
-           CÁMARA
-           ================================================= -->
+      <!-- CÁMARA -->
 
       <a-camera
 
         position="0 0 0"
 
-        look-controls="
-          enabled: false;
-        "
+        look-controls="enabled: false"
 
-        wasd-controls="
-          enabled: false;
-        "
+        wasd-controls="enabled: false"
 
       ></a-camera>
 
 
 
       <!-- =================================================
-           TARGET 0 = CARRETÓN
+           TARGET 0
+           CARRETÓN
            ================================================= -->
 
       <a-entity
-
         id="target-carreton"
-
-        mindar-image-target="
-          targetIndex: 0;
-        "
-
+        mindar-image-target="targetIndex: 0"
       >
 
 
-        <!--
-          CONTENEDOR DEL CARRETÓN
-
-          El archivo mide:
-          X = 2.114
-          Y = 1.101
-          Z = 0.917
-
-          Usamos scale 0.42 para dejarlo
-          aproximadamente a 0.89 unidades de ancho.
-        -->
-
         <a-entity
 
-          id="contenedor-modelo-carreton"
+          id="contenedor-carreton"
 
-          position="0 0 0.25"
+          position="0 0 0.20"
 
           scale="0.42 0.42 0.42"
 
         >
 
 
-          <!--
-            El origen original no está centrado.
-
-            Centro medido:
-            X = 0.729306
-            Y = 0.550175
-            Z = -0.155868
-
-            Por eso desplazamos en dirección contraria.
-          -->
-
-          <a-gltf-model
+          <a-entity
 
             id="modelo-carreton"
 
-            src="#asset-carreton"
+            position="-0.729306 -0.550175 0.155868"
 
-            position="
-              -0.729306
-              -0.550175
-              0.155868
-            "
-
-            rotation="0 0 0"
-
-          ></a-gltf-model>
+          ></a-entity>
 
 
         </a-entity>
@@ -677,44 +530,19 @@
 
 
       <!-- =================================================
-           TARGET 1 = GUAJOJÓ
+           TARGET 1
+           GUAJOJÓ
            ================================================= -->
 
       <a-entity
-
         id="target-guajojo"
-
-        mindar-image-target="
-          targetIndex: 1;
-        "
-
+        mindar-image-target="targetIndex: 1"
       >
 
 
-        <!--
-          GUAJOJÓ
-
-          Dimensiones originales:
-          X = 0.406
-          Y = 0.375
-          Z = 1.160
-
-          El modelo viene acostado sobre Z.
-
-          rotation X = 90° lo pone vertical.
-
-          Después de rotarlo:
-
-          ancho ≈ 0.406
-          alto  ≈ 1.160
-
-          scale 0.73:
-          alto final ≈ 0.85
-        -->
-
         <a-entity
 
-          id="contenedor-modelo-guajojo"
+          id="contenedor-guajojo"
 
           position="0 0 0.18"
 
@@ -723,21 +551,15 @@
         >
 
 
-          <a-gltf-model
+          <a-entity
 
             id="modelo-guajojo"
 
-            src="#asset-guajojo"
-
-            position="
-              0.022369
-              -0.580067
-              0.007816
-            "
+            position="0.022369 -0.580067 0.007816"
 
             rotation="90 0 0"
 
-          ></a-gltf-model>
+          ></a-entity>
 
 
         </a-entity>
@@ -748,43 +570,141 @@
 
 
       <!-- =================================================
-           ILUMINACIÓN
+           TARGET 2
+           DUENDE
            ================================================= -->
 
-      <a-light
+      <a-entity
+        id="target-duende"
+        mindar-image-target="targetIndex: 2"
+      >
 
+
+        <a-entity
+
+          id="contenedor-duende"
+
+          position="0 0 0.16"
+
+          scale="0.78 0.78 0.78"
+
+        >
+
+
+          <a-entity
+
+            id="modelo-duende"
+
+            position="-0.004029 -0.540324 0.009786"
+
+          ></a-entity>
+
+
+        </a-entity>
+
+
+      </a-entity>
+
+
+
+      <!-- =================================================
+           TARGET 3
+           VIUDITA
+           ================================================= -->
+
+      <a-entity
+        id="target-viudita"
+        mindar-image-target="targetIndex: 3"
+      >
+
+
+        <a-entity
+
+          id="contenedor-viudita"
+
+          position="0 0 0.16"
+
+          scale="0.78 0.78 0.78"
+
+        >
+
+
+          <a-entity
+
+            id="modelo-viudita"
+
+            position="0.001848 -0.549410 0.018784"
+
+          ></a-entity>
+
+
+        </a-entity>
+
+
+      </a-entity>
+
+
+
+      <!-- =================================================
+           TARGET 4
+           JICHI
+           ================================================= -->
+
+      <a-entity
+        id="target-jichi"
+        mindar-image-target="targetIndex: 4"
+      >
+
+
+        <a-entity
+
+          id="contenedor-jichi"
+
+          position="0 0 0.14"
+
+          scale="0.80 0.80 0.80"
+
+        >
+
+
+          <a-entity
+
+            id="modelo-jichi"
+
+            position="-0.160627 -0.237334 0.058854"
+
+          ></a-entity>
+
+
+        </a-entity>
+
+
+      </a-entity>
+
+
+
+      <!-- ILUMINACIÓN -->
+
+      <a-light
         type="ambient"
-
         color="#ffffff"
-
-        intensity="2.2"
-
+        intensity="2.3"
       ></a-light>
 
 
       <a-light
-
         type="directional"
-
         color="#ffffff"
-
-        intensity="1.8"
-
+        intensity="1.7"
         position="2 4 3"
-
       ></a-light>
 
 
       <a-light
-
         type="directional"
-
         color="#ffffff"
-
-        intensity="1"
-
+        intensity="0.9"
         position="-3 2 1"
-
       ></a-light>
 
 
@@ -793,13 +713,11 @@
 
 
     <!-- ===================================================
-         INTERFAZ AR
+         UI AR
          =================================================== -->
 
     <div class="interfaz-ar">
 
-
-      <!-- BARRA SUPERIOR -->
 
       <div class="barra-superior-ar">
 
@@ -812,20 +730,13 @@
 
           <div>
 
-
             <small>
-
               REALIDAD AUMENTADA
-
             </small>
 
-
             <strong id="mensaje-ar">
-
               Preparando...
-
             </strong>
-
 
           </div>
 
@@ -835,19 +746,11 @@
 
 
         <button
-
           id="btn-cerrar-ar"
-
           class="btn-cerrar-ar"
-
           type="button"
-
-          aria-label="Cerrar"
-
         >
-
           ✕
-
         </button>
 
 
@@ -855,49 +758,31 @@
 
 
 
-      <!-- ESTADO -->
-
       <div
-
         id="estado-target"
-
         class="estado-target"
-
       >
-
         🔎 Preparando reconocimiento...
-
       </div>
 
 
 
-      <!-- MARCO -->
-
       <div class="guia-target">
 
-
         <span class="esquina esquina-1"></span>
-
         <span class="esquina esquina-2"></span>
-
         <span class="esquina esquina-3"></span>
-
         <span class="esquina esquina-4"></span>
-
 
         <div class="centro-guia">
           +
         </div>
 
-
       </div>
 
 
 
-      <!-- INSTRUCCIÓN -->
-
       <div class="instruccion-ar">
-
 
         <span id="texto-instruccion-ar">
 
@@ -905,12 +790,9 @@
 
         </span>
 
-
       </div>
 
 
-
-      <!-- CAPTURAR -->
 
       <button
 
@@ -924,9 +806,7 @@
 
       >
 
-
         👀 Busca la imagen...
-
 
       </button>
 
@@ -938,16 +818,9 @@
 
 
 
-  <!-- =====================================================
-       JAVASCRIPT
-       ===================================================== -->
-
   <script
-
     type="module"
-
     src="/main.js"
-
   ></script>
 
 
