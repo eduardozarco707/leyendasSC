@@ -1,4 +1,5 @@
 import './style.css';
+import './chat.css';
 
 
 // ============================================================
@@ -2906,3 +2907,1816 @@ window.addEventListener(
 
   }
 );
+
+// ============================================================
+// CHAT CON IA - LEYENDAS
+// ============================================================
+
+const CHAT_API_URL =
+  'https://leyendas-sc-xnww.vercel.app/api/chat-leyenda';
+
+
+// ============================================================
+// CONFIGURACIÓN DE PERSONAJES
+// ============================================================
+
+const chatPersonajes = {
+
+  carreton: {
+    nombre: 'El Carretón',
+    emoji: '☠️',
+
+    saludo:
+      'He vuelto a recorrer estas antiguas historias. Pregúntame sobre mi leyenda, mis apariciones o mi relación con las epidemias de Santa Cruz.'
+  },
+
+  guajojo: {
+    nombre: 'El Guajojó',
+    emoji: '🪶',
+
+    saludo:
+      'Puedes preguntarme sobre mi historia, mi transformación, mi amado o el origen de mi triste canto.'
+  },
+
+  duende: {
+    nombre: 'El Duende',
+    emoji: '🌿',
+
+    saludo:
+      'Puedes preguntarme sobre mis travesuras, el monte, los niños, mi sombrero de saó o las crines de los caballos.'
+  },
+
+  viudita: {
+    nombre: 'La Viudita',
+    emoji: '🕯️',
+
+    saludo:
+      'Puedes preguntarme sobre mis apariciones, los trasnochadores, mis encantamientos o las antiguas noches cruceñas.'
+  },
+
+  jichi: {
+    nombre: 'El Jichi',
+    emoji: '💧',
+
+    saludo:
+      'Puedes preguntarme sobre las aguas que protejo, mi apariencia, las lagunas o el cuidado de la naturaleza.'
+  }
+
+};
+
+
+// ============================================================
+// HISTORIAL INDEPENDIENTE DE CADA LEYENDA
+// ============================================================
+
+const chatHistorial = {
+
+  carreton: [],
+  guajojo: [],
+  duende: [],
+  viudita: [],
+  jichi: []
+
+};
+
+
+// ============================================================
+// IDIOMA ACTUAL DEL CHAT
+// ============================================================
+
+const chatIdiomaActual = {
+
+  carreton: 'es',
+  guajojo: 'es',
+  duende: 'es',
+  viudita: 'es',
+  jichi: 'es'
+
+};
+
+
+// ============================================================
+// IDIOMAS PARA VOZ
+// ============================================================
+
+const chatIdiomasVoz = {
+
+  es: 'es-BO',
+
+  en: 'en-US',
+
+  pt: 'pt-BR',
+
+  de: 'de-DE'
+
+};
+
+
+// ============================================================
+// VARIABLES DEL MICRÓFONO
+// ============================================================
+
+let chatReconocimientoActivo = null;
+
+let chatTipoReconocimientoActivo = null;
+
+
+// ============================================================
+// CREAR HTML DEL CHAT
+// ============================================================
+
+function chatCrearHTML(
+  tipo
+) {
+
+  const personaje =
+    chatPersonajes[tipo];
+
+
+  if (!personaje) {
+
+    return '';
+
+  }
+
+
+  return `
+
+    <section
+      class="chat-leyenda"
+      id="chat-leyenda-${tipo}"
+    >
+
+
+      <!-- ====================================================
+           CABECERA
+           ==================================================== -->
+
+      <div class="chat-cabecera">
+
+
+        <div class="chat-cabecera-icono">
+
+          ${personaje.emoji}
+
+        </div>
+
+
+        <div class="chat-cabecera-texto">
+
+
+          <span class="sobrelinea">
+
+            EXPERIENCIA INTERACTIVA
+
+          </span>
+
+
+          <h3>
+
+            💬 Conversa con ${personaje.nombre}
+
+          </h3>
+
+
+          <p>
+
+            Pregunta sobre su historia y conversa
+            directamente con el personaje.
+
+          </p>
+
+
+        </div>
+
+
+      </div>
+
+
+
+      <!-- ====================================================
+           ZONA CELESTE:
+           PREGUNTAS Y RESPUESTAS
+           ==================================================== -->
+
+      <div
+
+        class="chat-mensajes"
+
+        id="chat-mensajes-${tipo}"
+
+        aria-live="polite"
+
+      ></div>
+
+
+
+      <!-- ====================================================
+           PARTE INFERIOR
+           ==================================================== -->
+
+      <div class="chat-zona-inferior">
+
+
+        <!-- ==================================================
+             ZONA NARANJA:
+             AQUÍ IRÁ LA IMAGEN
+             ================================================== -->
+
+        <div
+
+          class="chat-personaje-placeholder"
+
+          id="chat-imagen-${tipo}"
+
+        >
+
+
+          <span class="chat-personaje-emoji">
+
+            ${personaje.emoji}
+
+          </span>
+
+
+          <span class="chat-personaje-texto">
+
+            Imagen del personaje
+
+          </span>
+
+
+        </div>
+
+
+
+        <!-- ==================================================
+             ZONA AMARILLA:
+             ESCRIBIR PREGUNTA
+             ================================================== -->
+
+        <div class="chat-compositor">
+
+
+          <label
+
+            class="chat-label"
+
+            for="chat-input-${tipo}"
+
+          >
+
+            Pregúntale a ${personaje.nombre}
+
+          </label>
+
+
+
+          <textarea
+
+            id="chat-input-${tipo}"
+
+            class="chat-input"
+
+            maxlength="1000"
+
+            rows="4"
+
+            placeholder="Escribe tu pregunta..."
+
+          ></textarea>
+
+
+
+          <div class="chat-acciones">
+
+
+            <!-- MICRÓFONO -->
+
+            <button
+
+              id="chat-mic-${tipo}"
+
+              class="chat-btn-mic"
+
+              type="button"
+
+              title="Hablar por micrófono"
+
+              aria-label="Hablar por micrófono"
+
+            >
+
+              🎙️
+
+            </button>
+
+
+
+            <!-- ENVIAR -->
+
+            <button
+
+              id="chat-enviar-${tipo}"
+
+              class="chat-btn-enviar"
+
+              type="button"
+
+            >
+
+
+              <span>
+
+                Enviar
+
+              </span>
+
+
+              <span aria-hidden="true">
+
+                ➤
+
+              </span>
+
+
+            </button>
+
+
+          </div>
+
+
+
+          <div
+
+            class="chat-estado"
+
+            id="chat-estado-${tipo}"
+
+            aria-live="polite"
+
+          ></div>
+
+
+        </div>
+
+
+      </div>
+
+
+    </section>
+
+  `;
+
+}
+
+
+// ============================================================
+// BUSCAR E INSERTAR LOS CHATS
+// ============================================================
+
+function chatInyectarTodos() {
+
+  Object.keys(
+    chatPersonajes
+  ).forEach(
+    tipo => {
+
+      chatInyectar(
+        tipo
+      );
+
+    }
+  );
+
+}
+
+
+// ============================================================
+// INSERTAR CHAT EN UNA LEYENDA
+// ============================================================
+
+function chatInyectar(
+  tipo
+) {
+
+  const config =
+    experiencias[tipo];
+
+
+  if (!config) {
+
+    return;
+
+  }
+
+
+  const contenido =
+    document.getElementById(
+      config.contenidoId
+    );
+
+
+  if (!contenido) {
+
+    return;
+
+  }
+
+
+  // ==========================================================
+  // EVITAR DUPLICAR EL CHAT
+  // ==========================================================
+
+  if (
+    document.getElementById(
+      `chat-leyenda-${tipo}`
+    )
+  ) {
+
+    return;
+
+  }
+
+
+  const audiolibro =
+    contenido.querySelector(
+      '.audiolibro'
+    );
+
+
+  // ==========================================================
+  // CHAT DESPUÉS DEL AUDIOLIBRO
+  // ==========================================================
+
+  if (audiolibro) {
+
+    audiolibro.insertAdjacentHTML(
+
+      'afterend',
+
+      chatCrearHTML(
+        tipo
+      )
+
+    );
+
+  } else {
+
+    contenido.insertAdjacentHTML(
+
+      'afterbegin',
+
+      chatCrearHTML(
+        tipo
+      )
+
+    );
+
+  }
+
+
+  // ==========================================================
+  // ACTIVAR FUNCIONES
+  // ==========================================================
+
+  chatConfigurar(
+    tipo
+  );
+
+}
+
+
+// ============================================================
+// CONFIGURAR CHAT
+// ============================================================
+
+function chatConfigurar(
+  tipo
+) {
+
+  const input =
+    document.getElementById(
+      `chat-input-${tipo}`
+    );
+
+
+  const btnEnviar =
+    document.getElementById(
+      `chat-enviar-${tipo}`
+    );
+
+
+  const btnMic =
+    document.getElementById(
+      `chat-mic-${tipo}`
+    );
+
+
+  const mensajes =
+    document.getElementById(
+      `chat-mensajes-${tipo}`
+    );
+
+
+  if (
+    !input ||
+    !btnEnviar ||
+    !mensajes
+  ) {
+
+    return;
+
+  }
+
+
+  // ==========================================================
+  // MOSTRAR HISTORIAL
+  // ==========================================================
+
+  chatRenderizarHistorial(
+    tipo
+  );
+
+
+  // ==========================================================
+  // BOTÓN ENVIAR
+  // ==========================================================
+
+  btnEnviar.addEventListener(
+
+    'click',
+
+    () => {
+
+      chatEnviarPregunta(
+        tipo
+      );
+
+    }
+
+  );
+
+
+  // ==========================================================
+  // ENTER = ENVIAR
+  //
+  // SHIFT + ENTER = SALTO DE LÍNEA
+  // ==========================================================
+
+  input.addEventListener(
+
+    'keydown',
+
+    evento => {
+
+      if (
+        evento.key === 'Enter' &&
+        !evento.shiftKey
+      ) {
+
+        evento.preventDefault();
+
+
+        chatEnviarPregunta(
+          tipo
+        );
+
+      }
+
+    }
+
+  );
+
+
+  // ==========================================================
+  // MICRÓFONO
+  // ==========================================================
+
+  if (btnMic) {
+
+    const Reconocimiento =
+
+      window.SpeechRecognition ||
+
+      window.webkitSpeechRecognition;
+
+
+    if (!Reconocimiento) {
+
+      btnMic.disabled =
+        true;
+
+
+      btnMic.title =
+        'El reconocimiento de voz no está disponible en este navegador.';
+
+
+      btnMic.setAttribute(
+
+        'aria-label',
+
+        'Reconocimiento de voz no disponible'
+
+      );
+
+    } else {
+
+      btnMic.addEventListener(
+
+        'click',
+
+        () => {
+
+          chatIniciarMicrofono(
+            tipo
+          );
+
+        }
+
+      );
+
+    }
+
+  }
+
+}
+
+
+// ============================================================
+// MOSTRAR HISTORIAL
+// ============================================================
+
+function chatRenderizarHistorial(
+  tipo
+) {
+
+  const contenedor =
+    document.getElementById(
+      `chat-mensajes-${tipo}`
+    );
+
+
+  const personaje =
+    chatPersonajes[tipo];
+
+
+  if (
+    !contenedor ||
+    !personaje
+  ) {
+
+    return;
+
+  }
+
+
+  contenedor.innerHTML =
+    '';
+
+
+  // ==========================================================
+  // SALUDO INICIAL
+  // ==========================================================
+
+  chatAgregarMensaje(
+
+    tipo,
+
+    'assistant',
+
+    personaje.saludo,
+
+    false
+
+  );
+
+
+  // ==========================================================
+  // CONVERSACIÓN EXISTENTE
+  // ==========================================================
+
+  chatHistorial[tipo].forEach(
+
+    mensaje => {
+
+      chatAgregarMensaje(
+
+        tipo,
+
+        mensaje.role,
+
+        mensaje.content,
+
+        false
+
+      );
+
+    }
+
+  );
+
+
+  chatScrollAbajo(
+    tipo
+  );
+
+}
+
+
+// ============================================================
+// AGREGAR MENSAJE VISUAL
+// ============================================================
+
+function chatAgregarMensaje(
+  tipo,
+  role,
+  texto,
+  desplazar = true
+) {
+
+  const contenedor =
+    document.getElementById(
+      `chat-mensajes-${tipo}`
+    );
+
+
+  const personaje =
+    chatPersonajes[tipo];
+
+
+  if (
+    !contenedor ||
+    !personaje ||
+    !texto
+  ) {
+
+    return;
+
+  }
+
+
+  // ==========================================================
+  // CONTENEDOR DEL MENSAJE
+  // ==========================================================
+
+  const bloque =
+    document.createElement(
+      'div'
+    );
+
+
+  bloque.className =
+
+    role === 'user'
+
+      ? 'chat-mensaje chat-mensaje-usuario'
+
+      : 'chat-mensaje chat-mensaje-personaje';
+
+
+  // ==========================================================
+  // NOMBRE
+  // ==========================================================
+
+  const etiqueta =
+    document.createElement(
+      'div'
+    );
+
+
+  etiqueta.className =
+    'chat-etiqueta';
+
+
+  etiqueta.textContent =
+
+    role === 'user'
+
+      ? 'Tú'
+
+      : `${personaje.emoji} ${personaje.nombre}`;
+
+
+  // ==========================================================
+  // BURBUJA
+  // ==========================================================
+
+  const burbuja =
+    document.createElement(
+      'div'
+    );
+
+
+  burbuja.className =
+    'chat-burbuja';
+
+
+  burbuja.textContent =
+    texto;
+
+
+  bloque.appendChild(
+    etiqueta
+  );
+
+
+  bloque.appendChild(
+    burbuja
+  );
+
+
+  // ==========================================================
+  // BOTÓN ESCUCHAR RESPUESTA
+  // ==========================================================
+
+  if (
+    role === 'assistant'
+  ) {
+
+    const acciones =
+      document.createElement(
+        'div'
+      );
+
+
+    acciones.className =
+      'chat-acciones-respuesta';
+
+
+    const btnEscuchar =
+      document.createElement(
+        'button'
+      );
+
+
+    btnEscuchar.type =
+      'button';
+
+
+    btnEscuchar.className =
+      'chat-btn-escuchar';
+
+
+    btnEscuchar.textContent =
+      '🔊 Escuchar';
+
+
+    btnEscuchar.addEventListener(
+
+      'click',
+
+      () => {
+
+        chatEscucharRespuesta(
+
+          tipo,
+
+          texto
+
+        );
+
+      }
+
+    );
+
+
+    acciones.appendChild(
+      btnEscuchar
+    );
+
+
+    bloque.appendChild(
+      acciones
+    );
+
+  }
+
+
+  contenedor.appendChild(
+    bloque
+  );
+
+
+  if (
+    desplazar
+  ) {
+
+    chatScrollAbajo(
+      tipo
+    );
+
+  }
+
+}
+
+
+// ============================================================
+// ENVIAR PREGUNTA
+// ============================================================
+
+async function chatEnviarPregunta(
+  tipo
+) {
+
+  const input =
+    document.getElementById(
+      `chat-input-${tipo}`
+    );
+
+
+  const btnEnviar =
+    document.getElementById(
+      `chat-enviar-${tipo}`
+    );
+
+
+  const btnMic =
+    document.getElementById(
+      `chat-mic-${tipo}`
+    );
+
+
+  if (
+    !input ||
+    !btnEnviar ||
+    !chatPersonajes[tipo]
+  ) {
+
+    return;
+
+  }
+
+
+  const pregunta =
+    input.value.trim();
+
+
+  // ==========================================================
+  // PREGUNTA VACÍA
+  // ==========================================================
+
+  if (!pregunta) {
+
+    chatActualizarEstado(
+
+      tipo,
+
+      'Escribe una pregunta antes de enviarla.',
+
+      'aviso'
+
+    );
+
+
+    input.focus();
+
+
+    return;
+
+  }
+
+
+  // ==========================================================
+  // GUARDAR HISTORIAL ANTERIOR
+  // ==========================================================
+
+  const historialParaEnviar =
+
+    chatHistorial[tipo]
+      .slice(-8);
+
+
+  // ==========================================================
+  // AGREGAR PREGUNTA LOCALMENTE
+  // ==========================================================
+
+  chatHistorial[tipo].push({
+
+    role: 'user',
+
+    content: pregunta
+
+  });
+
+
+  chatAgregarMensaje(
+
+    tipo,
+
+    'user',
+
+    pregunta
+
+  );
+
+
+  input.value =
+    '';
+
+
+  btnEnviar.disabled =
+    true;
+
+
+  if (btnMic) {
+
+    btnMic.disabled =
+      true;
+
+  }
+
+
+  chatActualizarEstado(
+
+    tipo,
+
+    `${chatPersonajes[tipo].emoji} ${chatPersonajes[tipo].nombre} está pensando...`,
+
+    'cargando'
+
+  );
+
+
+  try {
+
+    // ========================================================
+    // ENVIAR AL BACKEND
+    // ========================================================
+
+    const respuesta =
+      await fetch(
+
+        CHAT_API_URL,
+
+        {
+
+          method:
+            'POST',
+
+
+          headers: {
+
+            'Content-Type':
+              'application/json'
+
+          },
+
+
+          body:
+            JSON.stringify({
+
+              leyenda:
+                tipo,
+
+              pregunta:
+                pregunta,
+
+              historial:
+                historialParaEnviar
+
+            })
+
+        }
+
+      );
+
+
+    let datos =
+      {};
+
+
+    try {
+
+      datos =
+        await respuesta.json();
+
+    } catch {
+
+      // No era JSON
+
+    }
+
+
+    // ========================================================
+    // ERROR DEL SERVIDOR
+    // ========================================================
+
+    if (
+      !respuesta.ok
+    ) {
+
+      throw new Error(
+
+        datos.error ||
+
+        `Error ${respuesta.status}`
+
+      );
+
+    }
+
+
+    // ========================================================
+    // TEXTO DE RESPUESTA
+    // ========================================================
+
+    const texto =
+
+      String(
+        datos.respuesta || ''
+      ).trim();
+
+
+    if (!texto) {
+
+      throw new Error(
+        'La respuesta llegó vacía.'
+      );
+
+    }
+
+
+    // ========================================================
+    // GUARDAR RESPUESTA
+    // ========================================================
+
+    chatHistorial[tipo].push({
+
+      role: 'assistant',
+
+      content: texto
+
+    });
+
+
+    // ========================================================
+    // MOSTRAR RESPUESTA
+    // ========================================================
+
+    chatAgregarMensaje(
+
+      tipo,
+
+      'assistant',
+
+      texto
+
+    );
+
+
+    chatActualizarEstado(
+
+      tipo,
+
+      '',
+
+      ''
+
+    );
+
+
+  } catch (error) {
+
+
+    console.error(
+
+      '❌ Error en el chat:',
+
+      error
+
+    );
+
+
+    chatActualizarEstado(
+
+      tipo,
+
+      'No pude conectarme con el personaje. Intenta nuevamente.',
+
+      'error'
+
+    );
+
+
+  } finally {
+
+
+    btnEnviar.disabled =
+      false;
+
+
+    if (btnMic) {
+
+      const Reconocimiento =
+
+        window.SpeechRecognition ||
+
+        window.webkitSpeechRecognition;
+
+
+      btnMic.disabled =
+        !Reconocimiento;
+
+    }
+
+
+    input.focus();
+
+  }
+
+}
+
+
+// ============================================================
+// MOSTRAR ESTADO
+// ============================================================
+
+function chatActualizarEstado(
+  tipo,
+  texto,
+  clase
+) {
+
+  const estado =
+    document.getElementById(
+      `chat-estado-${tipo}`
+    );
+
+
+  if (!estado) {
+
+    return;
+
+  }
+
+
+  estado.textContent =
+    texto || '';
+
+
+  estado.className =
+    'chat-estado';
+
+
+  if (clase) {
+
+    estado.classList.add(
+      `chat-estado-${clase}`
+    );
+
+  }
+
+}
+
+
+// ============================================================
+// BAJAR AUTOMÁTICAMENTE AL ÚLTIMO MENSAJE
+// ============================================================
+
+function chatScrollAbajo(
+  tipo
+) {
+
+  requestAnimationFrame(
+
+    () => {
+
+      const contenedor =
+        document.getElementById(
+          `chat-mensajes-${tipo}`
+        );
+
+
+      if (contenedor) {
+
+        contenedor.scrollTop =
+          contenedor.scrollHeight;
+
+      }
+
+    }
+
+  );
+
+}
+
+
+// ============================================================
+// MICRÓFONO
+// ============================================================
+
+function chatIniciarMicrofono(
+  tipo
+) {
+
+  const Reconocimiento =
+
+    window.SpeechRecognition ||
+
+    window.webkitSpeechRecognition;
+
+
+  const input =
+    document.getElementById(
+      `chat-input-${tipo}`
+    );
+
+
+  const btnMic =
+    document.getElementById(
+      `chat-mic-${tipo}`
+    );
+
+
+  if (
+    !Reconocimiento ||
+    !input ||
+    !btnMic
+  ) {
+
+    chatActualizarEstado(
+
+      tipo,
+
+      'El reconocimiento de voz no está disponible en este navegador.',
+
+      'aviso'
+
+    );
+
+
+    return;
+
+  }
+
+
+  // ==========================================================
+  // SI YA ESTÁ ESCUCHANDO
+  // ==========================================================
+
+  if (
+    chatReconocimientoActivo
+  ) {
+
+    try {
+
+      chatReconocimientoActivo.stop();
+
+    } catch {
+
+      // Nada
+
+    }
+
+
+    if (
+      chatTipoReconocimientoActivo === tipo
+    ) {
+
+      return;
+
+    }
+
+  }
+
+
+  const reconocimiento =
+    new Reconocimiento();
+
+
+  reconocimiento.lang =
+
+    chatIdiomasVoz[
+      chatIdiomaActual[tipo]
+    ] || 'es-BO';
+
+
+  reconocimiento.interimResults =
+    false;
+
+
+  reconocimiento.continuous =
+    false;
+
+
+  reconocimiento.maxAlternatives =
+    1;
+
+
+  chatReconocimientoActivo =
+    reconocimiento;
+
+
+  chatTipoReconocimientoActivo =
+    tipo;
+
+
+  // ==========================================================
+  // EMPEZÓ A ESCUCHAR
+  // ==========================================================
+
+  reconocimiento.onstart =
+    () => {
+
+
+      btnMic.classList.add(
+        'escuchando'
+      );
+
+
+      btnMic.textContent =
+        '⏹️';
+
+
+      chatActualizarEstado(
+
+        tipo,
+
+        'Escuchando... habla ahora.',
+
+        'cargando'
+
+      );
+
+    };
+
+
+  // ==========================================================
+  // RESULTADO
+  // ==========================================================
+
+  reconocimiento.onresult =
+    evento => {
+
+
+      const texto =
+
+        evento
+          .results?.[0]?.[0]
+          ?.transcript;
+
+
+      if (texto) {
+
+
+        input.value =
+          texto;
+
+
+        input.focus();
+
+
+        input.setSelectionRange(
+
+          input.value.length,
+
+          input.value.length
+
+        );
+
+      }
+
+    };
+
+
+  // ==========================================================
+  // ERROR
+  // ==========================================================
+
+  reconocimiento.onerror =
+    evento => {
+
+
+      let mensaje =
+
+        'No pude escuchar la pregunta. Intenta nuevamente.';
+
+
+      if (
+
+        evento.error === 'not-allowed' ||
+
+        evento.error === 'service-not-allowed'
+
+      ) {
+
+        mensaje =
+
+          'Debes permitir el acceso al micrófono para utilizar esta función.';
+
+      }
+
+
+      if (
+        evento.error === 'no-speech'
+      ) {
+
+        mensaje =
+
+          'No detecté ninguna voz. Intenta hablar un poco más cerca del micrófono.';
+
+      }
+
+
+      chatActualizarEstado(
+
+        tipo,
+
+        mensaje,
+
+        'error'
+
+      );
+
+    };
+
+
+  // ==========================================================
+  // TERMINÓ
+  // ==========================================================
+
+  reconocimiento.onend =
+    () => {
+
+
+      btnMic.classList.remove(
+        'escuchando'
+      );
+
+
+      btnMic.textContent =
+        '🎙️';
+
+
+      if (
+        chatReconocimientoActivo === reconocimiento
+      ) {
+
+        chatReconocimientoActivo =
+          null;
+
+
+        chatTipoReconocimientoActivo =
+          null;
+
+      }
+
+
+      const estado =
+        document.getElementById(
+          `chat-estado-${tipo}`
+        );
+
+
+      if (
+
+        estado &&
+
+        estado.classList.contains(
+          'chat-estado-cargando'
+        )
+
+      ) {
+
+        chatActualizarEstado(
+
+          tipo,
+
+          '',
+
+          ''
+
+        );
+
+      }
+
+    };
+
+
+  try {
+
+    reconocimiento.start();
+
+  } catch (error) {
+
+    console.warn(
+
+      'No se pudo iniciar el micrófono:',
+
+      error
+
+    );
+
+  }
+
+}
+
+
+// ============================================================
+// LEER RESPUESTA EN VOZ ALTA
+// ============================================================
+
+function chatEscucharRespuesta(
+  tipo,
+  texto
+) {
+
+  if (
+    !('speechSynthesis' in window)
+  ) {
+
+    chatActualizarEstado(
+
+      tipo,
+
+      'La lectura en voz alta no está disponible en este navegador.',
+
+      'aviso'
+
+    );
+
+
+    return;
+
+  }
+
+
+  // ==========================================================
+  // DETENER AUDIO ANTERIOR
+  // ==========================================================
+
+  window.speechSynthesis.cancel();
+
+
+  const voz =
+    new SpeechSynthesisUtterance(
+      texto
+    );
+
+
+  voz.lang =
+
+    chatIdiomasVoz[
+      chatIdiomaActual[tipo]
+    ] || 'es-BO';
+
+
+  voz.rate =
+    0.96;
+
+
+  voz.pitch =
+    1;
+
+
+  // ==========================================================
+  // BUSCAR UNA VOZ DEL MISMO IDIOMA
+  // ==========================================================
+
+  const voces =
+    window.speechSynthesis.getVoices();
+
+
+  const prefijo =
+
+    voz.lang
+      .split('-')[0]
+      .toLowerCase();
+
+
+  const vozCompatible =
+
+    voces.find(
+
+      item => {
+
+        return String(
+          item.lang || ''
+        )
+
+          .toLowerCase()
+
+          .startsWith(
+            prefijo
+          );
+
+      }
+
+    );
+
+
+  if (
+    vozCompatible
+  ) {
+
+    voz.voice =
+      vozCompatible;
+
+  }
+
+
+  window.speechSynthesis.speak(
+    voz
+  );
+
+}
+
+
+// ============================================================
+// DETECTAR CAMBIO DE IDIOMA DEL AUDIOLIBRO
+// ============================================================
+
+document.addEventListener(
+
+  'click',
+
+  evento => {
+
+
+    const boton =
+      evento.target.closest(
+        '[data-audio-lang][data-audio-tipo]'
+      );
+
+
+    if (!boton) {
+
+      return;
+
+    }
+
+
+    const tipo =
+      boton.dataset.audioTipo;
+
+
+    const idioma =
+      boton.dataset.audioLang;
+
+
+    if (
+      chatIdiomaActual[tipo] !== undefined
+    ) {
+
+      chatIdiomaActual[tipo] =
+        idioma;
+
+    }
+
+  }
+
+);
+
+
+// ============================================================
+// OBSERVADOR
+//
+// TU main.js CREA EL CONTENIDO DE CADA LEYENDA
+// DINÁMICAMENTE.
+//
+// ESTE OBSERVADOR DETECTA CUANDO APARECE Y AGREGA EL CHAT.
+// ============================================================
+
+const chatObservador =
+  new MutationObserver(
+
+    () => {
+
+      chatInyectarTodos();
+
+    }
+
+  );
+
+
+// ============================================================
+// OBSERVAR CONTENIDO DINÁMICO
+// ============================================================
+
+if (areaTexto) {
+
+  chatObservador.observe(
+
+    areaTexto,
+
+    {
+
+      childList:
+        true,
+
+      subtree:
+        true
+
+    }
+
+  );
+
+}
+
+
+// ============================================================
+// PRIMER INTENTO
+// ============================================================
+
+chatInyectarTodos();
