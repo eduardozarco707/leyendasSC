@@ -1,0 +1,1263 @@
+/* ============================================================
+   CHAT DE LAS LEYENDAS
+   ============================================================ */
+
+.chat-leyenda {
+  width: 100%;
+  box-sizing: border-box;
+
+  margin-top: 28px;
+  margin-bottom: 32px;
+
+  padding: 22px;
+
+  border: 1px solid rgba(130, 101, 42, 0.24);
+  border-radius: 22px;
+
+  background: rgba(255, 252, 244, 0.98);
+
+  box-shadow:
+    0 14px 38px rgba(35, 44, 34, 0.10);
+
+  overflow: hidden;
+}
+
+
+/* ============================================================
+   CABECERA
+   ============================================================ */
+
+.chat-cabecera {
+  display: flex;
+
+  align-items: center;
+
+  gap: 14px;
+
+  margin-bottom: 18px;
+}
+
+
+.chat-cabecera-icono {
+  flex: 0 0 auto;
+
+  width: 54px;
+  height: 54px;
+
+  display: grid;
+  place-items: center;
+
+  border-radius: 50%;
+
+  font-size: 28px;
+
+  background: #214b39;
+
+  color: #ffffff;
+
+  box-shadow:
+    0 8px 18px rgba(33, 75, 57, 0.18);
+}
+
+
+.chat-cabecera-texto {
+  min-width: 0;
+}
+
+
+.chat-cabecera-texto h3 {
+  margin: 3px 0 5px;
+
+  font-size:
+    clamp(
+      1.25rem,
+      2vw,
+      1.65rem
+    );
+
+  line-height: 1.2;
+
+  color: #26372d;
+}
+
+
+.chat-cabecera-texto p {
+  margin: 0;
+
+  line-height: 1.55;
+
+  color: #5f675f;
+}
+
+
+/* ============================================================
+   ZONA CELESTE DE TU REFERENCIA
+   PREGUNTAS Y RESPUESTAS
+   ============================================================ */
+
+.chat-mensajes {
+  width: 100%;
+
+  min-height: 320px;
+
+  max-height: 440px;
+
+  box-sizing: border-box;
+
+  padding: 18px;
+
+  overflow-y: auto;
+
+  overscroll-behavior: contain;
+
+  scroll-behavior: smooth;
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 16px;
+
+  border:
+    1px solid
+    rgba(33, 75, 57, 0.16);
+
+  border-radius: 18px;
+
+  background:
+    linear-gradient(
+      180deg,
+      rgba(245, 248, 243, 0.98),
+      rgba(238, 243, 236, 0.98)
+    );
+}
+
+
+/* ============================================================
+   MENSAJES
+   ============================================================ */
+
+.chat-mensaje {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 5px;
+
+  width: fit-content;
+
+  max-width:
+    min(
+      84%,
+      720px
+    );
+}
+
+
+/* ============================================================
+   MENSAJE DEL USUARIO
+   ============================================================ */
+
+.chat-mensaje-usuario {
+  align-self: flex-end;
+
+  align-items: flex-end;
+}
+
+
+/* ============================================================
+   MENSAJE DEL PERSONAJE
+   ============================================================ */
+
+.chat-mensaje-personaje {
+  align-self: flex-start;
+
+  align-items: flex-start;
+}
+
+
+/* ============================================================
+   NOMBRE DEL QUE HABLA
+   ============================================================ */
+
+.chat-etiqueta {
+  padding:
+    0 5px;
+
+  font-size:
+    0.77rem;
+
+  font-weight:
+    800;
+
+  letter-spacing:
+    0.03em;
+
+  color:
+    #657068;
+}
+
+
+/* ============================================================
+   BURBUJA GENERAL
+   ============================================================ */
+
+.chat-burbuja {
+  box-sizing:
+    border-box;
+
+  padding:
+    13px 15px;
+
+  border-radius:
+    17px;
+
+  white-space:
+    pre-wrap;
+
+  overflow-wrap:
+    anywhere;
+
+  line-height:
+    1.55;
+
+  font-size:
+    0.98rem;
+}
+
+
+/* ============================================================
+   BURBUJA DEL USUARIO
+   ============================================================ */
+
+.chat-mensaje-usuario
+.chat-burbuja {
+  border-bottom-right-radius:
+    5px;
+
+  background:
+    #214b39;
+
+  color:
+    #ffffff;
+
+  box-shadow:
+    0 6px 16px
+    rgba(33, 75, 57, 0.14);
+}
+
+
+/* ============================================================
+   BURBUJA DEL PERSONAJE
+   ============================================================ */
+
+.chat-mensaje-personaje
+.chat-burbuja {
+  border:
+    1px solid
+    rgba(184, 145, 61, 0.28);
+
+  border-bottom-left-radius:
+    5px;
+
+  background:
+    #ffffff;
+
+  color:
+    #303b34;
+
+  box-shadow:
+    0 6px 16px
+    rgba(53, 59, 54, 0.07);
+}
+
+
+/* ============================================================
+   BOTÓN ESCUCHAR
+   ============================================================ */
+
+.chat-acciones-respuesta {
+  display: flex;
+
+  gap: 8px;
+
+  margin-top: 2px;
+}
+
+
+.chat-btn-escuchar {
+  appearance: none;
+
+  border: 0;
+
+  padding:
+    7px 11px;
+
+  border-radius:
+    999px;
+
+  background:
+    transparent;
+
+  color:
+    #315b48;
+
+  font: inherit;
+
+  font-size:
+    0.82rem;
+
+  font-weight:
+    750;
+
+  cursor:
+    pointer;
+
+  transition:
+    background-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+
+.chat-btn-escuchar:hover {
+  background:
+    rgba(33, 75, 57, 0.09);
+}
+
+
+.chat-btn-escuchar:active {
+  transform:
+    scale(0.97);
+}
+
+
+/* ============================================================
+   PARTE INFERIOR
+   IMAGEN + CUADRO DE ESCRITURA
+   ============================================================ */
+
+.chat-zona-inferior {
+  width:
+    100%;
+
+  box-sizing:
+    border-box;
+
+  display:
+    grid;
+
+  grid-template-columns:
+    minmax(150px, 28%)
+    minmax(0, 1fr);
+
+  gap:
+    16px;
+
+  align-items:
+    stretch;
+
+  margin-top:
+    16px;
+}
+
+
+/* ============================================================
+   ZONA NARANJA
+   IMAGEN FUTURA DEL PERSONAJE
+   ============================================================ */
+
+.chat-personaje-placeholder {
+  min-width:
+    0;
+
+  min-height:
+    160px;
+
+  box-sizing:
+    border-box;
+
+  display:
+    flex;
+
+  flex-direction:
+    column;
+
+  justify-content:
+    center;
+
+  align-items:
+    center;
+
+  gap:
+    8px;
+
+  padding:
+    14px;
+
+  overflow:
+    hidden;
+
+  border:
+    1px dashed
+    rgba(124, 92, 30, 0.42);
+
+  border-radius:
+    18px;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(236, 226, 196, 0.95),
+      rgba(247, 241, 222, 0.98)
+    );
+
+  text-align:
+    center;
+}
+
+
+.chat-personaje-emoji {
+  font-size:
+    clamp(
+      2.2rem,
+      5vw,
+      3.4rem
+    );
+
+  line-height:
+    1;
+}
+
+
+.chat-personaje-texto {
+  max-width:
+    100%;
+
+  font-size:
+    0.78rem;
+
+  line-height:
+    1.25;
+
+  font-weight:
+    750;
+
+  color:
+    #76643f;
+}
+
+
+/* ============================================================
+   ZONA AMARILLA
+   CUADRO PARA ESCRIBIR
+   ============================================================ */
+
+.chat-compositor {
+  min-width:
+    0;
+
+  min-height:
+    160px;
+
+  box-sizing:
+    border-box;
+
+  display:
+    flex;
+
+  flex-direction:
+    column;
+
+  gap:
+    9px;
+
+  padding:
+    13px;
+
+  border:
+    1px solid
+    rgba(33, 75, 57, 0.18);
+
+  border-radius:
+    18px;
+
+  background:
+    #ffffff;
+
+  box-shadow:
+    0 8px 22px
+    rgba(44, 55, 47, 0.07);
+}
+
+
+/* ============================================================
+   ETIQUETA
+   ============================================================ */
+
+.chat-label {
+  font-size:
+    0.82rem;
+
+  font-weight:
+    800;
+
+  color:
+    #405449;
+}
+
+
+/* ============================================================
+   TEXTAREA
+   ============================================================ */
+
+.chat-input {
+  width:
+    100%;
+
+  min-width:
+    0;
+
+  flex:
+    1 1 auto;
+
+  box-sizing:
+    border-box;
+
+  min-height:
+    82px;
+
+  padding:
+    12px 13px;
+
+  border:
+    1px solid #ccd6cf;
+
+  border-radius:
+    14px;
+
+  outline:
+    none;
+
+  resize:
+    vertical;
+
+  background:
+    #fbfcfa;
+
+  color:
+    #27332c;
+
+  font:
+    inherit;
+
+  font-size:
+    16px;
+
+  line-height:
+    1.45;
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    background-color 0.2s ease;
+}
+
+
+.chat-input::placeholder {
+  color:
+    #8b948e;
+}
+
+
+.chat-input:focus {
+  border-color:
+    #557b68;
+
+  background:
+    #ffffff;
+
+  box-shadow:
+    0 0 0 3px
+    rgba(85, 123, 104, 0.12);
+}
+
+
+/* ============================================================
+   BOTONES
+   ============================================================ */
+
+.chat-acciones {
+  display:
+    flex;
+
+  justify-content:
+    flex-end;
+
+  align-items:
+    center;
+
+  gap:
+    9px;
+}
+
+
+.chat-btn-mic,
+.chat-btn-enviar {
+  appearance:
+    none;
+
+  border:
+    0;
+
+  min-height:
+    44px;
+
+  cursor:
+    pointer;
+
+  font:
+    inherit;
+
+  transition:
+    transform 0.18s ease,
+    opacity 0.18s ease,
+    box-shadow 0.18s ease;
+}
+
+
+/* ============================================================
+   MICRÓFONO
+   ============================================================ */
+
+.chat-btn-mic {
+  width:
+    44px;
+
+  min-width:
+    44px;
+
+  padding:
+    0;
+
+  display:
+    grid;
+
+  place-items:
+    center;
+
+  border-radius:
+    50%;
+
+  background:
+    #edf2ee;
+
+  color:
+    #214b39;
+
+  font-size:
+    1.05rem;
+}
+
+
+/* ============================================================
+   ENVIAR
+   ============================================================ */
+
+.chat-btn-enviar {
+  display:
+    inline-flex;
+
+  align-items:
+    center;
+
+  justify-content:
+    center;
+
+  gap:
+    8px;
+
+  padding:
+    0 17px;
+
+  border-radius:
+    999px;
+
+  background:
+    #214b39;
+
+  color:
+    #ffffff;
+
+  font-weight:
+    800;
+
+  box-shadow:
+    0 7px 16px
+    rgba(33, 75, 57, 0.17);
+}
+
+
+.chat-btn-mic:hover,
+.chat-btn-enviar:hover {
+  transform:
+    translateY(-1px);
+}
+
+
+.chat-btn-mic:active,
+.chat-btn-enviar:active {
+  transform:
+    translateY(0)
+    scale(0.98);
+}
+
+
+.chat-btn-mic:disabled,
+.chat-btn-enviar:disabled {
+  opacity:
+    0.5;
+
+  cursor:
+    not-allowed;
+
+  transform:
+    none;
+}
+
+
+/* ============================================================
+   MICRÓFONO ESCUCHANDO
+   ============================================================ */
+
+.chat-btn-mic.escuchando {
+  background:
+    #8b2f2f;
+
+  color:
+    #ffffff;
+
+  animation:
+    chatPulsoMic
+    1.15s
+    ease-in-out
+    infinite;
+}
+
+
+@keyframes chatPulsoMic {
+
+  0%,
+  100% {
+
+    box-shadow:
+      0 0 0 0
+      rgba(139, 47, 47, 0.30);
+
+  }
+
+
+  50% {
+
+    box-shadow:
+      0 0 0 8px
+      rgba(139, 47, 47, 0);
+
+  }
+
+}
+
+
+/* ============================================================
+   ESTADO
+   ============================================================ */
+
+.chat-estado {
+  min-height:
+    20px;
+
+  font-size:
+    0.78rem;
+
+  line-height:
+    1.35;
+
+  color:
+    #69736c;
+}
+
+
+.chat-estado-cargando {
+  color:
+    #52685c;
+}
+
+
+.chat-estado-aviso {
+  color:
+    #8a691d;
+}
+
+
+.chat-estado-error {
+  color:
+    #9b3434;
+}
+
+
+/* ============================================================
+   FUTURA IMAGEN REAL
+   ============================================================ */
+
+.chat-personaje-imagen {
+  width:
+    100%;
+
+  height:
+    100%;
+
+  min-height:
+    160px;
+
+  display:
+    block;
+
+  object-fit:
+    cover;
+
+  object-position:
+    center;
+
+  border-radius:
+    18px;
+}
+
+
+/* ============================================================
+   TABLET
+   ============================================================ */
+
+@media (max-width: 900px) {
+
+  .chat-leyenda {
+
+    padding:
+      18px;
+
+    border-radius:
+      19px;
+
+  }
+
+
+  .chat-mensajes {
+
+    min-height:
+      300px;
+
+    max-height:
+      420px;
+
+  }
+
+
+  .chat-zona-inferior {
+
+    grid-template-columns:
+      minmax(125px, 30%)
+      minmax(0, 1fr);
+
+    gap:
+      13px;
+
+  }
+
+}
+
+
+/* ============================================================
+   CELULAR
+   ============================================================ */
+
+@media (max-width: 600px) {
+
+  .chat-leyenda {
+
+    margin-top:
+      22px;
+
+    margin-bottom:
+      24px;
+
+    padding:
+      13px;
+
+    border-radius:
+      17px;
+
+  }
+
+
+  .chat-cabecera {
+
+    align-items:
+      flex-start;
+
+    gap:
+      10px;
+
+    margin-bottom:
+      13px;
+
+  }
+
+
+  .chat-cabecera-icono {
+
+    width:
+      43px;
+
+    height:
+      43px;
+
+    font-size:
+      23px;
+
+  }
+
+
+  .chat-cabecera-texto h3 {
+
+    font-size:
+      1.15rem;
+
+  }
+
+
+  .chat-cabecera-texto p {
+
+    font-size:
+      0.9rem;
+
+  }
+
+
+  /* ==========================================================
+     ZONA DE RESPUESTAS EN CELULAR
+     ========================================================== */
+
+  .chat-mensajes {
+
+    min-height:
+      285px;
+
+    height:
+      min(43vh, 390px);
+
+    max-height:
+      390px;
+
+    padding:
+      12px;
+
+    gap:
+      13px;
+
+    border-radius:
+      15px;
+
+  }
+
+
+  .chat-mensaje {
+
+    max-width:
+      91%;
+
+  }
+
+
+  .chat-burbuja {
+
+    padding:
+      11px 12px;
+
+    border-radius:
+      15px;
+
+    font-size:
+      0.94rem;
+
+  }
+
+
+  .chat-etiqueta {
+
+    font-size:
+      0.72rem;
+
+  }
+
+
+  /* ==========================================================
+     IMAGEN IZQUIERDA + CHAT DERECHA
+     ========================================================== */
+
+  .chat-zona-inferior {
+
+    grid-template-columns:
+      minmax(88px, 31%)
+      minmax(0, 1fr);
+
+    gap:
+      9px;
+
+    margin-top:
+      11px;
+
+  }
+
+
+  .chat-personaje-placeholder {
+
+    min-height:
+      145px;
+
+    padding:
+      8px;
+
+    border-radius:
+      15px;
+
+  }
+
+
+  .chat-personaje-emoji {
+
+    font-size:
+      2.35rem;
+
+  }
+
+
+  .chat-personaje-texto {
+
+    font-size:
+      0.68rem;
+
+  }
+
+
+  .chat-compositor {
+
+    min-height:
+      145px;
+
+    padding:
+      9px;
+
+    gap:
+      7px;
+
+    border-radius:
+      15px;
+
+  }
+
+
+  .chat-label {
+
+    font-size:
+      0.73rem;
+
+  }
+
+
+  .chat-input {
+
+    min-height:
+      74px;
+
+    padding:
+      10px;
+
+    border-radius:
+      12px;
+
+    font-size:
+      16px;
+
+  }
+
+
+  .chat-acciones {
+
+    gap:
+      7px;
+
+  }
+
+
+  .chat-btn-mic {
+
+    width:
+      41px;
+
+    min-width:
+      41px;
+
+    min-height:
+      41px;
+
+  }
+
+
+  .chat-btn-enviar {
+
+    min-height:
+      41px;
+
+    padding:
+      0 13px;
+
+    font-size:
+      0.86rem;
+
+  }
+
+
+  .chat-estado {
+
+    min-height:
+      17px;
+
+    font-size:
+      0.68rem;
+
+  }
+
+}
+
+
+/* ============================================================
+   CELULARES MUY PEQUEÑOS
+   ============================================================ */
+
+@media (max-width: 380px) {
+
+  .chat-leyenda {
+
+    padding:
+      10px;
+
+  }
+
+
+  .chat-mensajes {
+
+    min-height:
+      265px;
+
+    padding:
+      10px;
+
+  }
+
+
+  .chat-zona-inferior {
+
+    grid-template-columns:
+      minmax(78px, 30%)
+      minmax(0, 1fr);
+
+    gap:
+      7px;
+
+  }
+
+
+  .chat-personaje-placeholder {
+
+    min-height:
+      138px;
+
+    padding:
+      6px;
+
+  }
+
+
+  .chat-personaje-texto {
+
+    font-size:
+      0.62rem;
+
+  }
+
+
+  .chat-compositor {
+
+    min-height:
+      138px;
+
+    padding:
+      7px;
+
+  }
+
+
+  .chat-btn-enviar span:first-child {
+
+    display:
+      none;
+
+  }
+
+
+  .chat-btn-enviar {
+
+    width:
+      41px;
+
+    min-width:
+      41px;
+
+    padding:
+      0;
+
+  }
+
+}
+
+
+/* ============================================================
+   ACCESIBILIDAD
+   ============================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+
+  .chat-mensajes {
+
+    scroll-behavior:
+      auto;
+
+  }
+
+
+  .chat-btn-mic,
+  .chat-btn-enviar,
+  .chat-btn-escuchar {
+
+    transition:
+      none;
+
+  }
+
+
+  .chat-btn-mic.escuchando {
+
+    animation:
+      none;
+
+  }
+
+}
