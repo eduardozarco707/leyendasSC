@@ -1,11 +1,6 @@
 import './style.css';
 import './chat.css';
 
-
-// ============================================================
-// ELEMENTOS PRINCIPALES
-// ============================================================
-
 const sidebar =
   document.getElementById('sidebar');
 
@@ -17,11 +12,6 @@ const areaTexto =
 
 const botonesLeyenda =
   document.querySelectorAll('.btn-leyenda');
-
-
-// ============================================================
-// ELEMENTOS AR
-// ============================================================
 
 const pantallaAR =
   document.getElementById('pantalla-ar');
@@ -44,10 +34,6 @@ const btnCapturar =
 const btnCerrarAR =
   document.getElementById('btn-cerrar-ar');
 
-
-// ============================================================
-// IDIOMAS DEL AUDIOLIBRO
-// ============================================================
 
 const idiomas = {
 
@@ -74,12 +60,7 @@ const idiomas = {
 };
 
 
-// ============================================================
-// CONFIGURACIÓN DE LAS LEYENDAS
-// ============================================================
-
 const experiencias = {
-
 
   carreton: {
 
@@ -273,10 +254,6 @@ const experiencias = {
 };
 
 
-// ============================================================
-// ESTADO
-// ============================================================
-
 let experienciaActiva = null;
 
 let arActivo = false;
@@ -287,10 +264,6 @@ let targetEncontrado = false;
 
 let temporizadorCaptura = null;
 
-
-// ============================================================
-// MODELOS CARGADOS
-// ============================================================
 
 const modelosCargados = {
 
@@ -303,10 +276,6 @@ const modelosCargados = {
 };
 
 
-// ============================================================
-// MENÚ
-// ============================================================
-
 btnMenu?.addEventListener(
   'click',
   () => {
@@ -316,10 +285,6 @@ btnMenu?.addEventListener(
   }
 );
 
-
-// ============================================================
-// BOTONES DEL MENÚ
-// ============================================================
 
 botonesLeyenda.forEach(
   boton => {
@@ -362,10 +327,6 @@ botonesLeyenda.forEach(
 );
 
 
-// ============================================================
-// BOTÓN ACTIVO
-// ============================================================
-
 function marcarActivo(
   seleccionado
 ) {
@@ -387,10 +348,6 @@ function marcarActivo(
 
 }
 
-
-// ============================================================
-// CABECERA DE CADA LEYENDA
-// ============================================================
 
 function crearCabecera(
   tipo
@@ -525,10 +482,6 @@ function crearCabecera(
 }
 
 
-// ============================================================
-// PANEL AR
-// ============================================================
-
 function crearPanelAR(
   tipo
 ) {
@@ -598,10 +551,6 @@ function crearPanelAR(
 }
 
 
-// ============================================================
-// CREAR AUDIOLIBRO
-// ============================================================
-
 function crearAudiolibro(
   tipo
 ) {
@@ -665,7 +614,6 @@ function crearAudiolibro(
         </button>
 
 
-
         <button
           class="btn-idioma"
           type="button"
@@ -684,7 +632,6 @@ function crearAudiolibro(
         </button>
 
 
-
         <button
           class="btn-idioma"
           type="button"
@@ -701,7 +648,6 @@ function crearAudiolibro(
           </span>
 
         </button>
-
 
 
         <button
@@ -731,11 +677,9 @@ function crearAudiolibro(
 
         <div class="idioma-reproduccion">
 
-
           <span>
             🎙️ Narración:
           </span>
-
 
           <strong
             id="idioma-audio-${tipo}"
@@ -743,23 +687,15 @@ function crearAudiolibro(
             🇧🇴 Español
           </strong>
 
-
         </div>
 
 
-
         <audio
-
           id="audiolibro-${tipo}"
-
           class="audio-leyenda"
-
           src="/audio/es/${tipo}.mp3"
-
           controls
-
           preload="metadata"
-
         >
 
           Tu navegador no soporta reproducción de audio.
@@ -776,10 +712,6 @@ function crearAudiolibro(
 
 }
 
-
-// ============================================================
-// MOSTRAR LEYENDA
-// ============================================================
 
 function mostrarLeyenda(
   tipo
@@ -803,34 +735,23 @@ function mostrarLeyenda(
 
     <div class="vista-leyenda">
 
-
       ${crearCabecera(tipo)}
-
 
       ${crearPanelAR(tipo)}
 
-
       <div
-
         id="${config.contenidoId}"
-
         style="display:none"
-
       >
 
         ${crearContenidoCapturado(tipo)}
 
       </div>
 
-
     </div>
 
   `;
 
-
-  // ==========================================================
-  // BOTÓN PARA ABRIR AR
-  // ==========================================================
 
   document
     .getElementById(
@@ -848,10 +769,6 @@ function mostrarLeyenda(
     );
 
 
-  // ==========================================================
-  // PREPARAMOS AUDIOLIBRO
-  // ==========================================================
-
   configurarAudiolibro(
     tipo
   );
@@ -859,18 +776,10 @@ function mostrarLeyenda(
 }
 
 
-// ============================================================
-// CONTENIDO DESBLOQUEADO
-// ============================================================
-
 function crearContenidoCapturado(
   tipo
 ) {
 
-
-  // ==========================================================
-  // CARRETÓN
-  // ==========================================================
 
   if (
     tipo === 'carreton'
@@ -895,7 +804,6 @@ function crearContenidoCapturado(
 
 
       <div class="historia-leyenda">
-
 
         <span class="sobrelinea">
           HISTORIA Y TRADICIÓN ORAL CRUCEÑA
@@ -1050,7 +958,9 @@ function crearContenidoCapturado(
 
 
         <p>
+
           Entonces vio algo aterrador.
+
         </p>
 
         <br>
@@ -1079,7 +989,9 @@ function crearContenidoCapturado(
 
 
         <p>
+
           Pero lo más aterrador estaba al frente.
+
         </p>
 
         <br>
@@ -1132,7 +1044,9 @@ function crearContenidoCapturado(
 
 
         <p>
+
           Transportaba almas hacia la otra vida.
+
         </p>
 
         <br>
@@ -1155,10 +1069,6 @@ function crearContenidoCapturado(
 
   }
 
-
-  // ==========================================================
-  // GUAJOJÓ
-  // ==========================================================
 
   if (
     tipo === 'guajojo'
@@ -1294,6 +1204,7 @@ function crearContenidoCapturado(
 
         </p>
 
+
       </div>
 
 
@@ -1324,16 +1235,13 @@ function crearContenidoCapturado(
           alt="Guajojó"
         >
 
+
       </div>
 
     `;
 
   }
 
-
-  // ==========================================================
-  // DUENDE
-  // ==========================================================
 
   if (
     tipo === 'duende'
@@ -1470,10 +1378,6 @@ function crearContenidoCapturado(
   }
 
 
-  // ==========================================================
-  // VIUDITA
-  // ==========================================================
-
   if (
     tipo === 'viudita'
   ) {
@@ -1580,14 +1484,18 @@ function crearContenidoCapturado(
 
 
         <p>
+
           Todo parecía perfecto.
+
         </p>
 
         <br>
 
 
         <p>
+
           Pero el encantamiento no duraba para siempre.
+
         </p>
 
         <br>
@@ -1638,7 +1546,9 @@ function crearContenidoCapturado(
 
 
         <p>
+
           La Viudita había desaparecido sin dejar rastro.
+
         </p>
 
 
@@ -1648,10 +1558,6 @@ function crearContenidoCapturado(
 
   }
 
-
-  // ==========================================================
-  // JICHI
-  // ==========================================================
 
   return `
 
@@ -1831,10 +1737,6 @@ function crearContenidoCapturado(
 }
 
 
-// ============================================================
-// CONFIGURAR AUDIOLIBRO
-// ============================================================
-
 function configurarAudiolibro(
   tipo
 ) {
@@ -1891,10 +1793,6 @@ function configurarAudiolibro(
             !audio.paused;
 
 
-          // ==================================================
-          // CAMBIAR BOTÓN ACTIVO
-          // ==================================================
-
           botones.forEach(
             otro => {
 
@@ -1911,10 +1809,6 @@ function configurarAudiolibro(
           );
 
 
-          // ==================================================
-          // NUEVA RUTA
-          // ==================================================
-
           const nuevaRuta =
             `/audio/${idioma}/${tipo}.mp3`;
 
@@ -1929,10 +1823,6 @@ function configurarAudiolibro(
           audio.load();
 
 
-          // ==================================================
-          // INDICADOR
-          // ==================================================
-
           if (
             indicador
           ) {
@@ -1942,11 +1832,6 @@ function configurarAudiolibro(
 
           }
 
-
-          // ==================================================
-          // SI ESTABA REPRODUCIENDO,
-          // CONTINUAMOS AUTOMÁTICAMENTE
-          // ==================================================
 
           if (
             estabaReproduciendo
@@ -1972,10 +1857,6 @@ function configurarAudiolibro(
   );
 
 
-  // ==========================================================
-  // ERROR DEL MP3
-  // ==========================================================
-
   audio.addEventListener(
     'error',
     () => {
@@ -1991,10 +1872,6 @@ function configurarAudiolibro(
 }
 
 
-// ============================================================
-// OBTENER MODELO
-// ============================================================
-
 function obtenerModelo(
   tipo
 ) {
@@ -2005,10 +1882,6 @@ function obtenerModelo(
 
 }
 
-
-// ============================================================
-// PREPARAR MODELOS
-// ============================================================
 
 function prepararModelos(
   tipoActivo
@@ -2024,7 +1897,9 @@ function prepararModelos(
 
 
       if (!modelo) {
+
         return;
+
       }
 
 
@@ -2053,10 +1928,6 @@ function prepararModelos(
 }
 
 
-// ============================================================
-// CARGAR MODELO
-// ============================================================
-
 function cargarModelo(
   tipo
 ) {
@@ -2079,10 +1950,6 @@ function cargarModelo(
 
   }
 
-
-  // ==========================================================
-  // YA ESTÁ CARGADO
-  // ==========================================================
 
   if (
     modelosCargados[tipo] &&
@@ -2224,10 +2091,6 @@ function cargarModelo(
 }
 
 
-// ============================================================
-// INICIAR AR
-// ============================================================
-
 async function iniciarCamaraAR(
   tipo
 ) {
@@ -2303,10 +2166,6 @@ async function iniciarCamaraAR(
 
   try {
 
-
-    // ========================================================
-    // MODELO
-    // ========================================================
 
     await cargarModelo(
       tipo
@@ -2414,10 +2273,6 @@ async function iniciarCamaraAR(
 }
 
 
-// ============================================================
-// ESPERAR
-// ============================================================
-
 function esperar(
   tiempo
 ) {
@@ -2435,10 +2290,6 @@ function esperar(
 
 }
 
-
-// ============================================================
-// ESPERAR ESCENA
-// ============================================================
 
 function esperarEscena() {
 
@@ -2470,10 +2321,6 @@ function esperarEscena() {
 }
 
 
-// ============================================================
-// TARGETS
-// ============================================================
-
 Object.keys(
   experiencias
 ).forEach(
@@ -2497,10 +2344,6 @@ Object.keys(
 
     }
 
-
-    // ========================================================
-    // TARGET ENCONTRADO
-    // ========================================================
 
     target.addEventListener(
       'targetFound',
@@ -2573,10 +2416,6 @@ Object.keys(
     );
 
 
-    // ========================================================
-    // TARGET PERDIDO
-    // ========================================================
-
     target.addEventListener(
       'targetLost',
       () => {
@@ -2627,10 +2466,6 @@ Object.keys(
   }
 );
 
-
-// ============================================================
-// CAPTURAR
-// ============================================================
 
 btnCapturar?.addEventListener(
   'click',
@@ -2711,12 +2546,13 @@ function capturar() {
 
   }
 
+
+  mostrarBotonChatFlotante(
+    tipo
+  );
+
 }
 
-
-// ============================================================
-// CERRAR AR
-// ============================================================
 
 btnCerrarAR?.addEventListener(
   'click',
@@ -2803,10 +2639,6 @@ function cerrarCamaraAR() {
 }
 
 
-// ============================================================
-// UI AR
-// ============================================================
-
 function actualizarMensaje(
   texto
 ) {
@@ -2883,10 +2715,6 @@ function deshabilitarCaptura() {
 }
 
 
-// ============================================================
-// SALIR DE LA WEB
-// ============================================================
-
 window.addEventListener(
   'beforeunload',
   () => {
@@ -2901,15 +2729,15 @@ window.addEventListener(
 
     } catch {
 
-      // Nada
-
     }
 
   }
 );
 
+
+
 // ============================================================
-// CHAT CON IA - LEYENDAS
+// CHAT FLOTANTE CON IA
 // ============================================================
 
 const CHAT_API_URL =
@@ -2917,59 +2745,118 @@ const CHAT_API_URL =
 
 
 // ============================================================
-// CONFIGURACIÓN DE PERSONAJES
+// PERSONAJES DEL CHAT
 // ============================================================
 
 const chatPersonajes = {
 
   carreton: {
-    nombre: 'El Carretón',
-    emoji: '☠️',
+
+    nombre:
+      'El Carretón de la Otra Vida',
+
+    nombreCorto:
+      'El Carretón',
+
+    emoji:
+      '☠️',
+
+    imagen:
+      null,
 
     saludo:
-      'He vuelto a recorrer estas antiguas historias. Pregúntame sobre mi leyenda, mis apariciones o mi relación con las epidemias de Santa Cruz.'
+      'Puedes preguntarme sobre mi leyenda, mis apariciones y mi relación con las antiguas epidemias de Santa Cruz.'
+
   },
 
+
   guajojo: {
-    nombre: 'El Guajojó',
-    emoji: '🪶',
+
+    nombre:
+      'El Guajojó',
+
+    nombreCorto:
+      'El Guajojó',
+
+    emoji:
+      '🪶',
+
+    imagen:
+      null,
 
     saludo:
       'Puedes preguntarme sobre mi historia, mi transformación, mi amado o el origen de mi triste canto.'
+
   },
 
+
   duende: {
-    nombre: 'El Duende',
-    emoji: '🌿',
+
+    nombre:
+      'El Duende',
+
+    nombreCorto:
+      'El Duende',
+
+    emoji:
+      '🌿',
+
+    imagen:
+      null,
 
     saludo:
       'Puedes preguntarme sobre mis travesuras, el monte, los niños, mi sombrero de saó o las crines de los caballos.'
+
   },
 
+
   viudita: {
-    nombre: 'La Viudita',
-    emoji: '🕯️',
+
+    nombre:
+      'La Viudita',
+
+    nombreCorto:
+      'La Viudita',
+
+    emoji:
+      '🕯️',
+
+    imagen:
+      null,
 
     saludo:
       'Puedes preguntarme sobre mis apariciones, los trasnochadores, mis encantamientos o las antiguas noches cruceñas.'
+
   },
 
+
   jichi: {
-    nombre: 'El Jichi',
-    emoji: '💧',
+
+    nombre:
+      'El Jichi',
+
+    nombreCorto:
+      'El Jichi',
+
+    emoji:
+      '💧',
+
+    imagen:
+      null,
 
     saludo:
       'Puedes preguntarme sobre las aguas que protejo, mi apariencia, las lagunas o el cuidado de la naturaleza.'
+
   }
 
 };
 
 
 // ============================================================
-// HISTORIAL INDEPENDIENTE DE CADA LEYENDA
+// HISTORIALES
 // ============================================================
 
-const chatHistorial = {
+const historialesChat = {
 
   carreton: [],
   guajojo: [],
@@ -2981,356 +2868,75 @@ const chatHistorial = {
 
 
 // ============================================================
-// IDIOMA ACTUAL DEL CHAT
-// ============================================================
-
-const chatIdiomaActual = {
-
-  carreton: 'es',
-  guajojo: 'es',
-  duende: 'es',
-  viudita: 'es',
-  jichi: 'es'
-
-};
-
-
-// ============================================================
 // IDIOMAS PARA VOZ
 // ============================================================
 
-const chatIdiomasVoz = {
+const idiomasChat = {
 
-  es: 'es-BO',
+  carreton:
+    'es',
 
-  en: 'en-US',
+  guajojo:
+    'es',
 
-  pt: 'pt-BR',
+  duende:
+    'es',
 
-  de: 'de-DE'
+  viudita:
+    'es',
+
+  jichi:
+    'es'
+
+};
+
+
+const idiomasVozChat = {
+
+  es:
+    'es-BO',
+
+  en:
+    'en-US',
+
+  pt:
+    'pt-BR',
+
+  de:
+    'de-DE'
 
 };
 
 
 // ============================================================
-// VARIABLES DEL MICRÓFONO
+// ESTADO
 // ============================================================
 
-let chatReconocimientoActivo = null;
+let chatTipoActivo =
+  null;
 
-let chatTipoReconocimientoActivo = null;
 
+let reconocimientoChat =
+  null;
 
-// ============================================================
-// CREAR HTML DEL CHAT
-// ============================================================
 
-function chatCrearHTML(
-  tipo
-) {
+let reconocimientoChatTipo =
+  null;
 
-  const personaje =
-    chatPersonajes[tipo];
 
-
-  if (!personaje) {
-
-    return '';
-
-  }
-
-
-  return `
-
-    <section
-      class="chat-leyenda"
-      id="chat-leyenda-${tipo}"
-    >
-
-
-      <!-- ====================================================
-           CABECERA
-           ==================================================== -->
-
-      <div class="chat-cabecera">
-
-
-        <div class="chat-cabecera-icono">
-
-          ${personaje.emoji}
-
-        </div>
-
-
-        <div class="chat-cabecera-texto">
-
-
-          <span class="sobrelinea">
-
-            EXPERIENCIA INTERACTIVA
-
-          </span>
-
-
-          <h3>
-
-            💬 Conversa con ${personaje.nombre}
-
-          </h3>
-
-
-          <p>
-
-            Pregunta sobre su historia y conversa
-            directamente con el personaje.
-
-          </p>
-
-
-        </div>
-
-
-      </div>
-
-
-
-      <!-- ====================================================
-           ZONA CELESTE:
-           PREGUNTAS Y RESPUESTAS
-           ==================================================== -->
-
-      <div
-
-        class="chat-mensajes"
-
-        id="chat-mensajes-${tipo}"
-
-        aria-live="polite"
-
-      ></div>
-
-
-
-      <!-- ====================================================
-           PARTE INFERIOR
-           ==================================================== -->
-
-      <div class="chat-zona-inferior">
-
-
-        <!-- ==================================================
-             ZONA NARANJA:
-             AQUÍ IRÁ LA IMAGEN
-             ================================================== -->
-
-        <div
-
-          class="chat-personaje-placeholder"
-
-          id="chat-imagen-${tipo}"
-
-        >
-
-
-          <span class="chat-personaje-emoji">
-
-            ${personaje.emoji}
-
-          </span>
-
-
-          <span class="chat-personaje-texto">
-
-            Imagen del personaje
-
-          </span>
-
-
-        </div>
-
-
-
-        <!-- ==================================================
-             ZONA AMARILLA:
-             ESCRIBIR PREGUNTA
-             ================================================== -->
-
-        <div class="chat-compositor">
-
-
-          <label
-
-            class="chat-label"
-
-            for="chat-input-${tipo}"
-
-          >
-
-            Pregúntale a ${personaje.nombre}
-
-          </label>
-
-
-
-          <textarea
-
-            id="chat-input-${tipo}"
-
-            class="chat-input"
-
-            maxlength="1000"
-
-            rows="4"
-
-            placeholder="Escribe tu pregunta..."
-
-          ></textarea>
-
-
-
-          <div class="chat-acciones">
-
-
-            <!-- MICRÓFONO -->
-
-            <button
-
-              id="chat-mic-${tipo}"
-
-              class="chat-btn-mic"
-
-              type="button"
-
-              title="Hablar por micrófono"
-
-              aria-label="Hablar por micrófono"
-
-            >
-
-              🎙️
-
-            </button>
-
-
-
-            <!-- ENVIAR -->
-
-            <button
-
-              id="chat-enviar-${tipo}"
-
-              class="chat-btn-enviar"
-
-              type="button"
-
-            >
-
-
-              <span>
-
-                Enviar
-
-              </span>
-
-
-              <span aria-hidden="true">
-
-                ➤
-
-              </span>
-
-
-            </button>
-
-
-          </div>
-
-
-
-          <div
-
-            class="chat-estado"
-
-            id="chat-estado-${tipo}"
-
-            aria-live="polite"
-
-          ></div>
-
-
-        </div>
-
-
-      </div>
-
-
-    </section>
-
-  `;
-
-}
+let chatEnviando =
+  false;
 
 
 // ============================================================
-// BUSCAR E INSERTAR LOS CHATS
+// CREAR BOTÓN FLOTANTE Y PANTALLA
 // ============================================================
 
-function chatInyectarTodos() {
-
-  Object.keys(
-    chatPersonajes
-  ).forEach(
-    tipo => {
-
-      chatInyectar(
-        tipo
-      );
-
-    }
-  );
-
-}
-
-
-// ============================================================
-// INSERTAR CHAT EN UNA LEYENDA
-// ============================================================
-
-function chatInyectar(
-  tipo
-) {
-
-  const config =
-    experiencias[tipo];
-
-
-  if (!config) {
-
-    return;
-
-  }
-
-
-  const contenido =
-    document.getElementById(
-      config.contenidoId
-    );
-
-
-  if (!contenido) {
-
-    return;
-
-  }
-
-
-  // ==========================================================
-  // EVITAR DUPLICAR EL CHAT
-  // ==========================================================
+function crearInterfazChat() {
 
   if (
     document.getElementById(
-      `chat-leyenda-${tipo}`
+      'btn-chat-flotante'
     )
   ) {
 
@@ -3339,90 +2945,454 @@ function chatInyectar(
   }
 
 
-  const audiolibro =
-    contenido.querySelector(
-      '.audiolibro'
+  const botonFlotante =
+    document.createElement(
+      'button'
     );
 
 
-  // ==========================================================
-  // CHAT DESPUÉS DEL AUDIOLIBRO
-  // ==========================================================
+  botonFlotante.id =
+    'btn-chat-flotante';
 
-  if (audiolibro) {
 
-    audiolibro.insertAdjacentHTML(
+  botonFlotante.className =
+    'btn-chat-flotante';
 
-      'afterend',
 
-      chatCrearHTML(
-        tipo
-      )
+  botonFlotante.type =
+    'button';
 
+
+  botonFlotante.hidden =
+    true;
+
+
+  botonFlotante.setAttribute(
+    'aria-label',
+    'Abrir conversación con la leyenda'
+  );
+
+
+  botonFlotante.innerHTML = `
+
+    <span
+      class="btn-chat-flotante-emoji"
+      id="btn-chat-flotante-emoji"
+      aria-hidden="true"
+    >
+      💬
+    </span>
+
+    <span
+      class="btn-chat-flotante-texto"
+    >
+      HABLA CONMIGO
+    </span>
+
+  `;
+
+
+  document.body.appendChild(
+    botonFlotante
+  );
+
+
+  const modal =
+    document.createElement(
+      'div'
     );
 
-  } else {
 
-    contenido.insertAdjacentHTML(
+  modal.id =
+    'chat-modal';
 
-      'afterbegin',
 
-      chatCrearHTML(
-        tipo
-      )
+  modal.className =
+    'chat-modal';
 
+
+  modal.hidden =
+    true;
+
+
+  modal.setAttribute(
+    'role',
+    'dialog'
+  );
+
+
+  modal.setAttribute(
+    'aria-modal',
+    'true'
+  );
+
+
+  modal.setAttribute(
+    'aria-labelledby',
+    'chat-modal-titulo'
+  );
+
+
+  modal.innerHTML = `
+
+    <div class="chat-pantalla">
+
+
+      <header class="chat-barra-superior">
+
+        <div class="chat-barra-contenido">
+
+
+          <button
+            id="btn-cerrar-chat"
+            class="btn-cerrar-chat"
+            type="button"
+            aria-label="Volver a la leyenda"
+            title="Volver"
+          >
+            ←
+          </button>
+
+
+          <div class="chat-identidad">
+
+
+            <div
+              id="chat-avatar-superior"
+              class="chat-avatar-superior"
+              aria-hidden="true"
+            >
+              🌿
+            </div>
+
+
+            <div class="chat-identidad-texto">
+
+
+              <span class="chat-sobrelinea">
+                EXPERIENCIA INTERACTIVA
+              </span>
+
+
+              <h2 id="chat-modal-titulo">
+                Conversa con El Duende
+              </h2>
+
+
+            </div>
+
+
+          </div>
+
+
+          <button
+            id="btn-cerrar-chat-x"
+            class="btn-cerrar-chat btn-cerrar-chat-x"
+            type="button"
+            aria-label="Cerrar chat"
+            title="Cerrar chat"
+          >
+            ✕
+          </button>
+
+
+        </div>
+
+      </header>
+
+
+      <main class="chat-cuerpo">
+
+
+        <div class="chat-cuerpo-interior">
+
+
+          <section
+            id="chat-mensajes"
+            class="chat-mensajes"
+            aria-live="polite"
+            aria-label="Conversación"
+          >
+          </section>
+
+
+
+          <section class="chat-zona-inferior">
+
+
+            <div
+              id="chat-zona-personaje"
+              class="chat-zona-personaje"
+            >
+
+
+              <div
+                id="chat-personaje-placeholder"
+                class="chat-personaje-placeholder"
+              >
+
+
+                <span
+                  id="chat-personaje-emoji"
+                  class="chat-personaje-emoji"
+                  aria-hidden="true"
+                >
+                  🌿
+                </span>
+
+
+                <strong
+                  id="chat-personaje-nombre"
+                >
+                  El Duende
+                </strong>
+
+
+                <span
+                  class="chat-personaje-aviso"
+                >
+                  Imagen del personaje
+                </span>
+
+
+              </div>
+
+
+              <img
+                id="chat-personaje-imagen"
+                class="chat-personaje-imagen"
+                src=""
+                alt=""
+                hidden
+              >
+
+
+            </div>
+
+
+
+            <div class="chat-compositor">
+
+
+              <label
+                id="chat-label-pregunta"
+                class="chat-label"
+                for="chat-input"
+              >
+                Pregúntale al personaje
+              </label>
+
+
+              <textarea
+                id="chat-input"
+                class="chat-input"
+                rows="4"
+                maxlength="1000"
+                placeholder="Escribe tu pregunta..."
+              ></textarea>
+
+
+              <div class="chat-compositor-pie">
+
+
+                <div
+                  id="chat-estado"
+                  class="chat-estado"
+                  aria-live="polite"
+                >
+                </div>
+
+
+                <div class="chat-acciones">
+
+
+                  <button
+                    id="btn-chat-microfono"
+                    class="btn-chat-microfono"
+                    type="button"
+                    aria-label="Hablar por micrófono"
+                    title="Hablar por micrófono"
+                  >
+                    🎙️
+                  </button>
+
+
+                  <button
+                    id="btn-chat-enviar"
+                    class="btn-chat-enviar"
+                    type="button"
+                  >
+
+                    <span>
+                      Enviar
+                    </span>
+
+                    <span aria-hidden="true">
+                      ➤
+                    </span>
+
+                  </button>
+
+
+                </div>
+
+
+              </div>
+
+
+            </div>
+
+
+          </section>
+
+
+        </div>
+
+
+      </main>
+
+
+    </div>
+
+  `;
+
+
+  document.body.appendChild(
+    modal
+  );
+
+
+  botonFlotante.addEventListener(
+    'click',
+    () => {
+
+      if (
+        chatTipoActivo
+      ) {
+
+        abrirChat(
+          chatTipoActivo
+        );
+
+      }
+
+    }
+  );
+
+
+  document
+    .getElementById(
+      'btn-cerrar-chat'
+    )
+    ?.addEventListener(
+      'click',
+      cerrarChat
     );
 
-  }
+
+  document
+    .getElementById(
+      'btn-cerrar-chat-x'
+    )
+    ?.addEventListener(
+      'click',
+      cerrarChat
+    );
 
 
-  // ==========================================================
-  // ACTIVAR FUNCIONES
-  // ==========================================================
+  document
+    .getElementById(
+      'btn-chat-enviar'
+    )
+    ?.addEventListener(
+      'click',
+      enviarPreguntaChat
+    );
 
-  chatConfigurar(
-    tipo
+
+  document
+    .getElementById(
+      'chat-input'
+    )
+    ?.addEventListener(
+      'keydown',
+      evento => {
+
+        if (
+          evento.key === 'Enter' &&
+          !evento.shiftKey
+        ) {
+
+          evento.preventDefault();
+
+
+          enviarPreguntaChat();
+
+        }
+
+      }
+    );
+
+
+  document
+    .getElementById(
+      'btn-chat-microfono'
+    )
+    ?.addEventListener(
+      'click',
+      usarMicrofonoChat
+    );
+
+
+  document.addEventListener(
+    'keydown',
+    evento => {
+
+      if (
+        evento.key === 'Escape' &&
+        !modal.hidden
+      ) {
+
+        cerrarChat();
+
+      }
+
+    }
   );
 
 }
 
 
 // ============================================================
-// CONFIGURAR CHAT
+// MOSTRAR BOTÓN FLOTANTE
 // ============================================================
 
-function chatConfigurar(
+function mostrarBotonChatFlotante(
   tipo
 ) {
 
-  const input =
+  crearInterfazChat();
+
+
+  const personaje =
+    chatPersonajes[tipo];
+
+
+  const boton =
     document.getElementById(
-      `chat-input-${tipo}`
+      'btn-chat-flotante'
     );
 
 
-  const btnEnviar =
+  const emoji =
     document.getElementById(
-      `chat-enviar-${tipo}`
-    );
-
-
-  const btnMic =
-    document.getElementById(
-      `chat-mic-${tipo}`
-    );
-
-
-  const mensajes =
-    document.getElementById(
-      `chat-mensajes-${tipo}`
+      'btn-chat-flotante-emoji'
     );
 
 
   if (
-    !input ||
-    !btnEnviar ||
-    !mensajes
+    !personaje ||
+    !boton
   ) {
 
     return;
@@ -3430,111 +3400,348 @@ function chatConfigurar(
   }
 
 
-  // ==========================================================
-  // MOSTRAR HISTORIAL
-  // ==========================================================
+  chatTipoActivo =
+    tipo;
 
-  chatRenderizarHistorial(
+
+  if (
+    emoji
+  ) {
+
+    emoji.textContent =
+      personaje.emoji;
+
+  }
+
+
+  boton.hidden =
+    false;
+
+
+  boton.setAttribute(
+    'aria-label',
+    `Hablar con ${personaje.nombre}`
+  );
+
+}
+
+
+// ============================================================
+// OCULTAR BOTÓN FLOTANTE
+// ============================================================
+
+function ocultarBotonChatFlotante() {
+
+  const boton =
+    document.getElementById(
+      'btn-chat-flotante'
+    );
+
+
+  if (
+    boton
+  ) {
+
+    boton.hidden =
+      true;
+
+  }
+
+}
+
+
+// ============================================================
+// ABRIR CHAT
+// ============================================================
+
+function abrirChat(
+  tipo
+) {
+
+  crearInterfazChat();
+
+
+  const personaje =
+    chatPersonajes[tipo];
+
+
+  const modal =
+    document.getElementById(
+      'chat-modal'
+    );
+
+
+  if (
+    !personaje ||
+    !modal
+  ) {
+
+    return;
+
+  }
+
+
+  chatTipoActivo =
+    tipo;
+
+
+  actualizarPersonajeChat(
     tipo
   );
 
 
-  // ==========================================================
-  // BOTÓN ENVIAR
-  // ==========================================================
+  renderizarChat(
+    tipo
+  );
 
-  btnEnviar.addEventListener(
 
-    'click',
+  pausarAudiosLeyendas();
 
+
+  if (
+    'speechSynthesis' in window
+  ) {
+
+    window.speechSynthesis.cancel();
+
+  }
+
+
+  modal.hidden =
+    false;
+
+
+  document.body.classList.add(
+    'chat-abierto'
+  );
+
+
+  document.body.style.overflow =
+    'hidden';
+
+
+  actualizarDisponibilidadMicrofono();
+
+
+  setTimeout(
     () => {
 
-      chatEnviarPregunta(
-        tipo
-      );
+      document
+        .getElementById(
+          'chat-input'
+        )
+        ?.focus();
 
-    }
+    },
+    100
+  );
 
+}
+
+
+// ============================================================
+// CERRAR CHAT
+// ============================================================
+
+function cerrarChat() {
+
+  const modal =
+    document.getElementById(
+      'chat-modal'
+    );
+
+
+  if (
+    modal
+  ) {
+
+    modal.hidden =
+      true;
+
+  }
+
+
+  document.body.classList.remove(
+    'chat-abierto'
   );
 
 
-  // ==========================================================
-  // ENTER = ENVIAR
-  //
-  // SHIFT + ENTER = SALTO DE LÍNEA
-  // ==========================================================
-
-  input.addEventListener(
-
-    'keydown',
-
-    evento => {
-
-      if (
-        evento.key === 'Enter' &&
-        !evento.shiftKey
-      ) {
-
-        evento.preventDefault();
+  document.body.style.overflow =
+    '';
 
 
-        chatEnviarPregunta(
-          tipo
-        );
-
-      }
-
-    }
-
-  );
+  detenerMicrofonoChat();
 
 
-  // ==========================================================
-  // MICRÓFONO
-  // ==========================================================
+  if (
+    'speechSynthesis' in window
+  ) {
 
-  if (btnMic) {
+    window.speechSynthesis.cancel();
 
-    const Reconocimiento =
+  }
 
-      window.SpeechRecognition ||
-
-      window.webkitSpeechRecognition;
+}
 
 
-    if (!Reconocimiento) {
+// ============================================================
+// ACTUALIZAR PERSONAJE DEL CHAT
+// ============================================================
 
-      btnMic.disabled =
+function actualizarPersonajeChat(
+  tipo
+) {
+
+  const personaje =
+    chatPersonajes[tipo];
+
+
+  if (
+    !personaje
+  ) {
+
+    return;
+
+  }
+
+
+  const titulo =
+    document.getElementById(
+      'chat-modal-titulo'
+    );
+
+
+  const avatar =
+    document.getElementById(
+      'chat-avatar-superior'
+    );
+
+
+  const emoji =
+    document.getElementById(
+      'chat-personaje-emoji'
+    );
+
+
+  const nombre =
+    document.getElementById(
+      'chat-personaje-nombre'
+    );
+
+
+  const label =
+    document.getElementById(
+      'chat-label-pregunta'
+    );
+
+
+  const placeholder =
+    document.getElementById(
+      'chat-personaje-placeholder'
+    );
+
+
+  const imagen =
+    document.getElementById(
+      'chat-personaje-imagen'
+    );
+
+
+  if (
+    titulo
+  ) {
+
+    titulo.textContent =
+      `Conversa con ${personaje.nombre}`;
+
+  }
+
+
+  if (
+    avatar
+  ) {
+
+    avatar.textContent =
+      personaje.emoji;
+
+  }
+
+
+  if (
+    emoji
+  ) {
+
+    emoji.textContent =
+      personaje.emoji;
+
+  }
+
+
+  if (
+    nombre
+  ) {
+
+    nombre.textContent =
+      personaje.nombreCorto;
+
+  }
+
+
+  if (
+    label
+  ) {
+
+    label.textContent =
+      `Pregúntale a ${personaje.nombreCorto}`;
+
+  }
+
+
+  if (
+    imagen &&
+    placeholder &&
+    personaje.imagen
+  ) {
+
+    imagen.src =
+      personaje.imagen;
+
+
+    imagen.alt =
+      personaje.nombre;
+
+
+    imagen.hidden =
+      false;
+
+
+    placeholder.hidden =
+      true;
+
+  } else {
+
+
+    if (
+      imagen
+    ) {
+
+      imagen.hidden =
         true;
 
 
-      btnMic.title =
-        'El reconocimiento de voz no está disponible en este navegador.';
-
-
-      btnMic.setAttribute(
-
-        'aria-label',
-
-        'Reconocimiento de voz no disponible'
-
+      imagen.removeAttribute(
+        'src'
       );
 
-    } else {
+    }
 
-      btnMic.addEventListener(
 
-        'click',
+    if (
+      placeholder
+    ) {
 
-        () => {
-
-          chatIniciarMicrofono(
-            tipo
-          );
-
-        }
-
-      );
+      placeholder.hidden =
+        false;
 
     }
 
@@ -3544,16 +3751,16 @@ function chatConfigurar(
 
 
 // ============================================================
-// MOSTRAR HISTORIAL
+// RENDERIZAR CHAT
 // ============================================================
 
-function chatRenderizarHistorial(
+function renderizarChat(
   tipo
 ) {
 
   const contenedor =
     document.getElementById(
-      `chat-mensajes-${tipo}`
+      'chat-mensajes'
     );
 
 
@@ -3575,79 +3782,59 @@ function chatRenderizarHistorial(
     '';
 
 
-  // ==========================================================
-  // SALUDO INICIAL
-  // ==========================================================
-
-  chatAgregarMensaje(
-
-    tipo,
-
+  agregarMensajeVisualChat(
     'assistant',
-
     personaje.saludo,
-
     false
-
   );
 
 
-  // ==========================================================
-  // CONVERSACIÓN EXISTENTE
-  // ==========================================================
+  historialesChat[tipo]
+    .forEach(
+      mensaje => {
 
-  chatHistorial[tipo].forEach(
+        agregarMensajeVisualChat(
+          mensaje.role,
+          mensaje.content,
+          false
+        );
 
-    mensaje => {
-
-      chatAgregarMensaje(
-
-        tipo,
-
-        mensaje.role,
-
-        mensaje.content,
-
-        false
-
-      );
-
-    }
-
-  );
+      }
+    );
 
 
-  chatScrollAbajo(
-    tipo
-  );
+  desplazarChatAlFinal();
 
 }
 
 
 // ============================================================
-// AGREGAR MENSAJE VISUAL
+// AGREGAR MENSAJE
 // ============================================================
 
-function chatAgregarMensaje(
-  tipo,
+function agregarMensajeVisualChat(
   role,
   texto,
   desplazar = true
 ) {
 
-  const contenedor =
-    document.getElementById(
-      `chat-mensajes-${tipo}`
-    );
+  const tipo =
+    chatTipoActivo;
 
 
   const personaje =
     chatPersonajes[tipo];
 
 
+  const contenedor =
+    document.getElementById(
+      'chat-mensajes'
+    );
+
+
   if (
-    !contenedor ||
     !personaje ||
+    !contenedor ||
     !texto
   ) {
 
@@ -3656,17 +3843,13 @@ function chatAgregarMensaje(
   }
 
 
-  // ==========================================================
-  // CONTENEDOR DEL MENSAJE
-  // ==========================================================
-
-  const bloque =
+  const mensaje =
     document.createElement(
-      'div'
+      'article'
     );
 
 
-  bloque.className =
+  mensaje.className =
 
     role === 'user'
 
@@ -3675,32 +3858,24 @@ function chatAgregarMensaje(
       : 'chat-mensaje chat-mensaje-personaje';
 
 
-  // ==========================================================
-  // NOMBRE
-  // ==========================================================
-
-  const etiqueta =
+  const autor =
     document.createElement(
       'div'
     );
 
 
-  etiqueta.className =
-    'chat-etiqueta';
+  autor.className =
+    'chat-autor';
 
 
-  etiqueta.textContent =
+  autor.textContent =
 
     role === 'user'
 
       ? 'Tú'
 
-      : `${personaje.emoji} ${personaje.nombre}`;
+      : `${personaje.emoji} ${personaje.nombreCorto}`;
 
-
-  // ==========================================================
-  // BURBUJA
-  // ==========================================================
 
   const burbuja =
     document.createElement(
@@ -3716,85 +3891,74 @@ function chatAgregarMensaje(
     texto;
 
 
-  bloque.appendChild(
-    etiqueta
+  mensaje.appendChild(
+    autor
   );
 
 
-  bloque.appendChild(
+  mensaje.appendChild(
     burbuja
   );
 
-
-  // ==========================================================
-  // BOTÓN ESCUCHAR RESPUESTA
-  // ==========================================================
 
   if (
     role === 'assistant'
   ) {
 
-    const acciones =
+    const pie =
       document.createElement(
         'div'
       );
 
 
-    acciones.className =
-      'chat-acciones-respuesta';
+    pie.className =
+      'chat-mensaje-pie';
 
 
-    const btnEscuchar =
+    const escuchar =
       document.createElement(
         'button'
       );
 
 
-    btnEscuchar.type =
+    escuchar.className =
+      'btn-escuchar-chat';
+
+
+    escuchar.type =
       'button';
 
 
-    btnEscuchar.className =
-      'chat-btn-escuchar';
-
-
-    btnEscuchar.textContent =
+    escuchar.textContent =
       '🔊 Escuchar';
 
 
-    btnEscuchar.addEventListener(
-
+    escuchar.addEventListener(
       'click',
-
       () => {
 
-        chatEscucharRespuesta(
-
-          tipo,
-
+        leerRespuestaChat(
           texto
-
         );
 
       }
-
     );
 
 
-    acciones.appendChild(
-      btnEscuchar
+    pie.appendChild(
+      escuchar
     );
 
 
-    bloque.appendChild(
-      acciones
+    mensaje.appendChild(
+      pie
     );
 
   }
 
 
   contenedor.appendChild(
-    bloque
+    mensaje
   );
 
 
@@ -3802,9 +3966,7 @@ function chatAgregarMensaje(
     desplazar
   ) {
 
-    chatScrollAbajo(
-      tipo
-    );
+    desplazarChatAlFinal();
 
   }
 
@@ -3815,32 +3977,48 @@ function chatAgregarMensaje(
 // ENVIAR PREGUNTA
 // ============================================================
 
-async function chatEnviarPregunta(
-  tipo
-) {
+async function enviarPreguntaChat() {
+
+  if (
+    chatEnviando ||
+    !chatTipoActivo
+  ) {
+
+    return;
+
+  }
+
+
+  const tipo =
+    chatTipoActivo;
+
+
+  const personaje =
+    chatPersonajes[tipo];
+
 
   const input =
     document.getElementById(
-      `chat-input-${tipo}`
+      'chat-input'
     );
 
 
-  const btnEnviar =
+  const botonEnviar =
     document.getElementById(
-      `chat-enviar-${tipo}`
+      'btn-chat-enviar'
     );
 
 
-  const btnMic =
+  const botonMicrofono =
     document.getElementById(
-      `chat-mic-${tipo}`
+      'btn-chat-microfono'
     );
 
 
   if (
+    !personaje ||
     !input ||
-    !btnEnviar ||
-    !chatPersonajes[tipo]
+    !botonEnviar
   ) {
 
     return;
@@ -3852,20 +4030,13 @@ async function chatEnviarPregunta(
     input.value.trim();
 
 
-  // ==========================================================
-  // PREGUNTA VACÍA
-  // ==========================================================
+  if (
+    !pregunta
+  ) {
 
-  if (!pregunta) {
-
-    chatActualizarEstado(
-
-      tipo,
-
+    actualizarEstadoChat(
       'Escribe una pregunta antes de enviarla.',
-
       'aviso'
-
     );
 
 
@@ -3877,37 +4048,25 @@ async function chatEnviarPregunta(
   }
 
 
-  // ==========================================================
-  // GUARDAR HISTORIAL ANTERIOR
-  // ==========================================================
-
   const historialParaEnviar =
-
-    chatHistorial[tipo]
+    historialesChat[tipo]
       .slice(-8);
 
 
-  // ==========================================================
-  // AGREGAR PREGUNTA LOCALMENTE
-  // ==========================================================
+  historialesChat[tipo].push({
 
-  chatHistorial[tipo].push({
+    role:
+      'user',
 
-    role: 'user',
-
-    content: pregunta
+    content:
+      pregunta
 
   });
 
 
-  chatAgregarMensaje(
-
-    tipo,
-
+  agregarMensajeVisualChat(
     'user',
-
     pregunta
-
   );
 
 
@@ -3915,23 +4074,27 @@ async function chatEnviarPregunta(
     '';
 
 
-  btnEnviar.disabled =
+  chatEnviando =
     true;
 
 
-  if (btnMic) {
+  botonEnviar.disabled =
+    true;
 
-    btnMic.disabled =
+
+  if (
+    botonMicrofono
+  ) {
+
+    botonMicrofono.disabled =
       true;
 
   }
 
 
-  chatActualizarEstado(
+  actualizarEstadoChat(
 
-    tipo,
-
-    `${chatPersonajes[tipo].emoji} ${chatPersonajes[tipo].nombre} está pensando...`,
+    `${personaje.emoji} ${personaje.nombreCorto} está pensando...`,
 
     'cargando'
 
@@ -3940,9 +4103,6 @@ async function chatEnviarPregunta(
 
   try {
 
-    // ========================================================
-    // ENVIAR AL BACKEND
-    // ========================================================
 
     const respuesta =
       await fetch(
@@ -3993,14 +4153,8 @@ async function chatEnviarPregunta(
 
     } catch {
 
-      // No era JSON
-
     }
 
-
-    // ========================================================
-    // ERROR DEL SERVIDOR
-    // ========================================================
 
     if (
       !respuesta.ok
@@ -4017,62 +4171,43 @@ async function chatEnviarPregunta(
     }
 
 
-    // ========================================================
-    // TEXTO DE RESPUESTA
-    // ========================================================
-
     const texto =
-
       String(
         datos.respuesta || ''
       ).trim();
 
 
-    if (!texto) {
+    if (
+      !texto
+    ) {
 
       throw new Error(
-        'La respuesta llegó vacía.'
+        'El personaje no devolvió una respuesta.'
       );
 
     }
 
 
-    // ========================================================
-    // GUARDAR RESPUESTA
-    // ========================================================
+    historialesChat[tipo].push({
 
-    chatHistorial[tipo].push({
+      role:
+        'assistant',
 
-      role: 'assistant',
-
-      content: texto
+      content:
+        texto
 
     });
 
 
-    // ========================================================
-    // MOSTRAR RESPUESTA
-    // ========================================================
-
-    chatAgregarMensaje(
-
-      tipo,
-
+    agregarMensajeVisualChat(
       'assistant',
-
       texto
-
     );
 
 
-    chatActualizarEstado(
-
-      tipo,
-
+    actualizarEstadoChat(
       '',
-
       ''
-
     );
 
 
@@ -4080,45 +4215,34 @@ async function chatEnviarPregunta(
 
 
     console.error(
-
-      '❌ Error en el chat:',
-
+      '❌ Error en chat:',
       error
-
     );
 
 
-    chatActualizarEstado(
+    agregarMensajeSistemaChat(
+      'No pude comunicarme con el personaje en este momento. Intenta nuevamente.'
+    );
 
-      tipo,
 
-      'No pude conectarme con el personaje. Intenta nuevamente.',
-
+    actualizarEstadoChat(
+      'Error de conexión con la IA.',
       'error'
-
     );
 
 
   } finally {
 
 
-    btnEnviar.disabled =
+    chatEnviando =
       false;
 
 
-    if (btnMic) {
-
-      const Reconocimiento =
-
-        window.SpeechRecognition ||
-
-        window.webkitSpeechRecognition;
+    botonEnviar.disabled =
+      false;
 
 
-      btnMic.disabled =
-        !Reconocimiento;
-
-    }
+    actualizarDisponibilidadMicrofono();
 
 
     input.focus();
@@ -4129,22 +4253,70 @@ async function chatEnviarPregunta(
 
 
 // ============================================================
-// MOSTRAR ESTADO
+// MENSAJE DEL SISTEMA
 // ============================================================
 
-function chatActualizarEstado(
-  tipo,
+function agregarMensajeSistemaChat(
+  texto
+) {
+
+  const contenedor =
+    document.getElementById(
+      'chat-mensajes'
+    );
+
+
+  if (
+    !contenedor
+  ) {
+
+    return;
+
+  }
+
+
+  const mensaje =
+    document.createElement(
+      'div'
+    );
+
+
+  mensaje.className =
+    'chat-mensaje-sistema';
+
+
+  mensaje.textContent =
+    texto;
+
+
+  contenedor.appendChild(
+    mensaje
+  );
+
+
+  desplazarChatAlFinal();
+
+}
+
+
+// ============================================================
+// ESTADO
+// ============================================================
+
+function actualizarEstadoChat(
   texto,
-  clase
+  tipo
 ) {
 
   const estado =
     document.getElementById(
-      `chat-estado-${tipo}`
+      'chat-estado'
     );
 
 
-  if (!estado) {
+  if (
+    !estado
+  ) {
 
     return;
 
@@ -4159,10 +4331,12 @@ function chatActualizarEstado(
     'chat-estado';
 
 
-  if (clase) {
+  if (
+    tipo
+  ) {
 
     estado.classList.add(
-      `chat-estado-${clase}`
+      `chat-estado-${tipo}`
     );
 
   }
@@ -4171,24 +4345,23 @@ function chatActualizarEstado(
 
 
 // ============================================================
-// BAJAR AUTOMÁTICAMENTE AL ÚLTIMO MENSAJE
+// SCROLL AUTOMÁTICO
 // ============================================================
 
-function chatScrollAbajo(
-  tipo
-) {
+function desplazarChatAlFinal() {
 
   requestAnimationFrame(
-
     () => {
 
       const contenedor =
         document.getElementById(
-          `chat-mensajes-${tipo}`
+          'chat-mensajes'
         );
 
 
-      if (contenedor) {
+      if (
+        contenedor
+      ) {
 
         contenedor.scrollTop =
           contenedor.scrollHeight;
@@ -4196,8 +4369,86 @@ function chatScrollAbajo(
       }
 
     }
-
   );
+
+}
+
+
+// ============================================================
+// PAUSAR AUDIOS
+// ============================================================
+
+function pausarAudiosLeyendas() {
+
+  document
+    .querySelectorAll(
+      'audio'
+    )
+    .forEach(
+      audio => {
+
+        try {
+
+          audio.pause();
+
+        } catch {
+
+        }
+
+      }
+    );
+
+}
+
+
+// ============================================================
+// DISPONIBILIDAD DEL MICRÓFONO
+// ============================================================
+
+function actualizarDisponibilidadMicrofono() {
+
+  const boton =
+    document.getElementById(
+      'btn-chat-microfono'
+    );
+
+
+  if (
+    !boton
+  ) {
+
+    return;
+
+  }
+
+
+  const Reconocimiento =
+
+    window.SpeechRecognition ||
+
+    window.webkitSpeechRecognition;
+
+
+  boton.disabled =
+
+    !Reconocimiento ||
+
+    chatEnviando;
+
+
+  if (
+    !Reconocimiento
+  ) {
+
+    boton.title =
+      'El reconocimiento de voz no está disponible en este navegador.';
+
+  } else {
+
+    boton.title =
+      'Hablar por micrófono';
+
+  }
 
 }
 
@@ -4206,9 +4457,17 @@ function chatScrollAbajo(
 // MICRÓFONO
 // ============================================================
 
-function chatIniciarMicrofono(
-  tipo
-) {
+function usarMicrofonoChat() {
+
+  if (
+    !chatTipoActivo ||
+    chatEnviando
+  ) {
+
+    return;
+
+  }
+
 
   const Reconocimiento =
 
@@ -4219,25 +4478,23 @@ function chatIniciarMicrofono(
 
   const input =
     document.getElementById(
-      `chat-input-${tipo}`
+      'chat-input'
     );
 
 
-  const btnMic =
+  const boton =
     document.getElementById(
-      `chat-mic-${tipo}`
+      'btn-chat-microfono'
     );
 
 
   if (
     !Reconocimiento ||
     !input ||
-    !btnMic
+    !boton
   ) {
 
-    chatActualizarEstado(
-
-      tipo,
+    actualizarEstadoChat(
 
       'El reconocimiento de voz no está disponible en este navegador.',
 
@@ -4251,27 +4508,21 @@ function chatIniciarMicrofono(
   }
 
 
-  // ==========================================================
-  // SI YA ESTÁ ESCUCHANDO
-  // ==========================================================
-
   if (
-    chatReconocimientoActivo
+    reconocimientoChat
   ) {
 
-    try {
+    const mismoTipo =
 
-      chatReconocimientoActivo.stop();
+      reconocimientoChatTipo ===
+      chatTipoActivo;
 
-    } catch {
 
-      // Nada
-
-    }
+    detenerMicrofonoChat();
 
 
     if (
-      chatTipoReconocimientoActivo === tipo
+      mismoTipo
     ) {
 
       return;
@@ -4281,14 +4532,18 @@ function chatIniciarMicrofono(
   }
 
 
+  const tipo =
+    chatTipoActivo;
+
+
   const reconocimiento =
     new Reconocimiento();
 
 
   reconocimiento.lang =
 
-    chatIdiomasVoz[
-      chatIdiomaActual[tipo]
+    idiomasVozChat[
+      idiomasChat[tipo]
     ] || 'es-BO';
 
 
@@ -4304,34 +4559,28 @@ function chatIniciarMicrofono(
     1;
 
 
-  chatReconocimientoActivo =
+  reconocimientoChat =
     reconocimiento;
 
 
-  chatTipoReconocimientoActivo =
+  reconocimientoChatTipo =
     tipo;
 
-
-  // ==========================================================
-  // EMPEZÓ A ESCUCHAR
-  // ==========================================================
 
   reconocimiento.onstart =
     () => {
 
 
-      btnMic.classList.add(
+      boton.classList.add(
         'escuchando'
       );
 
 
-      btnMic.textContent =
+      boton.textContent =
         '⏹️';
 
 
-      chatActualizarEstado(
-
-        tipo,
+      actualizarEstadoChat(
 
         'Escuchando... habla ahora.',
 
@@ -4341,10 +4590,6 @@ function chatIniciarMicrofono(
 
     };
 
-
-  // ==========================================================
-  // RESULTADO
-  // ==========================================================
 
   reconocimiento.onresult =
     evento => {
@@ -4357,8 +4602,9 @@ function chatIniciarMicrofono(
           ?.transcript;
 
 
-      if (texto) {
-
+      if (
+        texto
+      ) {
 
         input.value =
           texto;
@@ -4379,10 +4625,6 @@ function chatIniciarMicrofono(
 
     };
 
-
-  // ==========================================================
-  // ERROR
-  // ==========================================================
 
   reconocimiento.onerror =
     evento => {
@@ -4414,14 +4656,12 @@ function chatIniciarMicrofono(
 
         mensaje =
 
-          'No detecté ninguna voz. Intenta hablar un poco más cerca del micrófono.';
+          'No detecté ninguna voz. Intenta hablar más cerca del micrófono.';
 
       }
 
 
-      chatActualizarEstado(
-
-        tipo,
+      actualizarEstadoChat(
 
         mensaje,
 
@@ -4432,32 +4672,29 @@ function chatIniciarMicrofono(
     };
 
 
-  // ==========================================================
-  // TERMINÓ
-  // ==========================================================
-
   reconocimiento.onend =
     () => {
 
 
-      btnMic.classList.remove(
+      boton.classList.remove(
         'escuchando'
       );
 
 
-      btnMic.textContent =
+      boton.textContent =
         '🎙️';
 
 
       if (
-        chatReconocimientoActivo === reconocimiento
+        reconocimientoChat ===
+        reconocimiento
       ) {
 
-        chatReconocimientoActivo =
+        reconocimientoChat =
           null;
 
 
-        chatTipoReconocimientoActivo =
+        reconocimientoChatTipo =
           null;
 
       }
@@ -4465,28 +4702,19 @@ function chatIniciarMicrofono(
 
       const estado =
         document.getElementById(
-          `chat-estado-${tipo}`
+          'chat-estado'
         );
 
 
       if (
-
-        estado &&
-
-        estado.classList.contains(
+        estado?.classList.contains(
           'chat-estado-cargando'
         )
-
       ) {
 
-        chatActualizarEstado(
-
-          tipo,
-
+        actualizarEstadoChat(
           '',
-
           ''
-
         );
 
       }
@@ -4501,12 +4729,61 @@ function chatIniciarMicrofono(
   } catch (error) {
 
     console.warn(
-
       'No se pudo iniciar el micrófono:',
-
       error
-
     );
+
+  }
+
+}
+
+
+// ============================================================
+// DETENER MICRÓFONO
+// ============================================================
+
+function detenerMicrofonoChat() {
+
+  if (
+    reconocimientoChat
+  ) {
+
+    try {
+
+      reconocimientoChat.stop();
+
+    } catch {
+
+    }
+
+  }
+
+
+  reconocimientoChat =
+    null;
+
+
+  reconocimientoChatTipo =
+    null;
+
+
+  const boton =
+    document.getElementById(
+      'btn-chat-microfono'
+    );
+
+
+  if (
+    boton
+  ) {
+
+    boton.classList.remove(
+      'escuchando'
+    );
+
+
+    boton.textContent =
+      '🎙️';
 
   }
 
@@ -4517,18 +4794,16 @@ function chatIniciarMicrofono(
 // LEER RESPUESTA EN VOZ ALTA
 // ============================================================
 
-function chatEscucharRespuesta(
-  tipo,
+function leerRespuestaChat(
   texto
 ) {
 
   if (
+    !chatTipoActivo ||
     !('speechSynthesis' in window)
   ) {
 
-    chatActualizarEstado(
-
-      tipo,
+    actualizarEstadoChat(
 
       'La lectura en voz alta no está disponible en este navegador.',
 
@@ -4542,37 +4817,31 @@ function chatEscucharRespuesta(
   }
 
 
-  // ==========================================================
-  // DETENER AUDIO ANTERIOR
-  // ==========================================================
-
   window.speechSynthesis.cancel();
 
 
-  const voz =
+  const utterance =
     new SpeechSynthesisUtterance(
       texto
     );
 
 
-  voz.lang =
+  utterance.lang =
 
-    chatIdiomasVoz[
-      chatIdiomaActual[tipo]
+    idiomasVozChat[
+      idiomasChat[
+        chatTipoActivo
+      ]
     ] || 'es-BO';
 
 
-  voz.rate =
+  utterance.rate =
     0.96;
 
 
-  voz.pitch =
+  utterance.pitch =
     1;
 
-
-  // ==========================================================
-  // BUSCAR UNA VOZ DEL MISMO IDIOMA
-  // ==========================================================
 
   const voces =
     window.speechSynthesis.getVoices();
@@ -4580,19 +4849,17 @@ function chatEscucharRespuesta(
 
   const prefijo =
 
-    voz.lang
+    utterance.lang
       .split('-')[0]
       .toLowerCase();
 
 
   const vozCompatible =
-
     voces.find(
-
-      item => {
+      voz => {
 
         return String(
-          item.lang || ''
+          voz.lang || ''
         )
 
           .toLowerCase()
@@ -4602,7 +4869,6 @@ function chatEscucharRespuesta(
           );
 
       }
-
     );
 
 
@@ -4610,37 +4876,37 @@ function chatEscucharRespuesta(
     vozCompatible
   ) {
 
-    voz.voice =
+    utterance.voice =
       vozCompatible;
 
   }
 
 
   window.speechSynthesis.speak(
-    voz
+    utterance
   );
 
 }
 
 
 // ============================================================
-// DETECTAR CAMBIO DE IDIOMA DEL AUDIOLIBRO
+// IDIOMA SELECCIONADO EN AUDIOLIBRO = IDIOMA DEL CHAT
 // ============================================================
 
 document.addEventListener(
-
   'click',
-
   evento => {
 
 
-    const boton =
+    const botonIdioma =
       evento.target.closest(
         '[data-audio-lang][data-audio-tipo]'
       );
 
 
-    if (!boton) {
+    if (
+      !botonIdioma
+    ) {
 
       return;
 
@@ -4648,75 +4914,61 @@ document.addEventListener(
 
 
     const tipo =
-      boton.dataset.audioTipo;
+      botonIdioma.dataset.audioTipo;
 
 
     const idioma =
-      boton.dataset.audioLang;
+      botonIdioma.dataset.audioLang;
 
 
     if (
-      chatIdiomaActual[tipo] !== undefined
+      idiomasChat[tipo] !==
+      undefined
     ) {
 
-      chatIdiomaActual[tipo] =
+      idiomasChat[tipo] =
         idioma;
 
     }
 
   }
-
 );
 
 
 // ============================================================
-// OBSERVADOR
-//
-// TU main.js CREA EL CONTENIDO DE CADA LEYENDA
-// DINÁMICAMENTE.
-//
-// ESTE OBSERVADOR DETECTA CUANDO APARECE Y AGREGA EL CHAT.
+// AL CAMBIAR DE LEYENDA
 // ============================================================
 
-const chatObservador =
-  new MutationObserver(
+botonesLeyenda.forEach(
+  boton => {
 
-    () => {
-
-      chatInyectarTodos();
-
-    }
-
-  );
+    boton.addEventListener(
+      'click',
+      () => {
 
 
-// ============================================================
-// OBSERVAR CONTENIDO DINÁMICO
-// ============================================================
+        cerrarChat();
 
-if (areaTexto) {
 
-  chatObservador.observe(
+        ocultarBotonChatFlotante();
 
-    areaTexto,
 
-    {
+        chatTipoActivo =
+          null;
 
-      childList:
-        true,
 
-      subtree:
-        true
+      }
+    );
 
-    }
-
-  );
-
-}
+  }
+);
 
 
 // ============================================================
-// PRIMER INTENTO
+// CREAR CHAT AL CARGAR
 // ============================================================
 
-chatInyectarTodos();
+crearInterfazChat();
+
+
+actualizarDisponibilidadMicrofono();
