@@ -2744,2129 +2744,7 @@ const CHAT_API_URL =
   'https://leyendas-sc-xnww.vercel.app/api/chat-leyenda';
 
 
-// ============================================================
-// PERSONAJES DEL CHAT
-// ============================================================
 
-const chatPersonajes = {
-
-  carreton: {
-
-    nombre:
-      'El Carretón de la Otra Vida',
-
-    nombreCorto:
-      'El Carretón',
-
-    emoji:
-      '☠️',
-
-    imagen:
-      null,
-
-    saludo:
-      'Puedes preguntarme sobre mi leyenda, mis apariciones y mi relación con las antiguas epidemias de Santa Cruz.'
-
-  },
-
-
-  guajojo: {
-
-    nombre:
-      'El Guajojó',
-
-    nombreCorto:
-      'El Guajojó',
-
-    emoji:
-      '🪶',
-
-    imagen:
-      null,
-
-    saludo:
-      'Puedes preguntarme sobre mi historia, mi transformación, mi amado o el origen de mi triste canto.'
-
-  },
-
-
-  duende: {
-
-    nombre:
-      'El Duende',
-
-    nombreCorto:
-      'El Duende',
-
-    emoji:
-      '🌿',
-
-    imagen:
-      null,
-
-    saludo:
-      'Puedes preguntarme sobre mis travesuras, el monte, los niños, mi sombrero de saó o las crines de los caballos.'
-
-  },
-
-
-  viudita: {
-
-    nombre:
-      'La Viudita',
-
-    nombreCorto:
-      'La Viudita',
-
-    emoji:
-      '🕯️',
-
-    imagen:
-      null,
-
-    saludo:
-      'Puedes preguntarme sobre mis apariciones, los trasnochadores, mis encantamientos o las antiguas noches cruceñas.'
-
-  },
-
-
-  jichi: {
-
-    nombre:
-      'El Jichi',
-
-    nombreCorto:
-      'El Jichi',
-
-    emoji:
-      '💧',
-
-    imagen:
-      null,
-
-    saludo:
-      'Puedes preguntarme sobre las aguas que protejo, mi apariencia, las lagunas o el cuidado de la naturaleza.'
-
-  }
-
-};
-
-
-// ============================================================
-// HISTORIALES
-// ============================================================
-
-const historialesChat = {
-
-  carreton: [],
-  guajojo: [],
-  duende: [],
-  viudita: [],
-  jichi: []
-
-};
-
-
-// ============================================================
-// IDIOMAS PARA VOZ
-// ============================================================
-
-const idiomasChat = {
-
-  carreton:
-    'es',
-
-  guajojo:
-    'es',
-
-  duende:
-    'es',
-
-  viudita:
-    'es',
-
-  jichi:
-    'es'
-
-};
-
-
-const idiomasVozChat = {
-
-  es:
-    'es-BO',
-
-  en:
-    'en-US',
-
-  pt:
-    'pt-BR',
-
-  de:
-    'de-DE'
-
-};
-
-
-// ============================================================
-// ESTADO
-// ============================================================
-
-let chatTipoActivo =
-  null;
-
-
-let reconocimientoChat =
-  null;
-
-
-let reconocimientoChatTipo =
-  null;
-
-
-let chatEnviando =
-  false;
-
-
-// ============================================================
-// CREAR BOTÓN FLOTANTE Y PANTALLA
-// ============================================================
-
-function crearInterfazChat() {
-
-  if (
-    document.getElementById(
-      'btn-chat-flotante'
-    )
-  ) {
-
-    return;
-
-  }
-
-
-  const botonFlotante =
-    document.createElement(
-      'button'
-    );
-
-
-  botonFlotante.id =
-    'btn-chat-flotante';
-
-
-  botonFlotante.className =
-    'btn-chat-flotante';
-
-
-  botonFlotante.type =
-    'button';
-
-
-  botonFlotante.hidden =
-    true;
-
-
-  botonFlotante.setAttribute(
-    'aria-label',
-    'Abrir conversación con la leyenda'
-  );
-
-
-  botonFlotante.innerHTML = `
-
-    <span
-      class="btn-chat-flotante-emoji"
-      id="btn-chat-flotante-emoji"
-      aria-hidden="true"
-    >
-      💬
-    </span>
-
-    <span
-      class="btn-chat-flotante-texto"
-    >
-      HABLA CONMIGO
-    </span>
-
-  `;
-
-
-  document.body.appendChild(
-    botonFlotante
-  );
-
-
-  const modal =
-    document.createElement(
-      'div'
-    );
-
-
-  modal.id =
-    'chat-modal';
-
-
-  modal.className =
-    'chat-modal';
-
-
-  modal.hidden =
-    true;
-
-
-  modal.setAttribute(
-    'role',
-    'dialog'
-  );
-
-
-  modal.setAttribute(
-    'aria-modal',
-    'true'
-  );
-
-
-  modal.setAttribute(
-    'aria-labelledby',
-    'chat-modal-titulo'
-  );
-
-
-  modal.innerHTML = `
-
-    <div class="chat-pantalla">
-
-
-      <header class="chat-barra-superior">
-
-        <div class="chat-barra-contenido">
-
-
-          <button
-            id="btn-cerrar-chat"
-            class="btn-cerrar-chat"
-            type="button"
-            aria-label="Volver a la leyenda"
-            title="Volver"
-          >
-            ←
-          </button>
-
-
-          <div class="chat-identidad">
-
-
-            <div
-              id="chat-avatar-superior"
-              class="chat-avatar-superior"
-              aria-hidden="true"
-            >
-              🌿
-            </div>
-
-
-            <div class="chat-identidad-texto">
-
-
-              <span class="chat-sobrelinea">
-                EXPERIENCIA INTERACTIVA
-              </span>
-
-
-              <h2 id="chat-modal-titulo">
-                Conversa con El Duende
-              </h2>
-
-
-            </div>
-
-
-          </div>
-
-
-          <button
-            id="btn-cerrar-chat-x"
-            class="btn-cerrar-chat btn-cerrar-chat-x"
-            type="button"
-            aria-label="Cerrar chat"
-            title="Cerrar chat"
-          >
-            ✕
-          </button>
-
-
-        </div>
-
-      </header>
-
-
-      <main class="chat-cuerpo">
-
-
-        <div class="chat-cuerpo-interior">
-
-
-          <section
-            id="chat-mensajes"
-            class="chat-mensajes"
-            aria-live="polite"
-            aria-label="Conversación"
-          >
-          </section>
-
-
-
-          <section class="chat-zona-inferior">
-
-
-            <div
-              id="chat-zona-personaje"
-              class="chat-zona-personaje"
-            >
-
-
-              <div
-                id="chat-personaje-placeholder"
-                class="chat-personaje-placeholder"
-              >
-
-
-                <span
-                  id="chat-personaje-emoji"
-                  class="chat-personaje-emoji"
-                  aria-hidden="true"
-                >
-                  🌿
-                </span>
-
-
-                <strong
-                  id="chat-personaje-nombre"
-                >
-                  El Duende
-                </strong>
-
-
-                <span
-                  class="chat-personaje-aviso"
-                >
-                  Imagen del personaje
-                </span>
-
-
-              </div>
-
-
-              <img
-                id="chat-personaje-imagen"
-                class="chat-personaje-imagen"
-                src=""
-                alt=""
-                hidden
-              >
-
-
-            </div>
-
-
-
-            <div class="chat-compositor">
-
-
-              <label
-                id="chat-label-pregunta"
-                class="chat-label"
-                for="chat-input"
-              >
-                Pregúntale al personaje
-              </label>
-
-
-              <textarea
-                id="chat-input"
-                class="chat-input"
-                rows="4"
-                maxlength="1000"
-                placeholder="Escribe tu pregunta..."
-              ></textarea>
-
-
-              <div class="chat-compositor-pie">
-
-
-                <div
-                  id="chat-estado"
-                  class="chat-estado"
-                  aria-live="polite"
-                >
-                </div>
-
-
-                <div class="chat-acciones">
-
-
-                  <button
-                    id="btn-chat-microfono"
-                    class="btn-chat-microfono"
-                    type="button"
-                    aria-label="Hablar por micrófono"
-                    title="Hablar por micrófono"
-                  >
-                    🎙️
-                  </button>
-
-
-                  <button
-                    id="btn-chat-enviar"
-                    class="btn-chat-enviar"
-                    type="button"
-                  >
-
-                    <span>
-                      Enviar
-                    </span>
-
-                    <span aria-hidden="true">
-                      ➤
-                    </span>
-
-                  </button>
-
-
-                </div>
-
-
-              </div>
-
-
-            </div>
-
-
-          </section>
-
-
-        </div>
-
-
-      </main>
-
-
-    </div>
-
-  `;
-
-
-  document.body.appendChild(
-    modal
-  );
-
-
-  botonFlotante.addEventListener(
-    'click',
-    () => {
-
-      if (
-        chatTipoActivo
-      ) {
-
-        abrirChat(
-          chatTipoActivo
-        );
-
-      }
-
-    }
-  );
-
-
-  document
-    .getElementById(
-      'btn-cerrar-chat'
-    )
-    ?.addEventListener(
-      'click',
-      cerrarChat
-    );
-
-
-  document
-    .getElementById(
-      'btn-cerrar-chat-x'
-    )
-    ?.addEventListener(
-      'click',
-      cerrarChat
-    );
-
-
-  document
-    .getElementById(
-      'btn-chat-enviar'
-    )
-    ?.addEventListener(
-      'click',
-      enviarPreguntaChat
-    );
-
-
-  document
-    .getElementById(
-      'chat-input'
-    )
-    ?.addEventListener(
-      'keydown',
-      evento => {
-
-        if (
-          evento.key === 'Enter' &&
-          !evento.shiftKey
-        ) {
-
-          evento.preventDefault();
-
-
-          enviarPreguntaChat();
-
-        }
-
-      }
-    );
-
-
-  document
-    .getElementById(
-      'btn-chat-microfono'
-    )
-    ?.addEventListener(
-      'click',
-      usarMicrofonoChat
-    );
-
-
-  document.addEventListener(
-    'keydown',
-    evento => {
-
-      if (
-        evento.key === 'Escape' &&
-        !modal.hidden
-      ) {
-
-        cerrarChat();
-
-      }
-
-    }
-  );
-
-}
-
-
-// ============================================================
-// MOSTRAR BOTÓN FLOTANTE
-// ============================================================
-
-function mostrarBotonChatFlotante(
-  tipo
-) {
-
-  crearInterfazChat();
-
-
-  const personaje =
-    chatPersonajes[tipo];
-
-
-  const boton =
-    document.getElementById(
-      'btn-chat-flotante'
-    );
-
-
-  const emoji =
-    document.getElementById(
-      'btn-chat-flotante-emoji'
-    );
-
-
-  if (
-    !personaje ||
-    !boton
-  ) {
-
-    return;
-
-  }
-
-
-  chatTipoActivo =
-    tipo;
-
-
-  if (
-    emoji
-  ) {
-
-    emoji.textContent =
-      personaje.emoji;
-
-  }
-
-
-  boton.hidden =
-    false;
-
-
-  boton.setAttribute(
-    'aria-label',
-    `Hablar con ${personaje.nombre}`
-  );
-
-}
-
-
-// ============================================================
-// OCULTAR BOTÓN FLOTANTE
-// ============================================================
-
-function ocultarBotonChatFlotante() {
-
-  const boton =
-    document.getElementById(
-      'btn-chat-flotante'
-    );
-
-
-  if (
-    boton
-  ) {
-
-    boton.hidden =
-      true;
-
-  }
-
-}
-
-
-// ============================================================
-// ABRIR CHAT
-// ============================================================
-
-function abrirChat(
-  tipo
-) {
-
-  crearInterfazChat();
-
-
-  const personaje =
-    chatPersonajes[tipo];
-
-
-  const modal =
-    document.getElementById(
-      'chat-modal'
-    );
-
-
-  if (
-    !personaje ||
-    !modal
-  ) {
-
-    return;
-
-  }
-
-
-  chatTipoActivo =
-    tipo;
-
-
-  actualizarPersonajeChat(
-    tipo
-  );
-
-
-  renderizarChat(
-    tipo
-  );
-
-
-  pausarAudiosLeyendas();
-
-
-  if (
-    'speechSynthesis' in window
-  ) {
-
-    window.speechSynthesis.cancel();
-
-  }
-
-
-  modal.hidden =
-    false;
-
-
-  document.body.classList.add(
-    'chat-abierto'
-  );
-
-
-  document.body.style.overflow =
-    'hidden';
-
-
-  actualizarDisponibilidadMicrofono();
-
-
-  setTimeout(
-    () => {
-
-      document
-        .getElementById(
-          'chat-input'
-        )
-        ?.focus();
-
-    },
-    100
-  );
-
-}
-
-
-// ============================================================
-// CERRAR CHAT
-// ============================================================
-
-function cerrarChat() {
-
-  const modal =
-    document.getElementById(
-      'chat-modal'
-    );
-
-
-  if (
-    modal
-  ) {
-
-    modal.hidden =
-      true;
-
-  }
-
-
-  document.body.classList.remove(
-    'chat-abierto'
-  );
-
-
-  document.body.style.overflow =
-    '';
-
-
-  detenerMicrofonoChat();
-
-
-  if (
-    'speechSynthesis' in window
-  ) {
-
-    window.speechSynthesis.cancel();
-
-  }
-
-}
-
-
-// ============================================================
-// ACTUALIZAR PERSONAJE DEL CHAT
-// ============================================================
-
-function actualizarPersonajeChat(
-  tipo
-) {
-
-  const personaje =
-    chatPersonajes[tipo];
-
-
-  if (
-    !personaje
-  ) {
-
-    return;
-
-  }
-
-
-  const titulo =
-    document.getElementById(
-      'chat-modal-titulo'
-    );
-
-
-  const avatar =
-    document.getElementById(
-      'chat-avatar-superior'
-    );
-
-
-  const emoji =
-    document.getElementById(
-      'chat-personaje-emoji'
-    );
-
-
-  const nombre =
-    document.getElementById(
-      'chat-personaje-nombre'
-    );
-
-
-  const label =
-    document.getElementById(
-      'chat-label-pregunta'
-    );
-
-
-  const placeholder =
-    document.getElementById(
-      'chat-personaje-placeholder'
-    );
-
-
-  const imagen =
-    document.getElementById(
-      'chat-personaje-imagen'
-    );
-
-
-  if (
-    titulo
-  ) {
-
-    titulo.textContent =
-      `Conversa con ${personaje.nombre}`;
-
-  }
-
-
-  if (
-    avatar
-  ) {
-
-    avatar.textContent =
-      personaje.emoji;
-
-  }
-
-
-  if (
-    emoji
-  ) {
-
-    emoji.textContent =
-      personaje.emoji;
-
-  }
-
-
-  if (
-    nombre
-  ) {
-
-    nombre.textContent =
-      personaje.nombreCorto;
-
-  }
-
-
-  if (
-    label
-  ) {
-
-    label.textContent =
-      `Pregúntale a ${personaje.nombreCorto}`;
-
-  }
-
-
-  if (
-    imagen &&
-    placeholder &&
-    personaje.imagen
-  ) {
-
-    imagen.src =
-      personaje.imagen;
-
-
-    imagen.alt =
-      personaje.nombre;
-
-
-    imagen.hidden =
-      false;
-
-
-    placeholder.hidden =
-      true;
-
-  } else {
-
-
-    if (
-      imagen
-    ) {
-
-      imagen.hidden =
-        true;
-
-
-      imagen.removeAttribute(
-        'src'
-      );
-
-    }
-
-
-    if (
-      placeholder
-    ) {
-
-      placeholder.hidden =
-        false;
-
-    }
-
-  }
-
-}
-
-
-// ============================================================
-// RENDERIZAR CHAT
-// ============================================================
-
-function renderizarChat(
-  tipo
-) {
-
-  const contenedor =
-    document.getElementById(
-      'chat-mensajes'
-    );
-
-
-  const personaje =
-    chatPersonajes[tipo];
-
-
-  if (
-    !contenedor ||
-    !personaje
-  ) {
-
-    return;
-
-  }
-
-
-  contenedor.innerHTML =
-    '';
-
-
-  agregarMensajeVisualChat(
-    'assistant',
-    personaje.saludo,
-    false
-  );
-
-
-  historialesChat[tipo]
-    .forEach(
-      mensaje => {
-
-        agregarMensajeVisualChat(
-          mensaje.role,
-          mensaje.content,
-          false
-        );
-
-      }
-    );
-
-
-  desplazarChatAlFinal();
-
-}
-
-
-// ============================================================
-// AGREGAR MENSAJE
-// ============================================================
-
-function agregarMensajeVisualChat(
-  role,
-  texto,
-  desplazar = true
-) {
-
-  const tipo =
-    chatTipoActivo;
-
-
-  const personaje =
-    chatPersonajes[tipo];
-
-
-  const contenedor =
-    document.getElementById(
-      'chat-mensajes'
-    );
-
-
-  if (
-    !personaje ||
-    !contenedor ||
-    !texto
-  ) {
-
-    return;
-
-  }
-
-
-  const mensaje =
-    document.createElement(
-      'article'
-    );
-
-
-  mensaje.className =
-
-    role === 'user'
-
-      ? 'chat-mensaje chat-mensaje-usuario'
-
-      : 'chat-mensaje chat-mensaje-personaje';
-
-
-  const autor =
-    document.createElement(
-      'div'
-    );
-
-
-  autor.className =
-    'chat-autor';
-
-
-  autor.textContent =
-
-    role === 'user'
-
-      ? 'Tú'
-
-      : `${personaje.emoji} ${personaje.nombreCorto}`;
-
-
-  const burbuja =
-    document.createElement(
-      'div'
-    );
-
-
-  burbuja.className =
-    'chat-burbuja';
-
-
-  burbuja.textContent =
-    texto;
-
-
-  mensaje.appendChild(
-    autor
-  );
-
-
-  mensaje.appendChild(
-    burbuja
-  );
-
-
-  if (
-    role === 'assistant'
-  ) {
-
-    const pie =
-      document.createElement(
-        'div'
-      );
-
-
-    pie.className =
-      'chat-mensaje-pie';
-
-
-    const escuchar =
-      document.createElement(
-        'button'
-      );
-
-
-    escuchar.className =
-      'btn-escuchar-chat';
-
-
-    escuchar.type =
-      'button';
-
-
-    escuchar.textContent =
-      '🔊 Escuchar';
-
-
-    escuchar.addEventListener(
-      'click',
-      () => {
-
-        leerRespuestaChat(
-          texto
-        );
-
-      }
-    );
-
-
-    pie.appendChild(
-      escuchar
-    );
-
-
-    mensaje.appendChild(
-      pie
-    );
-
-  }
-
-
-  contenedor.appendChild(
-    mensaje
-  );
-
-
-  if (
-    desplazar
-  ) {
-
-    desplazarChatAlFinal();
-
-  }
-
-}
-
-
-// ============================================================
-// ENVIAR PREGUNTA
-// ============================================================
-
-async function enviarPreguntaChat() {
-
-  if (
-    chatEnviando ||
-    !chatTipoActivo
-  ) {
-
-    return;
-
-  }
-
-
-  const tipo =
-    chatTipoActivo;
-
-
-  const personaje =
-    chatPersonajes[tipo];
-
-
-  const input =
-    document.getElementById(
-      'chat-input'
-    );
-
-
-  const botonEnviar =
-    document.getElementById(
-      'btn-chat-enviar'
-    );
-
-
-  const botonMicrofono =
-    document.getElementById(
-      'btn-chat-microfono'
-    );
-
-
-  if (
-    !personaje ||
-    !input ||
-    !botonEnviar
-  ) {
-
-    return;
-
-  }
-
-
-  const pregunta =
-    input.value.trim();
-
-
-  if (
-    !pregunta
-  ) {
-
-    actualizarEstadoChat(
-      'Escribe una pregunta antes de enviarla.',
-      'aviso'
-    );
-
-
-    input.focus();
-
-
-    return;
-
-  }
-
-
-  const historialParaEnviar =
-    historialesChat[tipo]
-      .slice(-8);
-
-
-  historialesChat[tipo].push({
-
-    role:
-      'user',
-
-    content:
-      pregunta
-
-  });
-
-
-  agregarMensajeVisualChat(
-    'user',
-    pregunta
-  );
-
-
-  input.value =
-    '';
-
-
-  chatEnviando =
-    true;
-
-
-  botonEnviar.disabled =
-    true;
-
-
-  if (
-    botonMicrofono
-  ) {
-
-    botonMicrofono.disabled =
-      true;
-
-  }
-
-
-  actualizarEstadoChat(
-
-    `${personaje.emoji} ${personaje.nombreCorto} está pensando...`,
-
-    'cargando'
-
-  );
-
-
-  try {
-
-
-    const respuesta =
-      await fetch(
-
-        CHAT_API_URL,
-
-        {
-
-          method:
-            'POST',
-
-
-          headers: {
-
-            'Content-Type':
-              'application/json'
-
-          },
-
-
-          body:
-            JSON.stringify({
-
-              leyenda:
-                tipo,
-
-              pregunta:
-                pregunta,
-
-              historial:
-                historialParaEnviar
-
-            })
-
-        }
-
-      );
-
-
-    let datos =
-      {};
-
-
-    try {
-
-      datos =
-        await respuesta.json();
-
-    } catch {
-
-    }
-
-
-    if (
-      !respuesta.ok
-    ) {
-
-      throw new Error(
-
-        datos.error ||
-
-        `Error ${respuesta.status}`
-
-      );
-
-    }
-
-
-    const texto =
-      String(
-        datos.respuesta || ''
-      ).trim();
-
-
-    if (
-      !texto
-    ) {
-
-      throw new Error(
-        'El personaje no devolvió una respuesta.'
-      );
-
-    }
-
-
-    historialesChat[tipo].push({
-
-      role:
-        'assistant',
-
-      content:
-        texto
-
-    });
-
-
-    agregarMensajeVisualChat(
-      'assistant',
-      texto
-    );
-
-
-    actualizarEstadoChat(
-      '',
-      ''
-    );
-
-
-  } catch (error) {
-
-
-    console.error(
-      '❌ Error en chat:',
-      error
-    );
-
-
-    agregarMensajeSistemaChat(
-      'No pude comunicarme con el personaje en este momento. Intenta nuevamente.'
-    );
-
-
-    actualizarEstadoChat(
-      'Error de conexión con la IA.',
-      'error'
-    );
-
-
-  } finally {
-
-
-    chatEnviando =
-      false;
-
-
-    botonEnviar.disabled =
-      false;
-
-
-    actualizarDisponibilidadMicrofono();
-
-
-    input.focus();
-
-  }
-
-}
-
-
-// ============================================================
-// MENSAJE DEL SISTEMA
-// ============================================================
-
-function agregarMensajeSistemaChat(
-  texto
-) {
-
-  const contenedor =
-    document.getElementById(
-      'chat-mensajes'
-    );
-
-
-  if (
-    !contenedor
-  ) {
-
-    return;
-
-  }
-
-
-  const mensaje =
-    document.createElement(
-      'div'
-    );
-
-
-  mensaje.className =
-    'chat-mensaje-sistema';
-
-
-  mensaje.textContent =
-    texto;
-
-
-  contenedor.appendChild(
-    mensaje
-  );
-
-
-  desplazarChatAlFinal();
-
-}
-
-
-// ============================================================
-// ESTADO
-// ============================================================
-
-function actualizarEstadoChat(
-  texto,
-  tipo
-) {
-
-  const estado =
-    document.getElementById(
-      'chat-estado'
-    );
-
-
-  if (
-    !estado
-  ) {
-
-    return;
-
-  }
-
-
-  estado.textContent =
-    texto || '';
-
-
-  estado.className =
-    'chat-estado';
-
-
-  if (
-    tipo
-  ) {
-
-    estado.classList.add(
-      `chat-estado-${tipo}`
-    );
-
-  }
-
-}
-
-
-// ============================================================
-// SCROLL AUTOMÁTICO
-// ============================================================
-
-function desplazarChatAlFinal() {
-
-  requestAnimationFrame(
-    () => {
-
-      const contenedor =
-        document.getElementById(
-          'chat-mensajes'
-        );
-
-
-      if (
-        contenedor
-      ) {
-
-        contenedor.scrollTop =
-          contenedor.scrollHeight;
-
-      }
-
-    }
-  );
-
-}
-
-
-// ============================================================
-// PAUSAR AUDIOS
-// ============================================================
-
-function pausarAudiosLeyendas() {
-
-  document
-    .querySelectorAll(
-      'audio'
-    )
-    .forEach(
-      audio => {
-
-        try {
-
-          audio.pause();
-
-        } catch {
-
-        }
-
-      }
-    );
-
-}
-
-
-// ============================================================
-// DISPONIBILIDAD DEL MICRÓFONO
-// ============================================================
-
-function actualizarDisponibilidadMicrofono() {
-
-  const boton =
-    document.getElementById(
-      'btn-chat-microfono'
-    );
-
-
-  if (
-    !boton
-  ) {
-
-    return;
-
-  }
-
-
-  const Reconocimiento =
-
-    window.SpeechRecognition ||
-
-    window.webkitSpeechRecognition;
-
-
-  boton.disabled =
-
-    !Reconocimiento ||
-
-    chatEnviando;
-
-
-  if (
-    !Reconocimiento
-  ) {
-
-    boton.title =
-      'El reconocimiento de voz no está disponible en este navegador.';
-
-  } else {
-
-    boton.title =
-      'Hablar por micrófono';
-
-  }
-
-}
-
-
-// ============================================================
-// MICRÓFONO
-// ============================================================
-
-function usarMicrofonoChat() {
-
-  if (
-    !chatTipoActivo ||
-    chatEnviando
-  ) {
-
-    return;
-
-  }
-
-
-  const Reconocimiento =
-
-    window.SpeechRecognition ||
-
-    window.webkitSpeechRecognition;
-
-
-  const input =
-    document.getElementById(
-      'chat-input'
-    );
-
-
-  const boton =
-    document.getElementById(
-      'btn-chat-microfono'
-    );
-
-
-  if (
-    !Reconocimiento ||
-    !input ||
-    !boton
-  ) {
-
-    actualizarEstadoChat(
-
-      'El reconocimiento de voz no está disponible en este navegador.',
-
-      'aviso'
-
-    );
-
-
-    return;
-
-  }
-
-
-  if (
-    reconocimientoChat
-  ) {
-
-    const mismoTipo =
-
-      reconocimientoChatTipo ===
-      chatTipoActivo;
-
-
-    detenerMicrofonoChat();
-
-
-    if (
-      mismoTipo
-    ) {
-
-      return;
-
-    }
-
-  }
-
-
-  const tipo =
-    chatTipoActivo;
-
-
-  const reconocimiento =
-    new Reconocimiento();
-
-
-  reconocimiento.lang =
-
-    idiomasVozChat[
-      idiomasChat[tipo]
-    ] || 'es-BO';
-
-
-  reconocimiento.interimResults =
-    false;
-
-
-  reconocimiento.continuous =
-    false;
-
-
-  reconocimiento.maxAlternatives =
-    1;
-
-
-  reconocimientoChat =
-    reconocimiento;
-
-
-  reconocimientoChatTipo =
-    tipo;
-
-
-  reconocimiento.onstart =
-    () => {
-
-
-      boton.classList.add(
-        'escuchando'
-      );
-
-
-      boton.textContent =
-        '⏹️';
-
-
-      actualizarEstadoChat(
-
-        'Escuchando... habla ahora.',
-
-        'cargando'
-
-      );
-
-    };
-
-
-  reconocimiento.onresult =
-    evento => {
-
-
-      const texto =
-
-        evento
-          .results?.[0]?.[0]
-          ?.transcript;
-
-
-      if (
-        texto
-      ) {
-
-        input.value =
-          texto;
-
-
-        input.focus();
-
-
-        input.setSelectionRange(
-
-          input.value.length,
-
-          input.value.length
-
-        );
-
-      }
-
-    };
-
-
-  reconocimiento.onerror =
-    evento => {
-
-
-      let mensaje =
-
-        'No pude escuchar la pregunta. Intenta nuevamente.';
-
-
-      if (
-
-        evento.error === 'not-allowed' ||
-
-        evento.error === 'service-not-allowed'
-
-      ) {
-
-        mensaje =
-
-          'Debes permitir el acceso al micrófono para utilizar esta función.';
-
-      }
-
-
-      if (
-        evento.error === 'no-speech'
-      ) {
-
-        mensaje =
-
-          'No detecté ninguna voz. Intenta hablar más cerca del micrófono.';
-
-      }
-
-
-      actualizarEstadoChat(
-
-        mensaje,
-
-        'error'
-
-      );
-
-    };
-
-
-  reconocimiento.onend =
-    () => {
-
-
-      boton.classList.remove(
-        'escuchando'
-      );
-
-
-      boton.textContent =
-        '🎙️';
-
-
-      if (
-        reconocimientoChat ===
-        reconocimiento
-      ) {
-
-        reconocimientoChat =
-          null;
-
-
-        reconocimientoChatTipo =
-          null;
-
-      }
-
-
-      const estado =
-        document.getElementById(
-          'chat-estado'
-        );
-
-
-      if (
-        estado?.classList.contains(
-          'chat-estado-cargando'
-        )
-      ) {
-
-        actualizarEstadoChat(
-          '',
-          ''
-        );
-
-      }
-
-    };
-
-
-  try {
-
-    reconocimiento.start();
-
-  } catch (error) {
-
-    console.warn(
-      'No se pudo iniciar el micrófono:',
-      error
-    );
-
-  }
-
-}
-
-
-// ============================================================
-// DETENER MICRÓFONO
-// ============================================================
-
-function detenerMicrofonoChat() {
-
-  if (
-    reconocimientoChat
-  ) {
-
-    try {
-
-      reconocimientoChat.stop();
-
-    } catch {
-
-    }
-
-  }
-
-
-  reconocimientoChat =
-    null;
-
-
-  reconocimientoChatTipo =
-    null;
-
-
-  const boton =
-    document.getElementById(
-      'btn-chat-microfono'
-    );
-
-
-  if (
-    boton
-  ) {
-
-    boton.classList.remove(
-      'escuchando'
-    );
-
-
-    boton.textContent =
-      '🎙️';
-
-  }
-
-}
-
-
-// ============================================================
-// LEER RESPUESTA EN VOZ ALTA
-// ============================================================
-
-function leerRespuestaChat(
-  texto
-) {
-
-  if (
-    !chatTipoActivo ||
-    !('speechSynthesis' in window)
-  ) {
-
-    actualizarEstadoChat(
-
-      'La lectura en voz alta no está disponible en este navegador.',
-
-      'aviso'
-
-    );
-
-
-    return;
-
-  }
-
-
-  window.speechSynthesis.cancel();
-
-
-  const utterance =
-    new SpeechSynthesisUtterance(
-      texto
-    );
-
-
-  utterance.lang =
-
-    idiomasVozChat[
-      idiomasChat[
-        chatTipoActivo
-      ]
-    ] || 'es-BO';
-
-
-  utterance.rate =
-    0.96;
-
-
-  utterance.pitch =
-    1;
-
-
-  const voces =
-    window.speechSynthesis.getVoices();
-
-
-  const prefijo =
-
-    utterance.lang
-      .split('-')[0]
-      .toLowerCase();
-
-
-  const vozCompatible =
-    voces.find(
-      voz => {
-
-        return String(
-          voz.lang || ''
-        )
-
-          .toLowerCase()
-
-          .startsWith(
-            prefijo
-          );
 
       }
     );
@@ -4971,4 +2849,1715 @@ botonesLeyenda.forEach(
 crearInterfazChat();
 
 
+actualizarDisponibilidadMicrofono();
+// ============================================================
+// CHAT FLOTANTE CON IA
+// ============================================================
+
+const CHAT_API_URL =
+  'https://leyendas-sc-xnww.vercel.app/api/chat-leyenda';
+
+
+// ============================================================
+// PERSONAJES DEL CHAT
+// ============================================================
+
+const chatPersonajes = {
+
+  carreton: {
+    nombre: 'El Carretón de la Otra Vida',
+    nombreCorto: 'El Carretón',
+    emoji: '☠️',
+    imagen: null,
+    saludo: 'Soy El Carretón de la Otra Vida. Puedes preguntarme sobre mi leyenda, mis apariciones y mi relación con las antiguas epidemias de Santa Cruz.'
+  },
+
+  guajojo: {
+    nombre: 'El Guajojó',
+    nombreCorto: 'El Guajojó',
+    emoji: '🪶',
+    imagen: null,
+    saludo: 'Soy El Guajojó. Puedes preguntarme sobre mi historia, mi transformación, mi amado o el origen de mi triste canto.'
+  },
+
+  duende: {
+    nombre: 'El Duende',
+    nombreCorto: 'El Duende',
+    emoji: '🌿',
+    imagen: null,
+    saludo: 'Soy El Duende. Puedes preguntarme sobre mis travesuras, el monte, los niños, mi sombrero de saó o las crines de los caballos.'
+  },
+
+  viudita: {
+    nombre: 'La Viudita',
+    nombreCorto: 'La Viudita',
+    emoji: '🕯️',
+    imagen: null,
+    saludo: 'Soy La Viudita. Puedes preguntarme sobre mis apariciones, los trasnochadores, mis encantamientos o las antiguas noches cruceñas.'
+  },
+
+  jichi: {
+    nombre: 'El Jichi',
+    nombreCorto: 'El Jichi',
+    emoji: '💧',
+    imagen: null,
+    saludo: 'Soy El Jichi. Puedes preguntarme sobre las aguas que protejo, mi apariencia, las lagunas o el cuidado de la naturaleza.'
+  }
+
+};
+
+
+// ============================================================
+// HISTORIALES
+// ============================================================
+
+const historialesChat = {
+  carreton: [],
+  guajojo: [],
+  duende: [],
+  viudita: [],
+  jichi: []
+};
+
+
+// ============================================================
+// IDIOMAS DEL CHAT (SEPARADOS DEL AUDIOLIBRO)
+// ============================================================
+
+const idiomasChatInfo = {
+
+  es: {
+    nombre: 'Español',
+    voz: 'es-BO',
+    bandera: '🇧🇴'
+  },
+
+  en: {
+    nombre: 'English',
+    voz: 'en-US',
+    bandera: '🇺🇸'
+  },
+
+  pt: {
+    nombre: 'Português',
+    voz: 'pt-BR',
+    bandera: '🇧🇷'
+  },
+
+  de: {
+    nombre: 'Deutsch',
+    voz: 'de-DE',
+    bandera: '🇩🇪'
+  }
+
+};
+
+
+const idiomasChatActivos = {
+  carreton: 'es',
+  guajojo: 'es',
+  duende: 'es',
+  viudita: 'es',
+  jichi: 'es'
+};
+
+
+// ============================================================
+// ESTADO GENERAL DEL CHAT
+// ============================================================
+
+let chatTipoActivo = null;
+let reconocimientoChat = null;
+let reconocimientoChatTipo = null;
+let chatEnviando = false;
+let ultimoModoEntradaChat = 'texto';
+let ultimoIdiomaPreguntaChat = 'es';
+
+
+// ============================================================
+// CREAR INTERFAZ DEL CHAT
+// ============================================================
+
+function crearInterfazChat() {
+
+  if (
+    document.getElementById('btn-chat-flotante')
+  ) {
+    return;
+  }
+
+
+  // ==========================================================
+  // BOTÓN FLOTANTE
+  // ==========================================================
+
+  const botonFlotante =
+    document.createElement('button');
+
+  botonFlotante.id =
+    'btn-chat-flotante';
+
+  botonFlotante.className =
+    'btn-chat-flotante';
+
+  botonFlotante.type =
+    'button';
+
+  botonFlotante.hidden =
+    true;
+
+  botonFlotante.setAttribute(
+    'aria-label',
+    'Abrir conversación con la leyenda'
+  );
+
+  botonFlotante.innerHTML = `
+
+    <span
+      class="btn-chat-flotante-emoji"
+      id="btn-chat-flotante-emoji"
+      aria-hidden="true"
+    >
+      💬
+    </span>
+
+  `;
+
+  document.body.appendChild(
+    botonFlotante
+  );
+
+
+  // ==========================================================
+  // MODAL / PANTALLA COMPLETA
+  // ==========================================================
+
+  const modal =
+    document.createElement('div');
+
+  modal.id =
+    'chat-modal';
+
+  modal.className =
+    'chat-modal';
+
+  modal.hidden =
+    true;
+
+  modal.setAttribute(
+    'role',
+    'dialog'
+  );
+
+  modal.setAttribute(
+    'aria-modal',
+    'true'
+  );
+
+  modal.setAttribute(
+    'aria-labelledby',
+    'chat-modal-titulo'
+  );
+
+  modal.innerHTML = `
+
+    <div class="chat-pantalla">
+
+      <header class="chat-barra-superior">
+
+        <div class="chat-barra-contenido">
+
+          <button
+            id="btn-cerrar-chat"
+            class="btn-cerrar-chat"
+            type="button"
+            aria-label="Volver a la leyenda"
+            title="Volver"
+          >
+            ←
+          </button>
+
+          <div class="chat-identidad">
+
+            <div
+              id="chat-avatar-superior"
+              class="chat-avatar-superior"
+              aria-hidden="true"
+            >
+              🌿
+            </div>
+
+            <div class="chat-identidad-texto">
+
+              <span class="chat-sobrelinea">
+                EXPERIENCIA INTERACTIVA
+              </span>
+
+              <h2 id="chat-modal-titulo">
+                Conversa con la leyenda
+              </h2>
+
+            </div>
+
+          </div>
+
+          <button
+            id="btn-cerrar-chat-x"
+            class="btn-cerrar-chat btn-cerrar-chat-x"
+            type="button"
+            aria-label="Cerrar chat"
+            title="Cerrar chat"
+          >
+            ✕
+          </button>
+
+        </div>
+
+      </header>
+
+
+      <main class="chat-cuerpo">
+
+        <div class="chat-cuerpo-interior">
+
+          <!-- MENSAJES -->
+          <section
+            id="chat-mensajes"
+            class="chat-mensajes"
+            aria-live="polite"
+            aria-label="Conversación"
+          >
+          </section>
+
+
+          <!-- ZONA INFERIOR -->
+          <section class="chat-zona-inferior">
+
+            <!-- IMAGEN -->
+            <div
+              id="chat-zona-personaje"
+              class="chat-zona-personaje"
+            >
+
+              <div
+                id="chat-personaje-placeholder"
+                class="chat-personaje-placeholder"
+              >
+
+                <span
+                  id="chat-personaje-emoji"
+                  class="chat-personaje-emoji"
+                  aria-hidden="true"
+                >
+                  🌿
+                </span>
+
+                <strong
+                  id="chat-personaje-nombre"
+                >
+                  El Duende
+                </strong>
+
+                <span class="chat-personaje-aviso">
+                  Imagen del personaje
+                </span>
+
+              </div>
+
+              <img
+                id="chat-personaje-imagen"
+                class="chat-personaje-imagen"
+                src=""
+                alt=""
+                hidden
+              >
+
+            </div>
+
+
+            <!-- ESCRIBIR -->
+            <div class="chat-compositor">
+
+              <div class="chat-selector-superior">
+
+                <span class="chat-label-secundaria">
+                  Idioma del chat
+                </span>
+
+                <div
+                  id="chat-selector-idiomas"
+                  class="chat-selector-idiomas"
+                >
+
+                  <button
+                    class="btn-chat-lang activo"
+                    type="button"
+                    data-chat-lang="es"
+                  >
+                    🇧🇴 ES
+                  </button>
+
+                  <button
+                    class="btn-chat-lang"
+                    type="button"
+                    data-chat-lang="en"
+                  >
+                    🇺🇸 EN
+                  </button>
+
+                  <button
+                    class="btn-chat-lang"
+                    type="button"
+                    data-chat-lang="pt"
+                  >
+                    🇧🇷 PT
+                  </button>
+
+                  <button
+                    class="btn-chat-lang"
+                    type="button"
+                    data-chat-lang="de"
+                  >
+                    🇩🇪 DE
+                  </button>
+
+                </div>
+
+              </div>
+
+
+              <label
+                id="chat-label-pregunta"
+                class="chat-label"
+                for="chat-input"
+              >
+                Pregúntale al personaje
+              </label>
+
+              <textarea
+                id="chat-input"
+                class="chat-input"
+                rows="4"
+                maxlength="1000"
+                placeholder="Escribe tu pregunta..."
+              ></textarea>
+
+              <div class="chat-compositor-pie">
+
+                <div
+                  id="chat-estado"
+                  class="chat-estado"
+                  aria-live="polite"
+                >
+                </div>
+
+                <div class="chat-acciones">
+
+                  <button
+                    id="btn-chat-microfono"
+                    class="btn-chat-microfono"
+                    type="button"
+                    aria-label="Hablar por micrófono"
+                    title="Hablar por micrófono"
+                  >
+                    🎙️
+                  </button>
+
+                  <button
+                    id="btn-chat-enviar"
+                    class="btn-chat-enviar"
+                    type="button"
+                  >
+                    <span>Enviar</span>
+                    <span aria-hidden="true">➤</span>
+                  </button>
+
+                </div>
+
+              </div>
+
+            </div>
+
+          </section>
+
+        </div>
+
+      </main>
+
+    </div>
+
+  `;
+
+  document.body.appendChild(
+    modal
+  );
+
+
+  // ==========================================================
+  // EVENTOS
+  // ==========================================================
+
+  botonFlotante.addEventListener(
+    'click',
+    () => {
+
+      if (chatTipoActivo) {
+        abrirChat(chatTipoActivo);
+      }
+
+    }
+  );
+
+  document
+    .getElementById('btn-cerrar-chat')
+    ?.addEventListener(
+      'click',
+      cerrarChat
+    );
+
+  document
+    .getElementById('btn-cerrar-chat-x')
+    ?.addEventListener(
+      'click',
+      cerrarChat
+    );
+
+  document
+    .getElementById('btn-chat-enviar')
+    ?.addEventListener(
+      'click',
+      () => {
+        enviarPreguntaChat();
+      }
+    );
+
+  document
+    .getElementById('chat-input')
+    ?.addEventListener(
+      'keydown',
+      evento => {
+
+        if (
+          evento.key === 'Enter' &&
+          !evento.shiftKey
+        ) {
+          evento.preventDefault();
+          enviarPreguntaChat();
+        }
+
+      }
+    );
+
+  document
+    .getElementById('btn-chat-microfono')
+    ?.addEventListener(
+      'click',
+      usarMicrofonoChat
+    );
+
+  document
+    .getElementById('chat-selector-idiomas')
+    ?.addEventListener(
+      'click',
+      evento => {
+
+        const boton =
+          evento.target.closest('[data-chat-lang]');
+
+        if (!boton || !chatTipoActivo) {
+          return;
+        }
+
+        const idioma =
+          boton.dataset.chatLang;
+
+        if (!idiomasChatInfo[idioma]) {
+          return;
+        }
+
+        idiomasChatActivos[chatTipoActivo] =
+          idioma;
+
+        renderizarSelectorIdiomaChat(
+          chatTipoActivo
+        );
+
+        actualizarEstadoChat(
+          `Idioma del chat: ${idiomasChatInfo[idioma].bandera} ${idiomasChatInfo[idioma].nombre}`,
+          'aviso'
+        );
+
+      }
+    );
+
+  document.addEventListener(
+    'keydown',
+    evento => {
+
+      const modalActual =
+        document.getElementById('chat-modal');
+
+      if (
+        evento.key === 'Escape' &&
+        modalActual &&
+        !modalActual.hidden
+      ) {
+        cerrarChat();
+      }
+
+    }
+  );
+
+}
+
+
+// ============================================================
+// MOSTRAR BOTÓN FLOTANTE
+// ============================================================
+
+function mostrarBotonChatFlotante(tipo) {
+
+  crearInterfazChat();
+
+  const personaje =
+    chatPersonajes[tipo];
+
+  const boton =
+    document.getElementById('btn-chat-flotante');
+
+  const emoji =
+    document.getElementById('btn-chat-flotante-emoji');
+
+  if (!personaje || !boton) {
+    return;
+  }
+
+  chatTipoActivo =
+    tipo;
+
+  if (emoji) {
+    emoji.textContent =
+      personaje.emoji;
+  }
+
+  boton.hidden =
+    false;
+
+  boton.setAttribute(
+    'aria-label',
+    `Hablar con ${personaje.nombre}`
+  );
+
+}
+
+
+// ============================================================
+// OCULTAR BOTÓN FLOTANTE
+// ============================================================
+
+function ocultarBotonChatFlotante() {
+
+  const boton =
+    document.getElementById('btn-chat-flotante');
+
+  if (boton) {
+    boton.hidden =
+      true;
+  }
+
+}
+
+
+// ============================================================
+// ABRIR CHAT
+// ============================================================
+
+function abrirChat(tipo) {
+
+  crearInterfazChat();
+
+  const personaje =
+    chatPersonajes[tipo];
+
+  const modal =
+    document.getElementById('chat-modal');
+
+  if (!personaje || !modal) {
+    return;
+  }
+
+  chatTipoActivo =
+    tipo;
+
+  actualizarPersonajeChat(tipo);
+  renderizarSelectorIdiomaChat(tipo);
+  renderizarChat(tipo);
+  pausarAudiosLeyendas();
+
+  if ('speechSynthesis' in window) {
+    window.speechSynthesis.cancel();
+  }
+
+  modal.hidden =
+    false;
+
+  document.body.classList.add(
+    'chat-abierto'
+  );
+
+  document.body.style.overflow =
+    'hidden';
+
+  actualizarDisponibilidadMicrofono();
+
+  setTimeout(
+    () => {
+      document
+        .getElementById('chat-input')
+        ?.focus();
+    },
+    100
+  );
+
+}
+
+
+// ============================================================
+// CERRAR CHAT
+// ============================================================
+
+function cerrarChat() {
+
+  const modal =
+    document.getElementById('chat-modal');
+
+  if (modal) {
+    modal.hidden =
+      true;
+  }
+
+  document.body.classList.remove(
+    'chat-abierto'
+  );
+
+  document.body.style.overflow =
+    '';
+
+  detenerMicrofonoChat();
+
+  if ('speechSynthesis' in window) {
+    window.speechSynthesis.cancel();
+  }
+
+}
+
+
+// ============================================================
+// ACTUALIZAR PERSONAJE DEL CHAT
+// ============================================================
+
+function actualizarPersonajeChat(tipo) {
+
+  const personaje =
+    chatPersonajes[tipo];
+
+  if (!personaje) {
+    return;
+  }
+
+  const titulo =
+    document.getElementById('chat-modal-titulo');
+
+  const avatar =
+    document.getElementById('chat-avatar-superior');
+
+  const emoji =
+    document.getElementById('chat-personaje-emoji');
+
+  const nombre =
+    document.getElementById('chat-personaje-nombre');
+
+  const label =
+    document.getElementById('chat-label-pregunta');
+
+  const placeholder =
+    document.getElementById('chat-personaje-placeholder');
+
+  const imagen =
+    document.getElementById('chat-personaje-imagen');
+
+  if (titulo) {
+    titulo.textContent =
+      `Conversa con ${personaje.nombre}`;
+  }
+
+  if (avatar) {
+    avatar.textContent =
+      personaje.emoji;
+  }
+
+  if (emoji) {
+    emoji.textContent =
+      personaje.emoji;
+  }
+
+  if (nombre) {
+    nombre.textContent =
+      personaje.nombreCorto;
+  }
+
+  if (label) {
+    label.textContent =
+      `Pregúntale a ${personaje.nombreCorto}`;
+  }
+
+  if (
+    imagen &&
+    placeholder &&
+    personaje.imagen
+  ) {
+    imagen.src =
+      personaje.imagen;
+
+    imagen.alt =
+      personaje.nombre;
+
+    imagen.hidden =
+      false;
+
+    placeholder.hidden =
+      true;
+  } else {
+
+    if (imagen) {
+      imagen.hidden =
+        true;
+
+      imagen.removeAttribute('src');
+    }
+
+    if (placeholder) {
+      placeholder.hidden =
+        false;
+    }
+
+  }
+
+}
+
+
+// ============================================================
+// RENDERIZAR SELECTOR DE IDIOMA DEL CHAT
+// ============================================================
+
+function renderizarSelectorIdiomaChat(tipo) {
+
+  const idiomaActivo =
+    idiomasChatActivos[tipo] || 'es';
+
+  document
+    .querySelectorAll('.btn-chat-lang')
+    .forEach(
+      boton => {
+
+        boton.classList.toggle(
+          'activo',
+          boton.dataset.chatLang === idiomaActivo
+        );
+
+      }
+    );
+
+}
+
+
+// ============================================================
+// RENDERIZAR CHAT
+// ============================================================
+
+function renderizarChat(tipo) {
+
+  const contenedor =
+    document.getElementById('chat-mensajes');
+
+  const personaje =
+    chatPersonajes[tipo];
+
+  if (!contenedor || !personaje) {
+    return;
+  }
+
+  contenedor.innerHTML =
+    '';
+
+  agregarMensajeVisualChat(
+    'assistant',
+    personaje.saludo,
+    false
+  );
+
+  historialesChat[tipo]
+    .forEach(
+      mensaje => {
+
+        agregarMensajeVisualChat(
+          mensaje.role,
+          mensaje.content,
+          false
+        );
+
+      }
+    );
+
+  desplazarChatAlFinal();
+
+}
+
+
+// ============================================================
+// AGREGAR MENSAJE VISUAL
+// ============================================================
+
+function agregarMensajeVisualChat(
+  role,
+  texto,
+  desplazar = true
+) {
+
+  const tipo =
+    chatTipoActivo;
+
+  const personaje =
+    chatPersonajes[tipo];
+
+  const contenedor =
+    document.getElementById('chat-mensajes');
+
+  if (
+    !personaje ||
+    !contenedor ||
+    !texto
+  ) {
+    return;
+  }
+
+  const mensaje =
+    document.createElement('article');
+
+  mensaje.className =
+    role === 'user'
+      ? 'chat-mensaje chat-mensaje-usuario'
+      : 'chat-mensaje chat-mensaje-personaje';
+
+  const autor =
+    document.createElement('div');
+
+  autor.className =
+    'chat-autor';
+
+  autor.textContent =
+    role === 'user'
+      ? 'Tú'
+      : `${personaje.emoji} ${personaje.nombreCorto}`;
+
+  const burbuja =
+    document.createElement('div');
+
+  burbuja.className =
+    'chat-burbuja';
+
+  burbuja.textContent =
+    texto;
+
+  mensaje.appendChild(autor);
+  mensaje.appendChild(burbuja);
+
+  if (role === 'assistant') {
+
+    const pie =
+      document.createElement('div');
+
+    pie.className =
+      'chat-mensaje-pie';
+
+    const escuchar =
+      document.createElement('button');
+
+    escuchar.className =
+      'btn-escuchar-chat';
+
+    escuchar.type =
+      'button';
+
+    escuchar.textContent =
+      '🔊 Escuchar';
+
+    escuchar.addEventListener(
+      'click',
+      () => {
+        leerRespuestaChat(
+          texto,
+          ultimoIdiomaPreguntaChat
+        );
+      }
+    );
+
+    pie.appendChild(escuchar);
+    mensaje.appendChild(pie);
+
+  }
+
+  contenedor.appendChild(mensaje);
+
+  if (desplazar) {
+    desplazarChatAlFinal();
+  }
+
+}
+
+
+// ============================================================
+// DETECTAR IDIOMA DEL TEXTO ESCRITO
+// ============================================================
+
+function detectarIdiomaPorTexto(
+  texto,
+  fallback = 'es'
+) {
+
+  const limpio =
+    String(texto || '')
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .trim();
+
+  if (!limpio) {
+    return fallback;
+  }
+
+  const patrones = {
+
+    es: [
+      /\b(yo|que|como|donde|porque|historia|leyenda|apareces|apareciste|quien|eres|agua|monte|noche)\b/g
+    ],
+
+    en: [
+      /\b(i|you|what|where|why|how|legend|story|forest|water|night|who|are)\b/g
+    ],
+
+    pt: [
+      /\b(eu|voce|voces|nao|porque|lenda|historia|floresta|agua|noite|quem|onde|como)\b/g
+    ],
+
+    de: [
+      /\b(ich|du|was|wo|warum|wie|geschichte|legende|wasser|nacht|wald|wer|bist)\b/g
+    ]
+
+  };
+
+  const puntajes = {
+    es: 0,
+    en: 0,
+    pt: 0,
+    de: 0
+  };
+
+  Object.entries(patrones)
+    .forEach(
+      ([idioma, lista]) => {
+
+        lista.forEach(
+          regex => {
+
+            const coincidencias =
+              limpio.match(regex);
+
+            if (coincidencias) {
+              puntajes[idioma] +=
+                coincidencias.length;
+            }
+
+          }
+        );
+
+      }
+    );
+
+  let mejorIdioma =
+    fallback;
+
+  let mejorPuntaje =
+    -1;
+
+  Object.entries(puntajes)
+    .forEach(
+      ([idioma, puntaje]) => {
+
+        if (puntaje > mejorPuntaje) {
+          mejorPuntaje =
+            puntaje;
+
+          mejorIdioma =
+            idioma;
+        }
+
+      }
+    );
+
+  return mejorPuntaje > 0
+    ? mejorIdioma
+    : fallback;
+
+}
+
+
+// ============================================================
+// ENVIAR PREGUNTA
+// ============================================================
+
+async function enviarPreguntaChat(
+  opciones = {}
+) {
+
+  if (
+    chatEnviando ||
+    !chatTipoActivo
+  ) {
+    return;
+  }
+
+  const {
+    origen = 'texto',
+    idiomaForzado = null,
+    autoHablar = false
+  } = opciones;
+
+  const tipo =
+    chatTipoActivo;
+
+  const personaje =
+    chatPersonajes[tipo];
+
+  const input =
+    document.getElementById('chat-input');
+
+  const botonEnviar =
+    document.getElementById('btn-chat-enviar');
+
+  const botonMicrofono =
+    document.getElementById('btn-chat-microfono');
+
+  if (
+    !personaje ||
+    !input ||
+    !botonEnviar
+  ) {
+    return;
+  }
+
+  const pregunta =
+    input.value.trim();
+
+  if (!pregunta) {
+
+    actualizarEstadoChat(
+      'Escribe una pregunta antes de enviarla.',
+      'aviso'
+    );
+
+    input.focus();
+    return;
+
+  }
+
+  const idiomaPregunta =
+    idiomaForzado ||
+    detectarIdiomaPorTexto(
+      pregunta,
+      idiomasChatActivos[tipo] || 'es'
+    );
+
+  ultimoModoEntradaChat =
+    origen;
+
+  ultimoIdiomaPreguntaChat =
+    idiomaPregunta;
+
+  const historialParaEnviar =
+    historialesChat[tipo].slice(-8);
+
+  historialesChat[tipo].push({
+    role: 'user',
+    content: pregunta
+  });
+
+  agregarMensajeVisualChat(
+    'user',
+    pregunta
+  );
+
+  input.value =
+    '';
+
+  chatEnviando =
+    true;
+
+  botonEnviar.disabled =
+    true;
+
+  if (botonMicrofono) {
+    botonMicrofono.disabled =
+      true;
+  }
+
+  actualizarEstadoChat(
+    `${personaje.emoji} ${personaje.nombreCorto} está pensando...`,
+    'cargando'
+  );
+
+  try {
+
+    const respuesta =
+      await fetch(
+        CHAT_API_URL,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            leyenda: tipo,
+            pregunta: pregunta,
+            historial: historialParaEnviar,
+            idioma_chat: idiomaPregunta,
+            origen_chat: origen
+          })
+        }
+      );
+
+    let datos = {};
+
+    try {
+      datos =
+        await respuesta.json();
+    } catch {
+      // respuesta no JSON
+    }
+
+    if (!respuesta.ok) {
+      throw new Error(
+        datos.error ||
+        `Error ${respuesta.status}`
+      );
+    }
+
+    const texto =
+      String(datos.respuesta || '').trim();
+
+    if (!texto) {
+      throw new Error(
+        'El personaje no devolvió una respuesta.'
+      );
+    }
+
+    historialesChat[tipo].push({
+      role: 'assistant',
+      content: texto
+    });
+
+    agregarMensajeVisualChat(
+      'assistant',
+      texto
+    );
+
+    actualizarEstadoChat(
+      '',
+      ''
+    );
+
+    if (
+      autoHablar ||
+      origen === 'voz'
+    ) {
+      leerRespuestaChat(
+        texto,
+        idiomaPregunta
+      );
+    }
+
+  } catch (error) {
+
+    console.error(
+      '❌ Error en chat:',
+      error
+    );
+
+    agregarMensajeSistemaChat(
+      'No pude comunicarme con el personaje en este momento. Intenta nuevamente.'
+    );
+
+    actualizarEstadoChat(
+      'Error de conexión con la IA.',
+      'error'
+    );
+
+  } finally {
+
+    chatEnviando =
+      false;
+
+    botonEnviar.disabled =
+      false;
+
+    actualizarDisponibilidadMicrofono();
+
+    input.focus();
+
+  }
+
+}
+
+
+// ============================================================
+// MENSAJE DEL SISTEMA
+// ============================================================
+
+function agregarMensajeSistemaChat(texto) {
+
+  const contenedor =
+    document.getElementById('chat-mensajes');
+
+  if (!contenedor) {
+    return;
+  }
+
+  const mensaje =
+    document.createElement('div');
+
+  mensaje.className =
+    'chat-mensaje-sistema';
+
+  mensaje.textContent =
+    texto;
+
+  contenedor.appendChild(mensaje);
+  desplazarChatAlFinal();
+
+}
+
+
+// ============================================================
+// ESTADO DEL CHAT
+// ============================================================
+
+function actualizarEstadoChat(
+  texto,
+  tipo
+) {
+
+  const estado =
+    document.getElementById('chat-estado');
+
+  if (!estado) {
+    return;
+  }
+
+  estado.textContent =
+    texto || '';
+
+  estado.className =
+    'chat-estado';
+
+  if (tipo) {
+    estado.classList.add(
+      `chat-estado-${tipo}`
+    );
+  }
+
+}
+
+
+// ============================================================
+// SCROLL AUTOMÁTICO
+// ============================================================
+
+function desplazarChatAlFinal() {
+
+  requestAnimationFrame(
+    () => {
+
+      const contenedor =
+        document.getElementById('chat-mensajes');
+
+      if (contenedor) {
+        contenedor.scrollTop =
+          contenedor.scrollHeight;
+      }
+
+    }
+  );
+
+}
+
+
+// ============================================================
+// PAUSAR AUDIOS
+// ============================================================
+
+function pausarAudiosLeyendas() {
+
+  document
+    .querySelectorAll('audio')
+    .forEach(
+      audio => {
+
+        try {
+          audio.pause();
+        } catch {
+          // nada
+        }
+
+      }
+    );
+
+}
+
+
+// ============================================================
+// DISPONIBILIDAD DEL MICRÓFONO
+// ============================================================
+
+function actualizarDisponibilidadMicrofono() {
+
+  const boton =
+    document.getElementById('btn-chat-microfono');
+
+  if (!boton) {
+    return;
+  }
+
+  const Reconocimiento =
+    window.SpeechRecognition ||
+    window.webkitSpeechRecognition;
+
+  boton.disabled =
+    !Reconocimiento ||
+    chatEnviando;
+
+  if (!Reconocimiento) {
+    boton.title =
+      'El reconocimiento de voz no está disponible en este navegador.';
+  } else {
+    boton.title =
+      'Hablar por micrófono';
+  }
+
+}
+
+
+// ============================================================
+// MICRÓFONO
+// ============================================================
+
+function usarMicrofonoChat() {
+
+  if (
+    !chatTipoActivo ||
+    chatEnviando
+  ) {
+    return;
+  }
+
+  const Reconocimiento =
+    window.SpeechRecognition ||
+    window.webkitSpeechRecognition;
+
+  const input =
+    document.getElementById('chat-input');
+
+  const boton =
+    document.getElementById('btn-chat-microfono');
+
+  if (
+    !Reconocimiento ||
+    !input ||
+    !boton
+  ) {
+
+    actualizarEstadoChat(
+      'El reconocimiento de voz no está disponible en este navegador.',
+      'aviso'
+    );
+
+    return;
+  }
+
+  if (reconocimientoChat) {
+
+    const mismoTipo =
+      reconocimientoChatTipo === chatTipoActivo;
+
+    detenerMicrofonoChat();
+
+    if (mismoTipo) {
+      return;
+    }
+
+  }
+
+  const tipo =
+    chatTipoActivo;
+
+  const idiomaChat =
+    idiomasChatActivos[tipo] || 'es';
+
+  const configIdioma =
+    idiomasChatInfo[idiomaChat] || idiomasChatInfo.es;
+
+  const reconocimiento =
+    new Reconocimiento();
+
+  reconocimiento.lang =
+    configIdioma.voz;
+
+  reconocimiento.interimResults =
+    false;
+
+  reconocimiento.continuous =
+    false;
+
+  reconocimiento.maxAlternatives =
+    1;
+
+  reconocimientoChat =
+    reconocimiento;
+
+  reconocimientoChatTipo =
+    tipo;
+
+  reconocimiento.onstart =
+    () => {
+
+      boton.classList.add('escuchando');
+      boton.textContent = '⏹️';
+
+      actualizarEstadoChat(
+        `Escuchando en ${configIdioma.bandera} ${configIdioma.nombre}...`,
+        'cargando'
+      );
+
+    };
+
+  reconocimiento.onresult =
+    evento => {
+
+      const texto =
+        evento.results?.[0]?.[0]?.transcript;
+
+      if (texto) {
+
+        input.value =
+          texto;
+
+        input.focus();
+
+        input.setSelectionRange(
+          input.value.length,
+          input.value.length
+        );
+
+        enviarPreguntaChat({
+          origen: 'voz',
+          idiomaForzado: idiomaChat,
+          autoHablar: true
+        });
+
+      }
+
+    };
+
+  reconocimiento.onerror =
+    evento => {
+
+      let mensaje =
+        'No pude escuchar la pregunta. Intenta nuevamente.';
+
+      if (
+        evento.error === 'not-allowed' ||
+        evento.error === 'service-not-allowed'
+      ) {
+        mensaje =
+          'Debes permitir el acceso al micrófono para utilizar esta función.';
+      }
+
+      if (evento.error === 'no-speech') {
+        mensaje =
+          'No detecté ninguna voz. Intenta hablar más cerca del micrófono.';
+      }
+
+      actualizarEstadoChat(
+        mensaje,
+        'error'
+      );
+
+    };
+
+  reconocimiento.onend =
+    () => {
+
+      boton.classList.remove('escuchando');
+      boton.textContent = '🎙️';
+
+      if (reconocimientoChat === reconocimiento) {
+        reconocimientoChat = null;
+        reconocimientoChatTipo = null;
+      }
+
+      const estado =
+        document.getElementById('chat-estado');
+
+      if (
+        estado?.classList.contains('chat-estado-cargando') &&
+        !chatEnviando
+      ) {
+        actualizarEstadoChat('', '');
+      }
+
+    };
+
+  try {
+    reconocimiento.start();
+  } catch (error) {
+    console.warn(
+      'No se pudo iniciar el micrófono:',
+      error
+    );
+  }
+
+}
+
+
+// ============================================================
+// DETENER MICRÓFONO
+// ============================================================
+
+function detenerMicrofonoChat() {
+
+  if (reconocimientoChat) {
+
+    try {
+      reconocimientoChat.stop();
+    } catch {
+      // nada
+    }
+
+  }
+
+  reconocimientoChat =
+    null;
+
+  reconocimientoChatTipo =
+    null;
+
+  const boton =
+    document.getElementById('btn-chat-microfono');
+
+  if (boton) {
+    boton.classList.remove('escuchando');
+    boton.textContent = '🎙️';
+  }
+
+}
+
+
+// ============================================================
+// LEER RESPUESTA EN VOZ ALTA
+// ============================================================
+
+function leerRespuestaChat(
+  texto,
+  idioma = 'es'
+) {
+
+  if (!('speechSynthesis' in window)) {
+
+    actualizarEstadoChat(
+      'La lectura en voz alta no está disponible en este navegador.',
+      'aviso'
+    );
+
+    return;
+  }
+
+  window.speechSynthesis.cancel();
+
+  const configIdioma =
+    idiomasChatInfo[idioma] || idiomasChatInfo.es;
+
+  const utterance =
+    new SpeechSynthesisUtterance(texto);
+
+  utterance.lang =
+    configIdioma.voz;
+
+  utterance.rate =
+    0.96;
+
+  utterance.pitch =
+    1;
+
+  const voces =
+    window.speechSynthesis.getVoices();
+
+  const prefijo =
+    utterance.lang
+      .split('-')[0]
+      .toLowerCase();
+
+  const vozCompatible =
+    voces.find(
+      voz =>
+        String(voz.lang || '')
+          .toLowerCase()
+          .startsWith(prefijo)
+    );
+
+  if (vozCompatible) {
+    utterance.voice =
+      vozCompatible;
+  }
+
+  window.speechSynthesis.speak(utterance);
+
+}
+
+
+// ============================================================
+// AL CAMBIAR DE LEYENDA
+// ============================================================
+
+botonesLeyenda.forEach(
+  boton => {
+
+    boton.addEventListener(
+      'click',
+      () => {
+
+        cerrarChat();
+        ocultarBotonChatFlotante();
+        chatTipoActivo = null;
+
+      }
+    );
+
+  }
+);
+
+
+// ============================================================
+// CREAR INTERFAZ AL CARGAR
+// ============================================================
+
+crearInterfazChat();
 actualizarDisponibilidadMicrofono();
