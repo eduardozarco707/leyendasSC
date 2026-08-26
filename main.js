@@ -1,6 +1,10 @@
 import './style.css';
 import './chat.css';
 
+// ============================================================
+// ELEMENTOS PRINCIPALES
+// ============================================================
+
 const sidebar =
   document.getElementById('sidebar');
 
@@ -12,6 +16,11 @@ const areaTexto =
 
 const botonesLeyenda =
   document.querySelectorAll('.btn-leyenda');
+
+
+// ============================================================
+// ELEMENTOS AR
+// ============================================================
 
 const pantallaAR =
   document.getElementById('pantalla-ar');
@@ -34,6 +43,10 @@ const btnCapturar =
 const btnCerrarAR =
   document.getElementById('btn-cerrar-ar');
 
+
+// ============================================================
+// IDIOMAS DEL AUDIOLIBRO
+// ============================================================
 
 const idiomas = {
 
@@ -60,12 +73,22 @@ const idiomas = {
 };
 
 
+// ============================================================
+// CONFIGURACIÓN DE LAS LEYENDAS
+// ============================================================
+
 const experiencias = {
 
   carreton: {
 
     nombre:
       'El Carretón de la Otra Vida',
+
+    nombreCorto:
+      'El Carretón',
+
+    emoji:
+      '☠️',
 
     archivo:
       '/carreton.glb',
@@ -95,7 +118,22 @@ const experiencias = {
       'Apunta hacia la imagen del Carretón',
 
     textoCapturar:
-      '☠️ CAPTURAR CARRETÓN'
+      '☠️ CAPTURAR CARRETÓN',
+
+    etiqueta:
+      'HISTORIA Y TRADICIÓN ORAL CRUCEÑA',
+
+    titulo:
+      'El Carretón de la Otra Vida',
+
+    descripcion:
+      'Una antigua aparición cruceña cuyo origen se relaciona con el recuerdo de las epidemias, la muerte y los carretones que recorrían Santa Cruz durante el siglo XIX.',
+
+    icono:
+      '🛞',
+
+    saludoChat:
+      'Soy El Carretón de la Otra Vida. Puedes preguntarme sobre mi leyenda, mis apariciones y mi relación con las antiguas epidemias de Santa Cruz.'
 
   },
 
@@ -104,6 +142,12 @@ const experiencias = {
 
     nombre:
       'El Guajojó',
+
+    nombreCorto:
+      'El Guajojó',
+
+    emoji:
+      '🪶',
 
     archivo:
       '/guajojo.glb',
@@ -133,7 +177,22 @@ const experiencias = {
       'Apunta hacia la imagen del Guajojó',
 
     textoCapturar:
-      '🦉 CAPTURAR GUAJOJÓ'
+      '🦉 CAPTURAR GUAJOJÓ',
+
+    etiqueta:
+      'LEYENDA DEL ORIENTE BOLIVIANO',
+
+    titulo:
+      'El Guajojó',
+
+    descripcion:
+      'Un lamento nocturno que, según la tradición, nació de una historia de amor y tragedia.',
+
+    icono:
+      '🌙',
+
+    saludoChat:
+      'Soy El Guajojó. Puedes preguntarme sobre mi historia, mi transformación, mi amado o el origen de mi triste canto.'
 
   },
 
@@ -142,6 +201,12 @@ const experiencias = {
 
     nombre:
       'El Duende',
+
+    nombreCorto:
+      'El Duende',
+
+    emoji:
+      '🌿',
 
     archivo:
       '/duende.glb',
@@ -171,7 +236,22 @@ const experiencias = {
       'Apunta hacia la imagen del Duende',
 
     textoCapturar:
-      '🌿 CAPTURAR DUENDE'
+      '🌿 CAPTURAR DUENDE',
+
+    etiqueta:
+      'MISTERIOS DEL MONTE',
+
+    titulo:
+      'El Duende',
+
+    descripcion:
+      'Un pequeño y misterioso personaje relacionado con los montes y las antiguas advertencias familiares.',
+
+    icono:
+      '🌿',
+
+    saludoChat:
+      'Soy El Duende. Puedes preguntarme sobre mis travesuras, el monte, los niños, mi sombrero de saó o las crines de los caballos.'
 
   },
 
@@ -180,6 +260,12 @@ const experiencias = {
 
     nombre:
       'La Viudita',
+
+    nombreCorto:
+      'La Viudita',
+
+    emoji:
+      '🕯️',
 
     archivo:
       '/viudita.glb',
@@ -209,7 +295,22 @@ const experiencias = {
       'Apunta hacia la imagen de La Viudita',
 
     textoCapturar:
-      '🕯️ CAPTURAR VIUDITA'
+      '🕯️ CAPTURAR VIUDITA',
+
+    etiqueta:
+      'RELATOS DE LA NOCHE',
+
+    titulo:
+      'La Viudita',
+
+    descripcion:
+      'Una misteriosa mujer que aparecía durante las antiguas noches cruceñas y encantaba a ciertos trasnochadores.',
+
+    icono:
+      '🕯️',
+
+    saludoChat:
+      'Soy La Viudita. Puedes preguntarme sobre mis apariciones, los trasnochadores, mis encantamientos o las antiguas noches cruceñas.'
 
   },
 
@@ -218,6 +319,12 @@ const experiencias = {
 
     nombre:
       'El Jichi',
+
+    nombreCorto:
+      'El Jichi',
+
+    emoji:
+      '💧',
 
     archivo:
       '/jichi.glb',
@@ -247,50 +354,334 @@ const experiencias = {
       'Apunta hacia la imagen del Jichi',
 
     textoCapturar:
-      '💧 CAPTURAR JICHI'
+      '💧 CAPTURAR JICHI',
+
+    etiqueta:
+      'GUARDIÁN DE LAS AGUAS',
+
+    titulo:
+      'El Jichi',
+
+    descripcion:
+      'Un misterioso ser sobrenatural asociado a lagunas, pozas y madrejones y a la protección del agua.',
+
+    icono:
+      '💧',
+
+    saludoChat:
+      'Soy El Jichi. Puedes preguntarme sobre las aguas que protejo, mi apariencia, las lagunas o el cuidado de la naturaleza.'
 
   }
 
 };
 
 
-let experienciaActiva = null;
+// ============================================================
+// TEXTOS DE LAS LEYENDAS
+// ============================================================
 
-let arActivo = false;
+const historias = {
 
-let arIniciando = false;
+  carreton: {
 
-let targetEncontrado = false;
+    titulo:
+      'El Carretón de la Otra Vida',
 
-let temporizadorCaptura = null;
+    sobrelinea:
+      'HISTORIA Y TRADICIÓN ORAL CRUCEÑA',
+
+    parrafos: [
+
+      'Corría el año 1861 y Santa Cruz de la Sierra atravesaba uno de los momentos más difíciles de su historia.',
+
+      'Una grave epidemia de viruela se extendía entre la población. Los conocimientos médicos eran todavía limitados y el temor al contagio aumentaba cada día.',
+
+      'Durante aquellas jornadas, un carretón recorría las calles transportando enfermos y moribundos hacia las afueras de la ciudad, en dirección al Lazareto.',
+
+      'Según los relatos que recuerdan aquella época, el paso del vehículo era anunciado para que los vecinos permanecieran alejados y evitaran exponerse al contagio.',
+
+      'Las familias cerraban sus puertas y ventanas mientras aquel carretón avanzaba por las calles de una Santa Cruz golpeada por la enfermedad y el miedo.',
+
+      'Con el paso de los años, aquel recuerdo comenzó a mezclarse con la imaginación y la tradición oral de los cruceños.',
+
+      'En las noches oscuras, especialmente durante el sur y el chilchi, algunas personas aseguraban escuchar nuevamente el chirriar de unos ejes y el fuerte restallar de un látigo.',
+
+      'El sonido parecía avanzar lentamente por los caminos solitarios.',
+
+      'También se decía que podía escucharse la extraña voz del carretero llamando a sus animales. Pero aquella voz no parecía pertenecer a un ser humano.',
+
+      'En ocasiones, algún relámpago iluminaba la noche durante unos segundos y permitía distinguir la silueta de un antiguo carretón avanzando entre las sombras.',
+
+      'Cuentan que una noche un trasnochador decidió enfrentarse a la aparición.',
+
+      'Reuniendo valor, se acercó al misterioso vehículo para descubrir qué era aquello que recorría los caminos durante la noche.',
+
+      'Entonces vio algo aterrador.',
+
+      'El carretón ya no parecía construido de madera como uno común.',
+
+      'Sus estacas parecían ser huesos humanos. Tibias, peronés y costillas formaban parte de aquella macabra estructura.',
+
+      'Pero lo más aterrador estaba al frente.',
+
+      'El carretero no tenía un rostro humano. En su lugar había una horrenda calavera y, dentro de sus cuencas vacías, brillaba un resplandor semejante al fuego.',
+
+      'El hombre perdió inmediatamente todo su valor y huyó aterrorizado.',
+
+      'Desde entonces, el recuerdo de aquel carretón relacionado con una época de enfermedad y muerte terminó transformándose en una de las apariciones más temidas de la tradición cruceña.',
+
+      'Para algunos, aquel vehículo ya no transportaba solamente enfermos o muertos.',
+
+      'Transportaba almas hacia la otra vida.',
+
+      'Y así, entre la memoria de una epidemia, el miedo de las antiguas noches cruceñas y la tradición transmitida de generación en generación, nació la leyenda de El Carretón de la Otra Vida.'
+
+    ]
+
+  },
+
+
+  guajojo: {
+
+    titulo:
+      'La Leyenda del Guajojó',
+
+    parrafos: [
+
+      'Cuenta la tradición que hace muchos años, en las tierras del oriente boliviano, la hija de un cacique se enamoró profundamente de un joven de su tribu.',
+
+      'Sin embargo, su padre desaprobaba aquella relación.',
+
+      'El cacique, que además poseía poderes de hechicero, decidió terminar con aquel romance. Engañó al joven y lo llevó hasta la espesura de la selva, donde acabó con su vida.',
+
+      'Cuando la muchacha descubrió lo sucedido, quedó destrozada por el dolor.',
+
+      'Furiosa, enfrentó a su padre y amenazó con contar a todos los habitantes de la tribu el terrible crimen que había cometido.',
+
+      'El cacique, temiendo que su hija revelara la verdad, utilizó sus poderes y la transformó en un ave nocturna.',
+
+      'Pero hubo algo que el hechicero no pudo quitarle: su voz.',
+
+      'Desde entonces, durante las noches silenciosas del bosque, puede escucharse el triste lamento de aquella joven transformada en ave.',
+
+      'Un canto profundo y melancólico que parece repetir entre los árboles: <strong>¡Gua... jo... jó!</strong>'
+
+    ],
+
+
+    extra: `
+
+      <div class="multimedia-leyenda">
+
+        <div class="reproductor-leyenda">
+
+          <span class="sobrelinea">
+            SONIDO DEL GUAJOJÓ
+          </span>
+
+          <h3>
+            Escucha su canto
+          </h3>
+
+          <audio
+            controls
+            preload="metadata"
+            src="/audio-guajojo.mp3"
+          ></audio>
+
+        </div>
+
+
+        <img
+          src="/foto-guajojo.jpg"
+          class="foto-leyenda"
+          alt="Guajojó"
+        >
+
+      </div>
+
+    `
+
+  },
+
+
+  duende: {
+
+    titulo:
+      'La Leyenda del Duende',
+
+    parrafos: [
+
+      'El Duende forma parte de los antiguos relatos tradicionales cruceños.',
+
+      'Se lo describe como un ser pequeño, de apariencia infantil y carácter travieso. En muchos relatos aparece vestido con ropa clara y cubierto por un gran sombrero de saó.',
+
+      'Se decía que habitaba cerca de los montes, caminos solitarios y lugares apartados.',
+
+      'Una de sus travesuras favoritas consistía en acercarse a los niños cuando estos se alejaban demasiado de sus casas.',
+
+      'El Duende trataba de ganarse su confianza ofreciéndoles dulces, juguetes o invitándolos a jugar.',
+
+      'Por esta razón, los mayores advertían a los niños que nunca debían seguir a un desconocido ni internarse solos en el monte.',
+
+      'También existía la creencia de que, durante la noche, podía ingresar a corrales y establos.',
+
+      'A la mañana siguiente, los propietarios encontraban las crines y las colas de sus caballos cuidadosamente trenzadas.',
+
+      'Algunos aseguraban que aquellas trenzas eran una señal inequívoca de que el Duende había visitado el lugar.'
+
+    ]
+
+  },
+
+
+  viudita: {
+
+    titulo:
+      'La Leyenda de La Viudita',
+
+    parrafos: [
+
+      'En las antiguas noches de Santa Cruz se contaba la historia de una misteriosa mujer conocida como La Viudita.',
+
+      'No era simplemente una aparición aterradora.',
+
+      'La tradición decía que solía aparecer especialmente ante hombres trasnochadores, parranderos o aquellos que recorrían las calles durante la noche buscando conquistas amorosas.',
+
+      'En medio de la oscuridad aparecía una misteriosa mujer.',
+
+      'Su presencia resultaba irresistible para quien la encontraba.',
+
+      'Bajo una especie de encantamiento, el hombre aceptaba acompañarla sin sospechar lo que estaba a punto de suceder.',
+
+      'Creía caminar junto a ella hacia un lugar agradable, elegante y confortable.',
+
+      'Todo parecía perfecto.',
+
+      'Pero el encantamiento no duraba para siempre.',
+
+      'Cuando finalmente recuperaba la conciencia, descubría que la realidad era completamente diferente.',
+
+      'Aquello que había imaginado como una elegante estancia podía ser simplemente un matorral lleno de espinas.',
+
+      'El cómodo lecho donde creía haber descansado podía resultar ser un barrial, un terreno abandonado o cualquier lugar desagradable.',
+
+      'Y de aquella misteriosa mujer ya no quedaba ninguna señal.',
+
+      'La Viudita había desaparecido sin dejar rastro.'
+
+    ]
+
+  },
+
+
+  jichi: {
+
+    titulo:
+      'La Leyenda del Jichi',
+
+    parrafos: [
+
+      'Según antiguas tradiciones compartidas por pueblos del oriente boliviano, las lagunas, pozas, charcos y madrejones no eran solamente depósitos de agua.',
+
+      'En algunos de ellos podía habitar un misterioso ser sobrenatural conocido como el Jichi.',
+
+      'El Jichi era considerado el guardián de las aguas.',
+
+      'Se lo describía como una criatura extraña, difícil de comparar con cualquier animal conocido.',
+
+      'Su cuerpo era alargado, con características que recordaban a una enorme culebra y, al mismo tiempo, a un saurio.',
+
+      'Su apariencia podía confundirse con el agua, haciendo muy difícil poder observarlo.',
+
+      'Mientras el Jichi permanecía en su morada, el agua se conservaba.',
+
+      'Por esta razón, las personas debían respetar el lugar donde habitaba. No debían desperdiciar el agua ni destruir la vegetación que crecía alrededor de la laguna.',
+
+      'Si las personas abusaban de aquellos recursos o destruían su entorno, el Jichi podía molestarse.',
+
+      'Entonces el guardián abandonaba su morada.',
+
+      'Después de su partida, el nivel del agua comenzaba lentamente a disminuir hasta terminar por agotarse.',
+
+      'De generación en generación quedó una sencilla advertencia:',
+
+      '<strong>Mientras el Jichi permanezca, el agua permanecerá. Pero si el Jichi se marcha, el agua también.</strong>'
+
+    ]
+
+  }
+
+};
+
+
+// ============================================================
+// ESTADO AR
+// ============================================================
+
+let experienciaActiva =
+  null;
+
+let arActivo =
+  false;
+
+let arIniciando =
+  false;
+
+let targetEncontrado =
+  false;
+
+let temporizadorCaptura =
+  null;
 
 
 const modelosCargados = {
 
-  carreton: false,
-  guajojo: false,
-  duende: false,
-  viudita: false,
-  jichi: false
+  carreton:
+    false,
+
+  guajojo:
+    false,
+
+  duende:
+    false,
+
+  viudita:
+    false,
+
+  jichi:
+    false
 
 };
 
 
+// ============================================================
+// MENÚ
+// ============================================================
+
 btnMenu?.addEventListener(
+
   'click',
+
   () => {
 
-    sidebar?.classList.toggle('abierto');
+    sidebar?.classList.toggle(
+      'abierto'
+    );
 
   }
+
 );
 
 
 botonesLeyenda.forEach(
+
   boton => {
 
     boton.addEventListener(
+
       'click',
+
       () => {
 
         const tipo =
@@ -298,6 +689,16 @@ botonesLeyenda.forEach(
 
 
         cerrarCamaraAR();
+
+
+        cerrarChat();
+
+
+        ocultarBotonChatFlotante();
+
+
+        chatTipoActivo =
+          null;
 
 
         marcarActivo(
@@ -321,17 +722,24 @@ botonesLeyenda.forEach(
         }
 
       }
+
     );
 
   }
+
 );
 
+
+// ============================================================
+// BOTÓN ACTIVO
+// ============================================================
 
 function marcarActivo(
   seleccionado
 ) {
 
   botonesLeyenda.forEach(
+
     boton => {
 
       boton.classList.remove(
@@ -339,6 +747,7 @@ function marcarActivo(
       );
 
     }
+
   );
 
 
@@ -349,102 +758,16 @@ function marcarActivo(
 }
 
 
+// ============================================================
+// CREAR CABECERA
+// ============================================================
+
 function crearCabecera(
   tipo
 ) {
 
-  const datos = {
-
-
-    carreton: {
-
-      etiqueta:
-        'HISTORIA Y TRADICIÓN ORAL CRUCEÑA',
-
-      titulo:
-        'El Carretón de la Otra Vida',
-
-      descripcion:
-        'Una antigua aparición cruceña cuyo origen se relaciona con el recuerdo de las epidemias, la muerte y los carretones que recorrían Santa Cruz durante el siglo XIX.',
-
-      icono:
-        '🛞'
-
-    },
-
-
-    guajojo: {
-
-      etiqueta:
-        'LEYENDA DEL ORIENTE BOLIVIANO',
-
-      titulo:
-        'El Guajojó',
-
-      descripcion:
-        'Un lamento nocturno que, según la tradición, nació de una historia de amor y tragedia.',
-
-      icono:
-        '🌙'
-
-    },
-
-
-    duende: {
-
-      etiqueta:
-        'MISTERIOS DEL MONTE',
-
-      titulo:
-        'El Duende',
-
-      descripcion:
-        'Un pequeño y misterioso personaje relacionado con los montes y las antiguas advertencias familiares.',
-
-      icono:
-        '🌿'
-
-    },
-
-
-    viudita: {
-
-      etiqueta:
-        'RELATOS DE LA NOCHE',
-
-      titulo:
-        'La Viudita',
-
-      descripcion:
-        'Una misteriosa mujer que aparecía durante las antiguas noches cruceñas y encantaba a ciertos trasnochadores.',
-
-      icono:
-        '🕯️'
-
-    },
-
-
-    jichi: {
-
-      etiqueta:
-        'GUARDIÁN DE LAS AGUAS',
-
-      titulo:
-        'El Jichi',
-
-      descripcion:
-        'Un misterioso ser sobrenatural asociado a lagunas, pozas y madrejones y a la protección del agua.',
-
-      icono:
-        '💧'
-
-    }
-
-  };
-
-
   const d =
-    datos[tipo];
+    experiencias[tipo];
 
 
   return `
@@ -481,6 +804,10 @@ function crearCabecera(
 
 }
 
+
+// ============================================================
+// CREAR PANEL AR
+// ============================================================
 
 function crearPanelAR(
   tipo
@@ -528,13 +855,9 @@ function crearPanelAR(
 
 
         <button
-
           id="${config.botonId}"
-
           class="btn-ver-ar"
-
           type="button"
-
         >
 
           📱 INICIAR EXPERIENCIA AR
@@ -550,6 +873,10 @@ function crearPanelAR(
 
 }
 
+
+// ============================================================
+// CREAR AUDIOLIBRO
+// ============================================================
 
 function crearAudiolibro(
   tipo
@@ -592,84 +919,47 @@ function crearAudiolibro(
       </div>
 
 
-
       <div class="selector-idiomas">
 
 
-        <button
-          class="btn-idioma activo"
-          type="button"
-          data-audio-lang="es"
-          data-audio-tipo="${tipo}"
-        >
+        ${Object.entries(
+          idiomas
+        )
+          .map(
+            ([codigo, info]) => `
 
-          <span class="bandera-idioma">
-            🇧🇴
-          </span>
+              <button
 
-          <span>
-            Español
-          </span>
+                class="btn-idioma ${
+                  codigo === 'es'
+                    ? 'activo'
+                    : ''
+                }"
 
-        </button>
+                type="button"
 
+                data-audio-lang="${codigo}"
 
-        <button
-          class="btn-idioma"
-          type="button"
-          data-audio-lang="en"
-          data-audio-tipo="${tipo}"
-        >
+                data-audio-tipo="${tipo}"
 
-          <span class="bandera-idioma">
-            🇺🇸
-          </span>
+              >
 
-          <span>
-            English
-          </span>
+                <span class="bandera-idioma">
+                  ${info.bandera}
+                </span>
 
-        </button>
+                <span>
+                  ${info.nombre}
+                </span>
 
+              </button>
 
-        <button
-          class="btn-idioma"
-          type="button"
-          data-audio-lang="pt"
-          data-audio-tipo="${tipo}"
-        >
-
-          <span class="bandera-idioma">
-            🇧🇷
-          </span>
-
-          <span>
-            Português
-          </span>
-
-        </button>
-
-
-        <button
-          class="btn-idioma"
-          type="button"
-          data-audio-lang="de"
-          data-audio-tipo="${tipo}"
-        >
-
-          <span class="bandera-idioma">
-            🇩🇪
-          </span>
-
-          <span>
-            Deutsch
-          </span>
-
-        </button>
+            `
+          )
+          .join('')}
 
 
       </div>
-
 
 
       <div class="reproductor-audiolibro">
@@ -691,11 +981,17 @@ function crearAudiolibro(
 
 
         <audio
+
           id="audiolibro-${tipo}"
+
           class="audio-leyenda"
+
           src="/audio/es/${tipo}.mp3"
+
           controls
+
           preload="metadata"
+
         >
 
           Tu navegador no soporta reproducción de audio.
@@ -712,6 +1008,116 @@ function crearAudiolibro(
 
 }
 
+
+// ============================================================
+// CREAR CONTENIDO DESBLOQUEADO
+// ============================================================
+
+function crearContenidoCapturado(
+  tipo
+) {
+
+  const config =
+    experiencias[tipo];
+
+
+  const historia =
+    historias[tipo];
+
+
+  const tituloCaptura =
+
+    tipo === 'viudita'
+
+      ? '🕯️ ¡La Viudita capturada!'
+
+      : `${config.emoji} ¡${config.nombreCorto
+          .replace(
+            'El ',
+            ''
+          )
+          .replace(
+            'La ',
+            ''
+          )} capturado!`;
+
+
+  const parrafos =
+
+    historia.parrafos
+
+      .map(
+        texto => `
+
+          <p>
+            ${texto}
+          </p>
+
+        `
+      )
+
+      .join(
+        '<br>'
+      );
+
+
+  return `
+
+    <div class="mensaje-capturado">
+
+      <h3>
+        ${tituloCaptura}
+      </h3>
+
+      <p>
+        Has desbloqueado su historia y audiolibro.
+      </p>
+
+    </div>
+
+
+    ${crearAudiolibro(tipo)}
+
+
+    <div class="historia-leyenda">
+
+
+      ${
+        historia.sobrelinea
+
+          ? `
+
+            <span class="sobrelinea">
+              ${historia.sobrelinea}
+            </span>
+
+          `
+
+          : ''
+      }
+
+
+      <h3>
+        ${historia.titulo}
+      </h3>
+
+
+      ${parrafos}
+
+
+    </div>
+
+
+    ${historia.extra || ''}
+
+  `;
+
+}
+
+
+// ============================================================
+// MOSTRAR LEYENDA
+// ============================================================
 
 function mostrarLeyenda(
   tipo
@@ -739,6 +1145,7 @@ function mostrarLeyenda(
 
       ${crearPanelAR(tipo)}
 
+
       <div
         id="${config.contenidoId}"
         style="display:none"
@@ -747,6 +1154,7 @@ function mostrarLeyenda(
         ${crearContenidoCapturado(tipo)}
 
       </div>
+
 
     </div>
 
@@ -758,7 +1166,9 @@ function mostrarLeyenda(
       config.botonId
     )
     ?.addEventListener(
+
       'click',
+
       () => {
 
         iniciarCamaraAR(
@@ -766,6 +1176,7 @@ function mostrarLeyenda(
         );
 
       }
+
     );
 
 
@@ -776,966 +1187,9 @@ function mostrarLeyenda(
 }
 
 
-function crearContenidoCapturado(
-  tipo
-) {
-
-
-  if (
-    tipo === 'carreton'
-  ) {
-
-    return `
-
-      <div class="mensaje-capturado">
-
-        <h3>
-          ☠️ ¡Carretón capturado!
-        </h3>
-
-        <p>
-          Has desbloqueado su historia y audiolibro.
-        </p>
-
-      </div>
-
-
-      ${crearAudiolibro(tipo)}
-
-
-      <div class="historia-leyenda">
-
-        <span class="sobrelinea">
-          HISTORIA Y TRADICIÓN ORAL CRUCEÑA
-        </span>
-
-
-        <h3>
-          El Carretón de la Otra Vida
-        </h3>
-
-
-        <p>
-
-          Corría el año 1861 y Santa Cruz de la Sierra
-          atravesaba uno de los momentos más difíciles
-          de su historia.
-
-        </p>
-
-        <br>
-
-
-        <p>
-
-          Una grave epidemia de viruela se extendía
-          entre la población.
-
-          Los conocimientos médicos eran todavía
-          limitados y el temor al contagio aumentaba
-          cada día.
-
-        </p>
-
-        <br>
-
-
-        <p>
-
-          Durante aquellas jornadas, un carretón
-          recorría las calles transportando enfermos
-          y moribundos hacia las afueras de la ciudad,
-          en dirección al Lazareto.
-
-        </p>
-
-        <br>
-
-
-        <p>
-
-          Según los relatos que recuerdan aquella
-          época, el paso del vehículo era anunciado
-          para que los vecinos permanecieran alejados
-          y evitaran exponerse al contagio.
-
-        </p>
-
-        <br>
-
-
-        <p>
-
-          Las familias cerraban sus puertas y ventanas
-          mientras aquel carretón avanzaba por las
-          calles de una Santa Cruz golpeada por
-          la enfermedad y el miedo.
-
-        </p>
-
-        <br>
-
-
-        <p>
-
-          Con el paso de los años, aquel recuerdo
-          comenzó a mezclarse con la imaginación
-          y la tradición oral de los cruceños.
-
-        </p>
-
-        <br>
-
-
-        <p>
-
-          En las noches oscuras, especialmente durante
-          el sur y el chilchi, algunas personas
-          aseguraban escuchar nuevamente el chirriar
-          de unos ejes y el fuerte restallar
-          de un látigo.
-
-        </p>
-
-        <br>
-
-
-        <p>
-
-          El sonido parecía avanzar lentamente
-          por los caminos solitarios.
-
-        </p>
-
-        <br>
-
-
-        <p>
-
-          También se decía que podía escucharse
-          la extraña voz del carretero llamando
-          a sus animales.
-
-          Pero aquella voz no parecía pertenecer
-          a un ser humano.
-
-        </p>
-
-        <br>
-
-
-        <p>
-
-          En ocasiones, algún relámpago iluminaba
-          la noche durante unos segundos y permitía
-          distinguir la silueta de un antiguo
-          carretón avanzando entre las sombras.
-
-        </p>
-
-        <br>
-
-
-        <p>
-
-          Cuentan que una noche un trasnochador
-          decidió enfrentarse a la aparición.
-
-        </p>
-
-        <br>
-
-
-        <p>
-
-          Reuniendo valor, se acercó al misterioso
-          vehículo para descubrir qué era aquello
-          que recorría los caminos durante la noche.
-
-        </p>
-
-        <br>
-
-
-        <p>
-
-          Entonces vio algo aterrador.
-
-        </p>
-
-        <br>
-
-
-        <p>
-
-          El carretón ya no parecía construido
-          de madera como uno común.
-
-        </p>
-
-        <br>
-
-
-        <p>
-
-          Sus estacas parecían ser huesos humanos.
-
-          Tibias, peronés y costillas formaban
-          parte de aquella macabra estructura.
-
-        </p>
-
-        <br>
-
-
-        <p>
-
-          Pero lo más aterrador estaba al frente.
-
-        </p>
-
-        <br>
-
-
-        <p>
-
-          El carretero no tenía un rostro humano.
-
-          En su lugar había una horrenda calavera
-          y, dentro de sus cuencas vacías,
-          brillaba un resplandor semejante al fuego.
-
-        </p>
-
-        <br>
-
-
-        <p>
-
-          El hombre perdió inmediatamente todo
-          su valor y huyó aterrorizado.
-
-        </p>
-
-        <br>
-
-
-        <p>
-
-          Desde entonces, el recuerdo de aquel
-          carretón relacionado con una época
-          de enfermedad y muerte terminó
-          transformándose en una de las apariciones
-          más temidas de la tradición cruceña.
-
-        </p>
-
-        <br>
-
-
-        <p>
-
-          Para algunos, aquel vehículo ya no
-          transportaba solamente enfermos o muertos.
-
-        </p>
-
-        <br>
-
-
-        <p>
-
-          Transportaba almas hacia la otra vida.
-
-        </p>
-
-        <br>
-
-
-        <p>
-
-          Y así, entre la memoria de una epidemia,
-          el miedo de las antiguas noches cruceñas
-          y la tradición transmitida de generación
-          en generación, nació la leyenda de
-          El Carretón de la Otra Vida.
-
-        </p>
-
-
-      </div>
-
-    `;
-
-  }
-
-
-  if (
-    tipo === 'guajojo'
-  ) {
-
-    return `
-
-      <div class="mensaje-capturado">
-
-        <h3>
-          🦉 ¡Guajojó capturado!
-        </h3>
-
-        <p>
-          Has desbloqueado su historia y audiolibro.
-        </p>
-
-      </div>
-
-
-      ${crearAudiolibro(tipo)}
-
-
-      <div class="historia-leyenda">
-
-        <h3>
-          La Leyenda del Guajojó
-        </h3>
-
-
-        <p>
-
-          Cuenta la tradición que hace muchos años,
-          en las tierras del oriente boliviano,
-          la hija de un cacique se enamoró
-          profundamente de un joven de su tribu.
-
-        </p>
-
-        <br>
-
-
-        <p>
-
-          Sin embargo, su padre desaprobaba
-          aquella relación.
-
-        </p>
-
-        <br>
-
-
-        <p>
-
-          El cacique, que además poseía poderes
-          de hechicero, decidió terminar con
-          aquel romance.
-
-          Engañó al joven y lo llevó hasta
-          la espesura de la selva,
-          donde acabó con su vida.
-
-        </p>
-
-        <br>
-
-
-        <p>
-
-          Cuando la muchacha descubrió lo sucedido,
-          quedó destrozada por el dolor.
-
-        </p>
-
-        <br>
-
-
-        <p>
-
-          Furiosa, enfrentó a su padre y amenazó
-          con contar a todos los habitantes
-          de la tribu el terrible crimen
-          que había cometido.
-
-        </p>
-
-        <br>
-
-
-        <p>
-
-          El cacique, temiendo que su hija revelara
-          la verdad, utilizó sus poderes
-          y la transformó en un ave nocturna.
-
-        </p>
-
-        <br>
-
-
-        <p>
-
-          Pero hubo algo que el hechicero
-          no pudo quitarle:
-
-          su voz.
-
-        </p>
-
-        <br>
-
-
-        <p>
-
-          Desde entonces, durante las noches
-          silenciosas del bosque, puede escucharse
-          el triste lamento de aquella joven
-          transformada en ave.
-
-        </p>
-
-        <br>
-
-
-        <p>
-
-          Un canto profundo y melancólico
-          que parece repetir entre los árboles:
-
-          <strong>
-            ¡Gua... jo... jó!
-          </strong>
-
-        </p>
-
-
-      </div>
-
-
-      <div class="multimedia-leyenda">
-
-        <div class="reproductor-leyenda">
-
-          <span class="sobrelinea">
-            SONIDO DEL GUAJOJÓ
-          </span>
-
-          <h3>
-            Escucha su canto
-          </h3>
-
-          <audio
-            controls
-            preload="metadata"
-            src="/audio-guajojo.mp3"
-          ></audio>
-
-        </div>
-
-
-        <img
-          src="/foto-guajojo.jpg"
-          class="foto-leyenda"
-          alt="Guajojó"
-        >
-
-
-      </div>
-
-    `;
-
-  }
-
-
-  if (
-    tipo === 'duende'
-  ) {
-
-    return `
-
-      <div class="mensaje-capturado">
-
-        <h3>
-          🌿 ¡Duende capturado!
-        </h3>
-
-        <p>
-          Has desbloqueado su historia y audiolibro.
-        </p>
-
-      </div>
-
-
-      ${crearAudiolibro(tipo)}
-
-
-      <div class="historia-leyenda">
-
-        <h3>
-          La Leyenda del Duende
-        </h3>
-
-
-        <p>
-
-          El Duende forma parte de los antiguos
-          relatos tradicionales cruceños.
-
-        </p>
-
-        <br>
-
-
-        <p>
-
-          Se lo describe como un ser pequeño,
-          de apariencia infantil y carácter travieso.
-
-          En muchos relatos aparece vestido
-          con ropa clara y cubierto por
-          un gran sombrero de saó.
-
-        </p>
-
-        <br>
-
-
-        <p>
-
-          Se decía que habitaba cerca de los montes,
-          caminos solitarios y lugares apartados.
-
-        </p>
-
-        <br>
-
-
-        <p>
-
-          Una de sus travesuras favoritas consistía
-          en acercarse a los niños cuando estos
-          se alejaban demasiado de sus casas.
-
-        </p>
-
-        <br>
-
-
-        <p>
-
-          El Duende trataba de ganarse su confianza
-          ofreciéndoles dulces, juguetes
-          o invitándolos a jugar.
-
-        </p>
-
-        <br>
-
-
-        <p>
-
-          Por esta razón, los mayores advertían
-          a los niños que nunca debían seguir
-          a un desconocido ni internarse solos
-          en el monte.
-
-        </p>
-
-        <br>
-
-
-        <p>
-
-          También existía la creencia de que,
-          durante la noche, podía ingresar
-          a corrales y establos.
-
-        </p>
-
-        <br>
-
-
-        <p>
-
-          A la mañana siguiente, los propietarios
-          encontraban las crines y las colas
-          de sus caballos cuidadosamente trenzadas.
-
-        </p>
-
-        <br>
-
-
-        <p>
-
-          Algunos aseguraban que aquellas trenzas
-          eran una señal inequívoca de que
-          el Duende había visitado el lugar.
-
-        </p>
-
-
-      </div>
-
-    `;
-
-  }
-
-
-  if (
-    tipo === 'viudita'
-  ) {
-
-    return `
-
-      <div class="mensaje-capturado">
-
-        <h3>
-          🕯️ ¡La Viudita capturada!
-        </h3>
-
-        <p>
-          Has desbloqueado su historia y audiolibro.
-        </p>
-
-      </div>
-
-
-      ${crearAudiolibro(tipo)}
-
-
-      <div class="historia-leyenda">
-
-        <h3>
-          La Leyenda de La Viudita
-        </h3>
-
-
-        <p>
-
-          En las antiguas noches de Santa Cruz
-          se contaba la historia de una misteriosa
-          mujer conocida como La Viudita.
-
-        </p>
-
-        <br>
-
-
-        <p>
-
-          No era simplemente una aparición aterradora.
-
-        </p>
-
-        <br>
-
-
-        <p>
-
-          La tradición decía que solía aparecer
-          especialmente ante hombres trasnochadores,
-          parranderos o aquellos que recorrían
-          las calles durante la noche buscando
-          conquistas amorosas.
-
-        </p>
-
-        <br>
-
-
-        <p>
-
-          En medio de la oscuridad aparecía
-          una misteriosa mujer.
-
-        </p>
-
-        <br>
-
-
-        <p>
-
-          Su presencia resultaba irresistible
-          para quien la encontraba.
-
-        </p>
-
-        <br>
-
-
-        <p>
-
-          Bajo una especie de encantamiento,
-          el hombre aceptaba acompañarla
-          sin sospechar lo que estaba
-          a punto de suceder.
-
-        </p>
-
-        <br>
-
-
-        <p>
-
-          Creía caminar junto a ella hacia
-          un lugar agradable, elegante
-          y confortable.
-
-        </p>
-
-        <br>
-
-
-        <p>
-
-          Todo parecía perfecto.
-
-        </p>
-
-        <br>
-
-
-        <p>
-
-          Pero el encantamiento no duraba para siempre.
-
-        </p>
-
-        <br>
-
-
-        <p>
-
-          Cuando finalmente recuperaba la conciencia,
-          descubría que la realidad era
-          completamente diferente.
-
-        </p>
-
-        <br>
-
-
-        <p>
-
-          Aquello que había imaginado como una
-          elegante estancia podía ser simplemente
-          un matorral lleno de espinas.
-
-        </p>
-
-        <br>
-
-
-        <p>
-
-          El cómodo lecho donde creía haber descansado
-          podía resultar ser un barrial,
-          un terreno abandonado
-          o cualquier lugar desagradable.
-
-        </p>
-
-        <br>
-
-
-        <p>
-
-          Y de aquella misteriosa mujer
-          ya no quedaba ninguna señal.
-
-        </p>
-
-        <br>
-
-
-        <p>
-
-          La Viudita había desaparecido sin dejar rastro.
-
-        </p>
-
-
-      </div>
-
-    `;
-
-  }
-
-
-  return `
-
-    <div class="mensaje-capturado">
-
-      <h3>
-        💧 ¡Jichi capturado!
-      </h3>
-
-      <p>
-        Has desbloqueado su historia y audiolibro.
-      </p>
-
-    </div>
-
-
-    ${crearAudiolibro(tipo)}
-
-
-    <div class="historia-leyenda">
-
-      <h3>
-        La Leyenda del Jichi
-      </h3>
-
-
-      <p>
-
-        Según antiguas tradiciones compartidas
-        por pueblos del oriente boliviano,
-        las lagunas, pozas, charcos y madrejones
-        no eran solamente depósitos de agua.
-
-      </p>
-
-      <br>
-
-
-      <p>
-
-        En algunos de ellos podía habitar
-        un misterioso ser sobrenatural
-        conocido como el Jichi.
-
-      </p>
-
-      <br>
-
-
-      <p>
-
-        El Jichi era considerado
-        el guardián de las aguas.
-
-      </p>
-
-      <br>
-
-
-      <p>
-
-        Se lo describía como una criatura extraña,
-        difícil de comparar con cualquier animal
-        conocido.
-
-      </p>
-
-      <br>
-
-
-      <p>
-
-        Su cuerpo era alargado,
-        con características que recordaban
-        a una enorme culebra y,
-        al mismo tiempo, a un saurio.
-
-      </p>
-
-      <br>
-
-
-      <p>
-
-        Su apariencia podía confundirse con el agua,
-        haciendo muy difícil poder observarlo.
-
-      </p>
-
-      <br>
-
-
-      <p>
-
-        Mientras el Jichi permanecía en su morada,
-        el agua se conservaba.
-
-      </p>
-
-      <br>
-
-
-      <p>
-
-        Por esta razón, las personas debían respetar
-        el lugar donde habitaba.
-
-        No debían desperdiciar el agua
-        ni destruir la vegetación que crecía
-        alrededor de la laguna.
-
-      </p>
-
-      <br>
-
-
-      <p>
-
-        Si las personas abusaban de aquellos recursos
-        o destruían su entorno,
-        el Jichi podía molestarse.
-
-      </p>
-
-      <br>
-
-
-      <p>
-
-        Entonces el guardián abandonaba su morada.
-
-      </p>
-
-      <br>
-
-
-      <p>
-
-        Después de su partida,
-        el nivel del agua comenzaba lentamente
-        a disminuir hasta terminar por agotarse.
-
-      </p>
-
-      <br>
-
-
-      <p>
-
-        De generación en generación quedó
-        una sencilla advertencia:
-
-      </p>
-
-      <br>
-
-
-      <p>
-
-        <strong>
-
-          Mientras el Jichi permanezca,
-          el agua permanecerá.
-
-          Pero si el Jichi se marcha,
-          el agua también.
-
-        </strong>
-
-      </p>
-
-
-    </div>
-
-  `;
-
-}
-
+// ============================================================
+// CONFIGURAR AUDIOLIBRO
+// ============================================================
 
 function configurarAudiolibro(
   tipo
@@ -1770,10 +1224,13 @@ function configurarAudiolibro(
 
 
   botones.forEach(
+
     boton => {
 
       boton.addEventListener(
+
         'click',
+
         () => {
 
           const idioma =
@@ -1794,6 +1251,7 @@ function configurarAudiolibro(
 
 
           botones.forEach(
+
             otro => {
 
               otro.classList.remove(
@@ -1801,6 +1259,7 @@ function configurarAudiolibro(
               );
 
             }
+
           );
 
 
@@ -1809,15 +1268,11 @@ function configurarAudiolibro(
           );
 
 
-          const nuevaRuta =
-            `/audio/${idioma}/${tipo}.mp3`;
-
-
           audio.pause();
 
 
           audio.src =
-            nuevaRuta;
+            `/audio/${idioma}/${tipo}.mp3`;
 
 
           audio.load();
@@ -1851,14 +1306,18 @@ function configurarAudiolibro(
           );
 
         }
+
       );
 
     }
+
   );
 
 
   audio.addEventListener(
+
     'error',
+
     () => {
 
       console.error(
@@ -1867,10 +1326,15 @@ function configurarAudiolibro(
       );
 
     }
+
   );
 
 }
 
+
+// ============================================================
+// MODELOS 3D
+// ============================================================
 
 function obtenerModelo(
   tipo
@@ -1890,13 +1354,18 @@ function prepararModelos(
   Object.keys(
     experiencias
   ).forEach(
+
     tipo => {
 
       const modelo =
-        obtenerModelo(tipo);
+        obtenerModelo(
+          tipo
+        );
 
 
-      if (!modelo) {
+      if (
+        !modelo
+      ) {
 
         return;
 
@@ -1923,10 +1392,15 @@ function prepararModelos(
       }
 
     }
+
   );
 
 }
 
+
+// ============================================================
+// CARGAR MODELO
+// ============================================================
 
 function cargarModelo(
   tipo
@@ -1937,15 +1411,21 @@ function cargarModelo(
 
 
   const modelo =
-    obtenerModelo(tipo);
+    obtenerModelo(
+      tipo
+    );
 
 
-  if (!modelo) {
+  if (
+    !modelo
+  ) {
 
     return Promise.reject(
+
       new Error(
         `No existe ${config.modeloId}`
       )
+
     );
 
   }
@@ -1967,7 +1447,12 @@ function cargarModelo(
 
 
   return new Promise(
-    (resolve, reject) => {
+
+    (
+      resolve,
+      reject
+    ) => {
+
 
       let terminado =
         false;
@@ -2031,9 +1516,11 @@ function cargarModelo(
 
 
           reject(
+
             new Error(
               `No se pudo cargar ${config.archivo}`
             )
+
           );
 
         };
@@ -2043,7 +1530,8 @@ function cargarModelo(
         'model-loaded',
         listo,
         {
-          once: true
+          once:
+            true
         }
       );
 
@@ -2052,7 +1540,8 @@ function cargarModelo(
         'model-error',
         error,
         {
-          once: true
+          once:
+            true
         }
       );
 
@@ -2070,11 +1559,14 @@ function cargarModelo(
 
 
       setTimeout(
+
         () => {
 
           if (
             !terminado &&
-            modelo.getObject3D('mesh')
+            modelo.getObject3D(
+              'mesh'
+            )
           ) {
 
             listo();
@@ -2082,14 +1574,21 @@ function cargarModelo(
           }
 
         },
+
         15000
+
       );
 
     }
+
   );
 
 }
 
+
+// ============================================================
+// INICIAR AR
+// ============================================================
 
 async function iniciarCamaraAR(
   tipo
@@ -2183,7 +1682,9 @@ async function iniciarCamaraAR(
 
 
     window.dispatchEvent(
-      new Event('resize')
+      new Event(
+        'resize'
+      )
     );
 
 
@@ -2268,16 +1769,22 @@ async function iniciarCamaraAR(
     arIniciando =
       false;
 
+
   }
 
 }
 
+
+// ============================================================
+// ESPERAR
+// ============================================================
 
 function esperar(
   tiempo
 ) {
 
   return new Promise(
+
     resolve => {
 
       setTimeout(
@@ -2286,14 +1793,20 @@ function esperar(
       );
 
     }
+
   );
 
 }
 
 
+// ============================================================
+// ESPERAR ESCENA
+// ============================================================
+
 function esperarEscena() {
 
   return new Promise(
+
     resolve => {
 
       if (
@@ -2308,22 +1821,33 @@ function esperarEscena() {
 
 
       escenaAR?.addEventListener(
+
         'loaded',
+
         resolve,
+
         {
-          once: true
+          once:
+            true
         }
+
       );
 
     }
+
   );
 
 }
 
 
+// ============================================================
+// TARGETS DE MINDAR
+// ============================================================
+
 Object.keys(
   experiencias
 ).forEach(
+
   tipo => {
 
     const config =
@@ -2345,8 +1869,14 @@ Object.keys(
     }
 
 
+    // ========================================================
+    // TARGET ENCONTRADO
+    // ========================================================
+
     target.addEventListener(
+
       'targetFound',
+
       () => {
 
         console.log(
@@ -2355,7 +1885,8 @@ Object.keys(
 
 
         if (
-          experienciaActiva !== tipo
+          experienciaActiva !==
+          tipo
         ) {
 
           return;
@@ -2395,11 +1926,13 @@ Object.keys(
 
         temporizadorCaptura =
           setTimeout(
+
             () => {
 
               if (
                 targetEncontrado &&
-                experienciaActiva === tipo
+                experienciaActiva ===
+                  tipo
               ) {
 
                 habilitarCaptura(
@@ -2409,19 +1942,29 @@ Object.keys(
               }
 
             },
+
             350
+
           );
 
       }
+
     );
 
 
+    // ========================================================
+    // TARGET PERDIDO
+    // ========================================================
+
     target.addEventListener(
+
       'targetLost',
+
       () => {
 
         if (
-          experienciaActiva !== tipo
+          experienciaActiva !==
+          tipo
         ) {
 
           return;
@@ -2461,11 +2004,17 @@ Object.keys(
         );
 
       }
+
     );
 
   }
+
 );
 
+
+// ============================================================
+// CAPTURAR
+// ============================================================
 
 btnCapturar?.addEventListener(
   'click',
@@ -2512,6 +2061,7 @@ function capturar() {
 
 
     setTimeout(
+
       () => {
 
         contenido.scrollIntoView({
@@ -2525,7 +2075,9 @@ function capturar() {
         });
 
       },
+
       200
+
     );
 
   }
@@ -2547,12 +2099,20 @@ function capturar() {
   }
 
 
+  // ==========================================================
+  // DESBLOQUEAR CHAT
+  // ==========================================================
+
   mostrarBotonChatFlotante(
     tipo
   );
 
 }
 
+
+// ============================================================
+// CERRAR AR
+// ============================================================
 
 btnCerrarAR?.addEventListener(
   'click',
@@ -2639,6 +2199,10 @@ function cerrarCamaraAR() {
 }
 
 
+// ============================================================
+// UI AR
+// ============================================================
+
 function actualizarMensaje(
   texto
 ) {
@@ -2715,141 +2279,6 @@ function deshabilitarCaptura() {
 }
 
 
-window.addEventListener(
-  'beforeunload',
-  () => {
-
-    try {
-
-      escenaAR
-        ?.systems[
-          'mindar-image-system'
-        ]
-        ?.stop();
-
-    } catch {
-
-    }
-
-  }
-);
-
-
-
-// ============================================================
-// CHAT FLOTANTE CON IA
-// ============================================================
-
-const CHAT_API_URL =
-  'https://leyendas-sc-xnww.vercel.app/api/chat-leyenda';
-
-
-
-
-      }
-    );
-
-
-  if (
-    vozCompatible
-  ) {
-
-    utterance.voice =
-      vozCompatible;
-
-  }
-
-
-  window.speechSynthesis.speak(
-    utterance
-  );
-
-}
-
-
-// ============================================================
-// IDIOMA SELECCIONADO EN AUDIOLIBRO = IDIOMA DEL CHAT
-// ============================================================
-
-document.addEventListener(
-  'click',
-  evento => {
-
-
-    const botonIdioma =
-      evento.target.closest(
-        '[data-audio-lang][data-audio-tipo]'
-      );
-
-
-    if (
-      !botonIdioma
-    ) {
-
-      return;
-
-    }
-
-
-    const tipo =
-      botonIdioma.dataset.audioTipo;
-
-
-    const idioma =
-      botonIdioma.dataset.audioLang;
-
-
-    if (
-      idiomasChat[tipo] !==
-      undefined
-    ) {
-
-      idiomasChat[tipo] =
-        idioma;
-
-    }
-
-  }
-);
-
-
-// ============================================================
-// AL CAMBIAR DE LEYENDA
-// ============================================================
-
-botonesLeyenda.forEach(
-  boton => {
-
-    boton.addEventListener(
-      'click',
-      () => {
-
-
-        cerrarChat();
-
-
-        ocultarBotonChatFlotante();
-
-
-        chatTipoActivo =
-          null;
-
-
-      }
-    );
-
-  }
-);
-
-
-// ============================================================
-// CREAR CHAT AL CARGAR
-// ============================================================
-
-crearInterfazChat();
-
-
-actualizarDisponibilidadMicrofono();
 // ============================================================
 // CHAT FLOTANTE CON IA
 // ============================================================
@@ -2859,119 +2288,123 @@ const CHAT_API_URL =
 
 
 // ============================================================
-// PERSONAJES DEL CHAT
-// ============================================================
-
-const chatPersonajes = {
-
-  carreton: {
-    nombre: 'El Carretón de la Otra Vida',
-    nombreCorto: 'El Carretón',
-    emoji: '☠️',
-    imagen: null,
-    saludo: 'Soy El Carretón de la Otra Vida. Puedes preguntarme sobre mi leyenda, mis apariciones y mi relación con las antiguas epidemias de Santa Cruz.'
-  },
-
-  guajojo: {
-    nombre: 'El Guajojó',
-    nombreCorto: 'El Guajojó',
-    emoji: '🪶',
-    imagen: null,
-    saludo: 'Soy El Guajojó. Puedes preguntarme sobre mi historia, mi transformación, mi amado o el origen de mi triste canto.'
-  },
-
-  duende: {
-    nombre: 'El Duende',
-    nombreCorto: 'El Duende',
-    emoji: '🌿',
-    imagen: null,
-    saludo: 'Soy El Duende. Puedes preguntarme sobre mis travesuras, el monte, los niños, mi sombrero de saó o las crines de los caballos.'
-  },
-
-  viudita: {
-    nombre: 'La Viudita',
-    nombreCorto: 'La Viudita',
-    emoji: '🕯️',
-    imagen: null,
-    saludo: 'Soy La Viudita. Puedes preguntarme sobre mis apariciones, los trasnochadores, mis encantamientos o las antiguas noches cruceñas.'
-  },
-
-  jichi: {
-    nombre: 'El Jichi',
-    nombreCorto: 'El Jichi',
-    emoji: '💧',
-    imagen: null,
-    saludo: 'Soy El Jichi. Puedes preguntarme sobre las aguas que protejo, mi apariencia, las lagunas o el cuidado de la naturaleza.'
-  }
-
-};
-
-
-// ============================================================
-// HISTORIALES
+// HISTORIALES INDEPENDIENTES
 // ============================================================
 
 const historialesChat = {
-  carreton: [],
-  guajojo: [],
-  duende: [],
-  viudita: [],
-  jichi: []
+
+  carreton:
+    [],
+
+  guajojo:
+    [],
+
+  duende:
+    [],
+
+  viudita:
+    [],
+
+  jichi:
+    []
+
 };
 
 
 // ============================================================
-// IDIOMAS DEL CHAT (SEPARADOS DEL AUDIOLIBRO)
+// IDIOMAS DEL MICRÓFONO
+//
+// IMPORTANTE:
+// ESTO NO TIENE NINGUNA RELACIÓN CON EL AUDIOLIBRO.
 // ============================================================
 
 const idiomasChatInfo = {
 
   es: {
-    nombre: 'Español',
-    voz: 'es-BO',
-    bandera: '🇧🇴'
+    nombre:
+      'Español',
+
+    voz:
+      'es-BO',
+
+    bandera:
+      '🇧🇴'
   },
 
   en: {
-    nombre: 'English',
-    voz: 'en-US',
-    bandera: '🇺🇸'
+    nombre:
+      'English',
+
+    voz:
+      'en-US',
+
+    bandera:
+      '🇺🇸'
   },
 
   pt: {
-    nombre: 'Português',
-    voz: 'pt-BR',
-    bandera: '🇧🇷'
+    nombre:
+      'Português',
+
+    voz:
+      'pt-BR',
+
+    bandera:
+      '🇧🇷'
   },
 
   de: {
-    nombre: 'Deutsch',
-    voz: 'de-DE',
-    bandera: '🇩🇪'
+    nombre:
+      'Deutsch',
+
+    voz:
+      'de-DE',
+
+    bandera:
+      '🇩🇪'
   }
 
 };
 
 
-const idiomasChatActivos = {
-  carreton: 'es',
-  guajojo: 'es',
-  duende: 'es',
-  viudita: 'es',
-  jichi: 'es'
+const idiomasMicrofonoChat = {
+
+  carreton:
+    'es',
+
+  guajojo:
+    'es',
+
+  duende:
+    'es',
+
+  viudita:
+    'es',
+
+  jichi:
+    'es'
+
 };
 
 
 // ============================================================
-// ESTADO GENERAL DEL CHAT
+// ESTADO DEL CHAT
 // ============================================================
 
-let chatTipoActivo = null;
-let reconocimientoChat = null;
-let reconocimientoChatTipo = null;
-let chatEnviando = false;
-let ultimoModoEntradaChat = 'texto';
-let ultimoIdiomaPreguntaChat = 'es';
+let chatTipoActivo =
+  null;
+
+
+let reconocimientoChat =
+  null;
+
+
+let reconocimientoChatTipo =
+  null;
+
+
+let chatEnviando =
+  false;
 
 
 // ============================================================
@@ -2981,9 +2414,13 @@ let ultimoIdiomaPreguntaChat = 'es';
 function crearInterfazChat() {
 
   if (
-    document.getElementById('btn-chat-flotante')
+    document.getElementById(
+      'btn-chat-flotante'
+    )
   ) {
+
     return;
+
   }
 
 
@@ -2992,30 +2429,40 @@ function crearInterfazChat() {
   // ==========================================================
 
   const botonFlotante =
-    document.createElement('button');
+    document.createElement(
+      'button'
+    );
+
 
   botonFlotante.id =
     'btn-chat-flotante';
 
+
   botonFlotante.className =
     'btn-chat-flotante';
+
 
   botonFlotante.type =
     'button';
 
+
   botonFlotante.hidden =
     true;
 
+
   botonFlotante.setAttribute(
+
     'aria-label',
+
     'Abrir conversación con la leyenda'
+
   );
+
 
   botonFlotante.innerHTML = `
 
     <span
       class="btn-chat-flotante-emoji"
-      id="btn-chat-flotante-emoji"
       aria-hidden="true"
     >
       💬
@@ -3023,270 +2470,478 @@ function crearInterfazChat() {
 
   `;
 
+
   document.body.appendChild(
     botonFlotante
   );
 
 
   // ==========================================================
-  // MODAL / PANTALLA COMPLETA
+  // MODAL DEL CHAT
   // ==========================================================
 
   const modal =
-    document.createElement('div');
+    document.createElement(
+      'div'
+    );
+
 
   modal.id =
     'chat-modal';
 
+
   modal.className =
     'chat-modal';
 
+
   modal.hidden =
     true;
+
 
   modal.setAttribute(
     'role',
     'dialog'
   );
 
+
   modal.setAttribute(
     'aria-modal',
     'true'
   );
+
 
   modal.setAttribute(
     'aria-labelledby',
     'chat-modal-titulo'
   );
 
+
   modal.innerHTML = `
 
     <div class="chat-pantalla">
 
+
+      <!-- ====================================================
+           CABECERA
+           ==================================================== -->
+
       <header class="chat-barra-superior">
+
 
         <div class="chat-barra-contenido">
 
+
           <button
+
             id="btn-cerrar-chat"
+
             class="btn-cerrar-chat"
+
             type="button"
+
             aria-label="Volver a la leyenda"
+
             title="Volver"
+
           >
+
             ←
+
           </button>
+
 
           <div class="chat-identidad">
 
+
             <div
+
               id="chat-avatar-superior"
+
               class="chat-avatar-superior"
+
               aria-hidden="true"
+
             >
+
               🌿
+
             </div>
+
 
             <div class="chat-identidad-texto">
 
+
               <span class="chat-sobrelinea">
+
                 EXPERIENCIA INTERACTIVA
+
               </span>
 
+
               <h2 id="chat-modal-titulo">
+
                 Conversa con la leyenda
+
               </h2>
+
 
             </div>
 
+
           </div>
 
+
           <button
+
             id="btn-cerrar-chat-x"
+
             class="btn-cerrar-chat btn-cerrar-chat-x"
+
             type="button"
+
             aria-label="Cerrar chat"
+
             title="Cerrar chat"
+
           >
+
             ✕
+
           </button>
 
+
         </div>
+
 
       </header>
 
 
+      <!-- ====================================================
+           CUERPO
+           ==================================================== -->
+
       <main class="chat-cuerpo">
+
 
         <div class="chat-cuerpo-interior">
 
-          <!-- MENSAJES -->
+
+          <!-- ==================================================
+               MENSAJES
+               ================================================== -->
+
           <section
+
             id="chat-mensajes"
+
             class="chat-mensajes"
+
             aria-live="polite"
+
             aria-label="Conversación"
+
           >
+
           </section>
 
 
-          <!-- ZONA INFERIOR -->
+          <!-- ==================================================
+               ZONA INFERIOR
+               ================================================== -->
+
           <section class="chat-zona-inferior">
 
-            <!-- IMAGEN -->
+
+            <!-- ================================================
+                 IMAGEN DEL PERSONAJE
+                 ================================================ -->
+
             <div
+
               id="chat-zona-personaje"
+
               class="chat-zona-personaje"
+
             >
 
+
               <div
+
                 id="chat-personaje-placeholder"
+
                 class="chat-personaje-placeholder"
+
               >
 
+
                 <span
+
                   id="chat-personaje-emoji"
+
                   class="chat-personaje-emoji"
+
                   aria-hidden="true"
+
                 >
+
                   🌿
+
                 </span>
+
 
                 <strong
+
                   id="chat-personaje-nombre"
+
                 >
+
                   El Duende
+
                 </strong>
 
+
                 <span class="chat-personaje-aviso">
+
                   Imagen del personaje
+
                 </span>
+
 
               </div>
 
+
+              <!--
+                IMPORTANTE:
+                NO TIENE src="" PARA EVITAR
+                EL ÍCONO DE IMAGEN ROTA.
+              -->
+
               <img
+
                 id="chat-personaje-imagen"
+
                 class="chat-personaje-imagen"
-                src=""
+
                 alt=""
+
                 hidden
+
               >
+
 
             </div>
 
 
-            <!-- ESCRIBIR -->
+            <!-- ================================================
+                 CUADRO PARA ESCRIBIR
+                 ================================================ -->
+
             <div class="chat-compositor">
+
+
+              <!-- ==============================================
+                   IDIOMA SOLO DEL MICRÓFONO
+                   ============================================== -->
 
               <div class="chat-selector-superior">
 
+
                 <span class="chat-label-secundaria">
-                  Idioma del chat
+
+                  Idioma del micrófono
+
                 </span>
 
+
                 <div
+
                   id="chat-selector-idiomas"
+
                   class="chat-selector-idiomas"
+
                 >
 
+
                   <button
+
                     class="btn-chat-lang activo"
+
                     type="button"
+
                     data-chat-lang="es"
+
                   >
+
                     🇧🇴 ES
+
                   </button>
 
+
                   <button
+
                     class="btn-chat-lang"
+
                     type="button"
+
                     data-chat-lang="en"
+
                   >
+
                     🇺🇸 EN
+
                   </button>
 
+
                   <button
+
                     class="btn-chat-lang"
+
                     type="button"
+
                     data-chat-lang="pt"
+
                   >
+
                     🇧🇷 PT
+
                   </button>
 
+
                   <button
+
                     class="btn-chat-lang"
+
                     type="button"
+
                     data-chat-lang="de"
+
                   >
+
                     🇩🇪 DE
+
                   </button>
+
 
                 </div>
+
 
               </div>
 
 
               <label
+
                 id="chat-label-pregunta"
+
                 class="chat-label"
+
                 for="chat-input"
+
               >
+
                 Pregúntale al personaje
+
               </label>
 
+
               <textarea
+
                 id="chat-input"
+
                 class="chat-input"
-                rows="4"
+
+                rows="3"
+
                 maxlength="1000"
+
                 placeholder="Escribe tu pregunta..."
+
               ></textarea>
+
 
               <div class="chat-compositor-pie">
 
+
                 <div
+
                   id="chat-estado"
+
                   class="chat-estado"
+
                   aria-live="polite"
+
                 >
+
                 </div>
+
 
                 <div class="chat-acciones">
 
-                  <button
-                    id="btn-chat-microfono"
-                    class="btn-chat-microfono"
-                    type="button"
-                    aria-label="Hablar por micrófono"
-                    title="Hablar por micrófono"
-                  >
-                    🎙️
-                  </button>
 
                   <button
-                    id="btn-chat-enviar"
-                    class="btn-chat-enviar"
+
+                    id="btn-chat-microfono"
+
+                    class="btn-chat-microfono"
+
                     type="button"
+
+                    aria-label="Hablar por micrófono"
+
+                    title="Hablar por micrófono"
+
                   >
-                    <span>Enviar</span>
-                    <span aria-hidden="true">➤</span>
+
+                    🎙️
+
                   </button>
+
+
+                  <button
+
+                    id="btn-chat-enviar"
+
+                    class="btn-chat-enviar"
+
+                    type="button"
+
+                  >
+
+
+                    <span>
+                      Enviar
+                    </span>
+
+
+                    <span aria-hidden="true">
+                      ➤
+                    </span>
+
+
+                  </button>
+
 
                 </div>
 
+
               </div>
+
 
             </div>
 
+
           </section>
+
 
         </div>
 
+
       </main>
+
 
     </div>
 
   `;
+
 
   document.body.appendChild(
     modal
@@ -3294,118 +2949,211 @@ function crearInterfazChat() {
 
 
   // ==========================================================
-  // EVENTOS
+  // ABRIR CHAT
   // ==========================================================
 
   botonFlotante.addEventListener(
+
     'click',
+
     () => {
 
-      if (chatTipoActivo) {
-        abrirChat(chatTipoActivo);
+      if (
+        chatTipoActivo
+      ) {
+
+        abrirChat(
+          chatTipoActivo
+        );
+
       }
 
     }
+
   );
 
+
+  // ==========================================================
+  // CERRAR
+  // ==========================================================
+
   document
-    .getElementById('btn-cerrar-chat')
+    .getElementById(
+      'btn-cerrar-chat'
+    )
     ?.addEventListener(
       'click',
       cerrarChat
     );
 
+
   document
-    .getElementById('btn-cerrar-chat-x')
+    .getElementById(
+      'btn-cerrar-chat-x'
+    )
     ?.addEventListener(
       'click',
       cerrarChat
     );
 
+
+  // ==========================================================
+  // ENVIAR CON BOTÓN
+  // ==========================================================
+
   document
-    .getElementById('btn-chat-enviar')
+    .getElementById(
+      'btn-chat-enviar'
+    )
     ?.addEventListener(
+
       'click',
+
       () => {
+
         enviarPreguntaChat();
+
       }
+
     );
 
+
+  // ==========================================================
+  // MICRÓFONO
+  // ==========================================================
+
   document
-    .getElementById('chat-input')
+    .getElementById(
+      'btn-chat-microfono'
+    )
     ?.addEventListener(
+      'click',
+      usarMicrofonoChat
+    );
+
+
+  // ==========================================================
+  // ENTER = ENVIAR
+  // SHIFT + ENTER = NUEVA LÍNEA
+  // ==========================================================
+
+  document
+    .getElementById(
+      'chat-input'
+    )
+    ?.addEventListener(
+
       'keydown',
+
       evento => {
 
         if (
           evento.key === 'Enter' &&
           !evento.shiftKey
         ) {
+
           evento.preventDefault();
+
+
           enviarPreguntaChat();
+
         }
 
       }
+
     );
 
-  document
-    .getElementById('btn-chat-microfono')
-    ?.addEventListener(
-      'click',
-      usarMicrofonoChat
-    );
+
+  // ==========================================================
+  // SELECTOR DEL IDIOMA DEL MICRÓFONO
+  // ==========================================================
 
   document
-    .getElementById('chat-selector-idiomas')
+    .getElementById(
+      'chat-selector-idiomas'
+    )
     ?.addEventListener(
+
       'click',
+
       evento => {
 
         const boton =
-          evento.target.closest('[data-chat-lang]');
+          evento.target.closest(
+            '[data-chat-lang]'
+          );
 
-        if (!boton || !chatTipoActivo) {
+
+        if (
+          !boton ||
+          !chatTipoActivo
+        ) {
+
           return;
+
         }
+
 
         const idioma =
           boton.dataset.chatLang;
 
-        if (!idiomasChatInfo[idioma]) {
+
+        if (
+          !idiomasChatInfo[
+            idioma
+          ]
+        ) {
+
           return;
+
         }
 
-        idiomasChatActivos[chatTipoActivo] =
+
+        idiomasMicrofonoChat[
+          chatTipoActivo
+        ] =
           idioma;
+
 
         renderizarSelectorIdiomaChat(
           chatTipoActivo
         );
 
+
         actualizarEstadoChat(
-          `Idioma del chat: ${idiomasChatInfo[idioma].bandera} ${idiomasChatInfo[idioma].nombre}`,
+
+          `Micrófono: ${idiomasChatInfo[idioma].bandera} ${idiomasChatInfo[idioma].nombre}`,
+
           'aviso'
+
         );
 
       }
+
     );
 
-  document.addEventListener(
-    'keydown',
-    evento => {
 
-      const modalActual =
-        document.getElementById('chat-modal');
+  // ==========================================================
+  // ESCAPE EN PC
+  // ==========================================================
+
+  document.addEventListener(
+
+    'keydown',
+
+    evento => {
 
       if (
         evento.key === 'Escape' &&
-        modalActual &&
-        !modalActual.hidden
+        !modal.hidden
       ) {
+
         cerrarChat();
+
       }
 
     }
+
   );
 
 }
@@ -3415,37 +3163,47 @@ function crearInterfazChat() {
 // MOSTRAR BOTÓN FLOTANTE
 // ============================================================
 
-function mostrarBotonChatFlotante(tipo) {
+function mostrarBotonChatFlotante(
+  tipo
+) {
 
   crearInterfazChat();
 
+
   const personaje =
-    chatPersonajes[tipo];
+    experiencias[tipo];
+
 
   const boton =
-    document.getElementById('btn-chat-flotante');
+    document.getElementById(
+      'btn-chat-flotante'
+    );
 
-  const emoji =
-    document.getElementById('btn-chat-flotante-emoji');
 
-  if (!personaje || !boton) {
+  if (
+    !personaje ||
+    !boton
+  ) {
+
     return;
+
   }
+
 
   chatTipoActivo =
     tipo;
 
-  if (emoji) {
-    emoji.textContent =
-      personaje.emoji;
-  }
 
   boton.hidden =
     false;
 
+
   boton.setAttribute(
+
     'aria-label',
+
     `Hablar con ${personaje.nombre}`
+
   );
 
 }
@@ -3458,11 +3216,18 @@ function mostrarBotonChatFlotante(tipo) {
 function ocultarBotonChatFlotante() {
 
   const boton =
-    document.getElementById('btn-chat-flotante');
+    document.getElementById(
+      'btn-chat-flotante'
+    );
 
-  if (boton) {
+
+  if (
+    boton
+  ) {
+
     boton.hidden =
       true;
+
   }
 
 }
@@ -3472,51 +3237,104 @@ function ocultarBotonChatFlotante() {
 // ABRIR CHAT
 // ============================================================
 
-function abrirChat(tipo) {
+function abrirChat(
+  tipo
+) {
 
   crearInterfazChat();
 
+
   const personaje =
-    chatPersonajes[tipo];
+    experiencias[tipo];
+
 
   const modal =
-    document.getElementById('chat-modal');
+    document.getElementById(
+      'chat-modal'
+    );
 
-  if (!personaje || !modal) {
+
+  if (
+    !personaje ||
+    !modal
+  ) {
+
     return;
+
   }
+
 
   chatTipoActivo =
     tipo;
 
-  actualizarPersonajeChat(tipo);
-  renderizarSelectorIdiomaChat(tipo);
-  renderizarChat(tipo);
+
+  actualizarPersonajeChat(
+    tipo
+  );
+
+
+  renderizarSelectorIdiomaChat(
+    tipo
+  );
+
+
+  renderizarChat(
+    tipo
+  );
+
+
+  // ==========================================================
+  // PAUSAMOS AUDIOLIBRO
+  // ==========================================================
+
   pausarAudiosLeyendas();
 
-  if ('speechSynthesis' in window) {
-    window.speechSynthesis.cancel();
+
+  // ==========================================================
+  // DETENER CUALQUIER VOZ ANTERIOR
+  // ==========================================================
+
+  if (
+    'speechSynthesis' in window
+  ) {
+
+    window
+      .speechSynthesis
+      .cancel();
+
   }
+
 
   modal.hidden =
     false;
+
 
   document.body.classList.add(
     'chat-abierto'
   );
 
+
   document.body.style.overflow =
     'hidden';
 
+
   actualizarDisponibilidadMicrofono();
 
+
   setTimeout(
+
     () => {
+
       document
-        .getElementById('chat-input')
+        .getElementById(
+          'chat-input'
+        )
         ?.focus();
+
     },
+
     100
+
   );
 
 }
@@ -3529,24 +3347,41 @@ function abrirChat(tipo) {
 function cerrarChat() {
 
   const modal =
-    document.getElementById('chat-modal');
+    document.getElementById(
+      'chat-modal'
+    );
 
-  if (modal) {
+
+  if (
+    modal
+  ) {
+
     modal.hidden =
       true;
+
   }
+
 
   document.body.classList.remove(
     'chat-abierto'
   );
 
+
   document.body.style.overflow =
     '';
 
+
   detenerMicrofonoChat();
 
-  if ('speechSynthesis' in window) {
-    window.speechSynthesis.cancel();
+
+  if (
+    'speechSynthesis' in window
+  ) {
+
+    window
+      .speechSynthesis
+      .cancel();
+
   }
 
 }
@@ -3556,90 +3391,147 @@ function cerrarChat() {
 // ACTUALIZAR PERSONAJE DEL CHAT
 // ============================================================
 
-function actualizarPersonajeChat(tipo) {
+function actualizarPersonajeChat(
+  tipo
+) {
 
   const personaje =
-    chatPersonajes[tipo];
+    experiencias[tipo];
 
-  if (!personaje) {
-    return;
-  }
-
-  const titulo =
-    document.getElementById('chat-modal-titulo');
-
-  const avatar =
-    document.getElementById('chat-avatar-superior');
-
-  const emoji =
-    document.getElementById('chat-personaje-emoji');
-
-  const nombre =
-    document.getElementById('chat-personaje-nombre');
-
-  const label =
-    document.getElementById('chat-label-pregunta');
-
-  const placeholder =
-    document.getElementById('chat-personaje-placeholder');
-
-  const imagen =
-    document.getElementById('chat-personaje-imagen');
-
-  if (titulo) {
-    titulo.textContent =
-      `Conversa con ${personaje.nombre}`;
-  }
-
-  if (avatar) {
-    avatar.textContent =
-      personaje.emoji;
-  }
-
-  if (emoji) {
-    emoji.textContent =
-      personaje.emoji;
-  }
-
-  if (nombre) {
-    nombre.textContent =
-      personaje.nombreCorto;
-  }
-
-  if (label) {
-    label.textContent =
-      `Pregúntale a ${personaje.nombreCorto}`;
-  }
 
   if (
-    imagen &&
-    placeholder &&
-    personaje.imagen
+    !personaje
   ) {
-    imagen.src =
-      personaje.imagen;
 
-    imagen.alt =
-      personaje.nombre;
+    return;
+
+  }
+
+
+  const titulo =
+    document.getElementById(
+      'chat-modal-titulo'
+    );
+
+
+  const avatar =
+    document.getElementById(
+      'chat-avatar-superior'
+    );
+
+
+  const emoji =
+    document.getElementById(
+      'chat-personaje-emoji'
+    );
+
+
+  const nombre =
+    document.getElementById(
+      'chat-personaje-nombre'
+    );
+
+
+  const label =
+    document.getElementById(
+      'chat-label-pregunta'
+    );
+
+
+  const placeholder =
+    document.getElementById(
+      'chat-personaje-placeholder'
+    );
+
+
+  const imagen =
+    document.getElementById(
+      'chat-personaje-imagen'
+    );
+
+
+  if (
+    titulo
+  ) {
+
+    titulo.textContent =
+      `Conversa con ${personaje.nombre}`;
+
+  }
+
+
+  if (
+    avatar
+  ) {
+
+    avatar.textContent =
+      personaje.emoji;
+
+  }
+
+
+  if (
+    emoji
+  ) {
+
+    emoji.textContent =
+      personaje.emoji;
+
+  }
+
+
+  if (
+    nombre
+  ) {
+
+    nombre.textContent =
+      personaje.nombreCorto;
+
+  }
+
+
+  if (
+    label
+  ) {
+
+    label.textContent =
+      `Pregúntale a ${personaje.nombreCorto}`;
+
+  }
+
+
+  // ==========================================================
+  // TODAVÍA NO HAY IMÁGENES chat.jpg
+  //
+  // EVITAMOS src="" PARA QUE NO APAREZCA EL ÍCONO DE
+  // IMAGEN ROTA QUE VISTE EN LA CAPTURA.
+  // ==========================================================
+
+  if (
+    imagen
+  ) {
 
     imagen.hidden =
-      false;
+      true;
+
+
+    imagen.removeAttribute(
+      'src'
+    );
+
+
+    imagen.alt =
+      '';
+
+  }
+
+
+  if (
+    placeholder
+  ) {
 
     placeholder.hidden =
-      true;
-  } else {
-
-    if (imagen) {
-      imagen.hidden =
-        true;
-
-      imagen.removeAttribute('src');
-    }
-
-    if (placeholder) {
-      placeholder.hidden =
-        false;
-    }
+      false;
 
   }
 
@@ -3647,25 +3539,38 @@ function actualizarPersonajeChat(tipo) {
 
 
 // ============================================================
-// RENDERIZAR SELECTOR DE IDIOMA DEL CHAT
+// SELECTOR DEL IDIOMA DEL MICRÓFONO
 // ============================================================
 
-function renderizarSelectorIdiomaChat(tipo) {
+function renderizarSelectorIdiomaChat(
+  tipo
+) {
 
   const idiomaActivo =
-    idiomasChatActivos[tipo] || 'es';
+    idiomasMicrofonoChat[
+      tipo
+    ] || 'es';
+
 
   document
-    .querySelectorAll('.btn-chat-lang')
+    .querySelectorAll(
+      '.btn-chat-lang'
+    )
     .forEach(
+
       boton => {
 
         boton.classList.toggle(
+
           'activo',
-          boton.dataset.chatLang === idiomaActivo
+
+          boton.dataset.chatLang ===
+            idiomaActivo
+
         );
 
       }
+
     );
 
 }
@@ -3675,39 +3580,77 @@ function renderizarSelectorIdiomaChat(tipo) {
 // RENDERIZAR CHAT
 // ============================================================
 
-function renderizarChat(tipo) {
+function renderizarChat(
+  tipo
+) {
 
   const contenedor =
-    document.getElementById('chat-mensajes');
+    document.getElementById(
+      'chat-mensajes'
+    );
+
 
   const personaje =
-    chatPersonajes[tipo];
+    experiencias[tipo];
 
-  if (!contenedor || !personaje) {
+
+  if (
+    !contenedor ||
+    !personaje
+  ) {
+
     return;
+
   }
+
 
   contenedor.innerHTML =
     '';
 
+
+  // ==========================================================
+  // SALUDO
+  // ==========================================================
+
   agregarMensajeVisualChat(
+
     'assistant',
-    personaje.saludo,
-    false
+
+    personaje.saludoChat,
+
+    false,
+
+    'es'
+
   );
 
-  historialesChat[tipo]
-    .forEach(
-      mensaje => {
 
-        agregarMensajeVisualChat(
-          mensaje.role,
-          mensaje.content,
-          false
-        );
+  // ==========================================================
+  // HISTORIAL
+  // ==========================================================
 
-      }
-    );
+  historialesChat[
+    tipo
+  ].forEach(
+
+    mensaje => {
+
+      agregarMensajeVisualChat(
+
+        mensaje.role,
+
+        mensaje.content,
+
+        false,
+
+        mensaje.idioma || 'es'
+
+      );
+
+    }
+
+  );
+
 
   desplazarChatAlFinal();
 
@@ -3719,194 +3662,545 @@ function renderizarChat(tipo) {
 // ============================================================
 
 function agregarMensajeVisualChat(
+
   role,
+
   texto,
-  desplazar = true
+
+  desplazar = true,
+
+  idiomaMensaje = 'es'
+
 ) {
 
-  const tipo =
-    chatTipoActivo;
-
   const personaje =
-    chatPersonajes[tipo];
+    experiencias[
+      chatTipoActivo
+    ];
+
 
   const contenedor =
-    document.getElementById('chat-mensajes');
+    document.getElementById(
+      'chat-mensajes'
+    );
+
 
   if (
     !personaje ||
     !contenedor ||
     !texto
   ) {
+
     return;
+
   }
 
+
   const mensaje =
-    document.createElement('article');
+    document.createElement(
+      'article'
+    );
+
 
   mensaje.className =
+
     role === 'user'
+
       ? 'chat-mensaje chat-mensaje-usuario'
+
       : 'chat-mensaje chat-mensaje-personaje';
 
+
+  // ==========================================================
+  // AUTOR
+  // ==========================================================
+
   const autor =
-    document.createElement('div');
+    document.createElement(
+      'div'
+    );
+
 
   autor.className =
     'chat-autor';
 
+
   autor.textContent =
+
     role === 'user'
+
       ? 'Tú'
+
       : `${personaje.emoji} ${personaje.nombreCorto}`;
 
+
+  // ==========================================================
+  // BURBUJA
+  // ==========================================================
+
   const burbuja =
-    document.createElement('div');
+    document.createElement(
+      'div'
+    );
+
 
   burbuja.className =
     'chat-burbuja';
 
+
   burbuja.textContent =
     texto;
 
-  mensaje.appendChild(autor);
-  mensaje.appendChild(burbuja);
 
-  if (role === 'assistant') {
+  mensaje.appendChild(
+    autor
+  );
+
+
+  mensaje.appendChild(
+    burbuja
+  );
+
+
+  // ==========================================================
+  // BOTÓN ESCUCHAR
+  // ==========================================================
+
+  if (
+    role === 'assistant'
+  ) {
 
     const pie =
-      document.createElement('div');
+      document.createElement(
+        'div'
+      );
+
 
     pie.className =
       'chat-mensaje-pie';
 
+
     const escuchar =
-      document.createElement('button');
+      document.createElement(
+        'button'
+      );
+
 
     escuchar.className =
       'btn-escuchar-chat';
 
+
     escuchar.type =
       'button';
+
 
     escuchar.textContent =
       '🔊 Escuchar';
 
+
     escuchar.addEventListener(
+
       'click',
+
       () => {
+
         leerRespuestaChat(
+
           texto,
-          ultimoIdiomaPreguntaChat
+
+          idiomaMensaje
+
         );
+
       }
+
     );
 
-    pie.appendChild(escuchar);
-    mensaje.appendChild(pie);
+
+    pie.appendChild(
+      escuchar
+    );
+
+
+    mensaje.appendChild(
+      pie
+    );
 
   }
 
-  contenedor.appendChild(mensaje);
 
-  if (desplazar) {
+  contenedor.appendChild(
+    mensaje
+  );
+
+
+  if (
+    desplazar
+  ) {
+
     desplazarChatAlFinal();
+
   }
 
 }
 
 
 // ============================================================
-// DETECTAR IDIOMA DEL TEXTO ESCRITO
+// DETECTAR IDIOMA DEL TEXTO
 // ============================================================
 
 function detectarIdiomaPorTexto(
+
   texto,
+
   fallback = 'es'
+
 ) {
 
+  const original =
+    String(
+      texto || ''
+    );
+
+
   const limpio =
-    String(texto || '')
+
+    original
+
       .toLowerCase()
-      .normalize('NFD')
-      .replace(/[\u0300-\u036f]/g, '')
+
+      .normalize(
+        'NFD'
+      )
+
+      .replace(
+        /[\u0300-\u036f]/g,
+        ''
+      )
+
       .trim();
 
-  if (!limpio) {
+
+  if (
+    !limpio
+  ) {
+
     return fallback;
+
   }
 
-  const patrones = {
+
+  const puntajes = {
+
+    es:
+      0,
+
+    en:
+      0,
+
+    pt:
+      0,
+
+    de:
+      0
+
+  };
+
+
+  const vocabulario = {
 
     es: [
-      /\b(yo|que|como|donde|porque|historia|leyenda|apareces|apareciste|quien|eres|agua|monte|noche)\b/g
+
+      'que',
+
+      'por que',
+
+      'porque',
+
+      'como',
+
+      'donde',
+
+      'quien',
+
+      'cuando',
+
+      'eres',
+
+      'historia',
+
+      'leyenda',
+
+      'agua',
+
+      'noche',
+
+      'monte',
+
+      'caballos',
+
+      'aparecias',
+
+      'tu',
+
+      'tus'
+
     ],
+
 
     en: [
-      /\b(i|you|what|where|why|how|legend|story|forest|water|night|who|are)\b/g
+
+      'what',
+
+      'why',
+
+      'how',
+
+      'where',
+
+      'who',
+
+      'when',
+
+      'you',
+
+      'your',
+
+      'are',
+
+      'story',
+
+      'legend',
+
+      'water',
+
+      'night',
+
+      'forest',
+
+      'horse',
+
+      'horses'
+
     ],
+
 
     pt: [
-      /\b(eu|voce|voces|nao|porque|lenda|historia|floresta|agua|noite|quem|onde|como)\b/g
+
+      'porque',
+
+      'como',
+
+      'onde',
+
+      'quem',
+
+      'quando',
+
+      'voce',
+
+      'seu',
+
+      'sua',
+
+      'lenda',
+
+      'historia',
+
+      'agua',
+
+      'noite',
+
+      'floresta',
+
+      'cavalo'
+
     ],
 
+
     de: [
-      /\b(ich|du|was|wo|warum|wie|geschichte|legende|wasser|nacht|wald|wer|bist)\b/g
+
+      'was',
+
+      'warum',
+
+      'wie',
+
+      'wo',
+
+      'wer',
+
+      'wann',
+
+      'du',
+
+      'dein',
+
+      'deine',
+
+      'bist',
+
+      'geschichte',
+
+      'legende',
+
+      'wasser',
+
+      'nacht',
+
+      'wald',
+
+      'pferd'
+
     ]
 
   };
 
-  const puntajes = {
-    es: 0,
-    en: 0,
-    pt: 0,
-    de: 0
-  };
 
-  Object.entries(patrones)
-    .forEach(
-      ([idioma, lista]) => {
+  Object.entries(
+    vocabulario
+  ).forEach(
 
-        lista.forEach(
-          regex => {
+    (
+      [
+        idioma,
+        palabras
+      ]
+    ) => {
 
-            const coincidencias =
-              limpio.match(regex);
+      palabras.forEach(
 
-            if (coincidencias) {
-              puntajes[idioma] +=
-                coincidencias.length;
-            }
+        palabra => {
+
+          const patron =
+            new RegExp(
+
+              `(^|\\s|[¿?¡!.,;:])${palabra.replace(
+                / /g,
+                '\\s+'
+              )}($|\\s|[¿?¡!.,;:])`,
+
+              'i'
+
+            );
+
+
+          if (
+            patron.test(
+              limpio
+            )
+          ) {
+
+            puntajes[
+              idioma
+            ] +=
+              1;
 
           }
-        );
 
-      }
-    );
+        }
+
+      );
+
+    }
+
+  );
+
+
+  // ==========================================================
+  // PISTAS ADICIONALES
+  // ==========================================================
+
+  if (
+    /[¿¡]/.test(
+      original
+    )
+  ) {
+
+    puntajes.es +=
+      2;
+
+  }
+
+
+  if (
+    /\b(the|is|did|does|were|was)\b/i.test(
+      original
+    )
+  ) {
+
+    puntajes.en +=
+      2;
+
+  }
+
+
+  if (
+    /\b(der|die|das|und|ist|war)\b/i.test(
+      original
+    )
+  ) {
+
+    puntajes.de +=
+      2;
+
+  }
+
+
+  if (
+    /\b(não|você|vocês|uma|muito)\b/i.test(
+      original
+    )
+  ) {
+
+    puntajes.pt +=
+      2;
+
+  }
+
 
   let mejorIdioma =
     fallback;
 
+
   let mejorPuntaje =
-    -1;
+    0;
 
-  Object.entries(puntajes)
-    .forEach(
-      ([idioma, puntaje]) => {
 
-        if (puntaje > mejorPuntaje) {
-          mejorPuntaje =
-            puntaje;
+  Object.entries(
+    puntajes
+  ).forEach(
 
-          mejorIdioma =
-            idioma;
-        }
+    (
+      [
+        idioma,
+        puntaje
+      ]
+    ) => {
+
+      if (
+        puntaje >
+        mejorPuntaje
+      ) {
+
+        mejorPuntaje =
+          puntaje;
+
+
+        mejorIdioma =
+          idioma;
 
       }
-    );
+
+    }
+
+  );
+
 
   return mejorPuntaje > 0
+
     ? mejorIdioma
+
     : fallback;
 
 }
@@ -3924,193 +4218,428 @@ async function enviarPreguntaChat(
     chatEnviando ||
     !chatTipoActivo
   ) {
+
     return;
+
   }
 
-  const {
-    origen = 'texto',
-    idiomaForzado = null,
-    autoHablar = false
-  } = opciones;
+
+  const origen =
+    opciones.origen ||
+    'texto';
+
+
+  const idiomaReconocimiento =
+    opciones.idiomaReconocimiento ||
+    null;
+
+
+  const autoHablar =
+    Boolean(
+      opciones.autoHablar
+    );
+
 
   const tipo =
     chatTipoActivo;
 
+
   const personaje =
-    chatPersonajes[tipo];
+    experiencias[tipo];
+
 
   const input =
-    document.getElementById('chat-input');
+    document.getElementById(
+      'chat-input'
+    );
+
 
   const botonEnviar =
-    document.getElementById('btn-chat-enviar');
+    document.getElementById(
+      'btn-chat-enviar'
+    );
+
 
   const botonMicrofono =
-    document.getElementById('btn-chat-microfono');
+    document.getElementById(
+      'btn-chat-microfono'
+    );
+
 
   if (
     !personaje ||
     !input ||
     !botonEnviar
   ) {
+
     return;
+
   }
+
 
   const pregunta =
     input.value.trim();
 
-  if (!pregunta) {
+
+  // ==========================================================
+  // PREGUNTA VACÍA
+  // ==========================================================
+
+  if (
+    !pregunta
+  ) {
 
     actualizarEstadoChat(
+
       'Escribe una pregunta antes de enviarla.',
+
       'aviso'
+
     );
 
+
     input.focus();
+
+
     return;
 
   }
 
+
+  // ==========================================================
+  // IDIOMA
+  //
+  // MUY IMPORTANTE:
+  //
+  // EL IDIOMA DEL AUDIOLIBRO NO SE USA AQUÍ.
+  //
+  // TEXTO:
+  // DETECTAMOS EL IDIOMA DE LO QUE ESCRIBIÓ.
+  //
+  // MICRÓFONO:
+  // DETECTAMOS EL IDIOMA DEL TEXTO TRANSCRITO.
+  // EL SELECTOR DEL MICRÓFONO ES SOLO UNA AYUDA PARA
+  // SpeechRecognition.
+  // ==========================================================
+
+  const fallbackIdioma =
+
+    idiomaReconocimiento ||
+
+    idiomasMicrofonoChat[
+      tipo
+    ] ||
+
+    'es';
+
+
   const idiomaPregunta =
-    idiomaForzado ||
+
     detectarIdiomaPorTexto(
+
       pregunta,
-      idiomasChatActivos[tipo] || 'es'
+
+      fallbackIdioma
+
     );
 
-  ultimoModoEntradaChat =
-    origen;
 
-  ultimoIdiomaPreguntaChat =
-    idiomaPregunta;
+  // ==========================================================
+  // HISTORIAL PARA EL BACKEND
+  // ==========================================================
 
   const historialParaEnviar =
-    historialesChat[tipo].slice(-8);
 
-  historialesChat[tipo].push({
-    role: 'user',
-    content: pregunta
+    historialesChat[
+      tipo
+    ]
+
+      .slice(
+        -8
+      )
+
+      .map(
+        mensaje => ({
+
+          role:
+            mensaje.role,
+
+          content:
+            mensaje.content
+
+        })
+      );
+
+
+  // ==========================================================
+  // GUARDAR PREGUNTA
+  // ==========================================================
+
+  historialesChat[
+    tipo
+  ].push({
+
+    role:
+      'user',
+
+    content:
+      pregunta,
+
+    idioma:
+      idiomaPregunta
+
   });
 
+
   agregarMensajeVisualChat(
+
     'user',
-    pregunta
+
+    pregunta,
+
+    true,
+
+    idiomaPregunta
+
   );
+
 
   input.value =
     '';
 
+
   chatEnviando =
     true;
+
 
   botonEnviar.disabled =
     true;
 
-  if (botonMicrofono) {
+
+  if (
+    botonMicrofono
+  ) {
+
     botonMicrofono.disabled =
       true;
+
   }
 
+
   actualizarEstadoChat(
+
     `${personaje.emoji} ${personaje.nombreCorto} está pensando...`,
+
     'cargando'
+
   );
+
 
   try {
 
+
+    // ========================================================
+    // CONSULTAR BACKEND
+    // ========================================================
+
     const respuesta =
       await fetch(
+
         CHAT_API_URL,
+
         {
-          method: 'POST',
+
+          method:
+            'POST',
+
+
           headers: {
-            'Content-Type': 'application/json'
+
+            'Content-Type':
+              'application/json'
+
           },
-          body: JSON.stringify({
-            leyenda: tipo,
-            pregunta: pregunta,
-            historial: historialParaEnviar,
-            idioma_chat: idiomaPregunta,
-            origen_chat: origen
-          })
+
+
+          body:
+            JSON.stringify({
+
+              leyenda:
+                tipo,
+
+              pregunta:
+                pregunta,
+
+              historial:
+                historialParaEnviar,
+
+              idioma_chat:
+                idiomaPregunta,
+
+              origen_chat:
+                origen
+
+            })
+
         }
+
       );
 
-    let datos = {};
+
+    let datos =
+      {};
+
 
     try {
+
       datos =
         await respuesta.json();
+
     } catch {
-      // respuesta no JSON
+
+      // Respuesta no JSON.
+
     }
 
-    if (!respuesta.ok) {
+
+    if (
+      !respuesta.ok
+    ) {
+
       throw new Error(
+
         datos.error ||
+
         `Error ${respuesta.status}`
+
       );
+
     }
+
 
     const texto =
-      String(datos.respuesta || '').trim();
 
-    if (!texto) {
+      String(
+        datos.respuesta || ''
+      ).trim();
+
+
+    if (
+      !texto
+    ) {
+
       throw new Error(
         'El personaje no devolvió una respuesta.'
       );
+
     }
 
-    historialesChat[tipo].push({
-      role: 'assistant',
-      content: texto
+
+    // ========================================================
+    // GUARDAR RESPUESTA
+    // ========================================================
+
+    historialesChat[
+      tipo
+    ].push({
+
+      role:
+        'assistant',
+
+      content:
+        texto,
+
+      idioma:
+        idiomaPregunta
+
     });
 
+
+    // ========================================================
+    // MOSTRAR RESPUESTA
+    // ========================================================
+
     agregarMensajeVisualChat(
+
       'assistant',
-      texto
+
+      texto,
+
+      true,
+
+      idiomaPregunta
+
     );
+
 
     actualizarEstadoChat(
       '',
       ''
     );
 
+
+    // ========================================================
+    // SI HABLÓ POR MICRÓFONO,
+    // RESPONDER AUTOMÁTICAMENTE CON VOZ
+    // ========================================================
+
     if (
       autoHablar ||
       origen === 'voz'
     ) {
+
       leerRespuestaChat(
+
         texto,
+
         idiomaPregunta
+
       );
+
     }
+
 
   } catch (error) {
 
+
     console.error(
+
       '❌ Error en chat:',
+
       error
+
     );
+
 
     agregarMensajeSistemaChat(
+
       'No pude comunicarme con el personaje en este momento. Intenta nuevamente.'
+
     );
+
 
     actualizarEstadoChat(
+
       'Error de conexión con la IA.',
+
       'error'
+
     );
 
+
   } finally {
+
 
     chatEnviando =
       false;
 
+
     botonEnviar.disabled =
       false;
 
+
     actualizarDisponibilidadMicrofono();
+
 
     input.focus();
 
@@ -4123,25 +4652,44 @@ async function enviarPreguntaChat(
 // MENSAJE DEL SISTEMA
 // ============================================================
 
-function agregarMensajeSistemaChat(texto) {
+function agregarMensajeSistemaChat(
+  texto
+) {
 
   const contenedor =
-    document.getElementById('chat-mensajes');
+    document.getElementById(
+      'chat-mensajes'
+    );
 
-  if (!contenedor) {
+
+  if (
+    !contenedor
+  ) {
+
     return;
+
   }
 
+
   const mensaje =
-    document.createElement('div');
+    document.createElement(
+      'div'
+    );
+
 
   mensaje.className =
     'chat-mensaje-sistema';
 
+
   mensaje.textContent =
     texto;
 
-  contenedor.appendChild(mensaje);
+
+  contenedor.appendChild(
+    mensaje
+  );
+
+
   desplazarChatAlFinal();
 
 }
@@ -4152,27 +4700,44 @@ function agregarMensajeSistemaChat(texto) {
 // ============================================================
 
 function actualizarEstadoChat(
+
   texto,
+
   tipo
+
 ) {
 
   const estado =
-    document.getElementById('chat-estado');
+    document.getElementById(
+      'chat-estado'
+    );
 
-  if (!estado) {
+
+  if (
+    !estado
+  ) {
+
     return;
+
   }
+
 
   estado.textContent =
     texto || '';
 
+
   estado.className =
     'chat-estado';
 
-  if (tipo) {
+
+  if (
+    tipo
+  ) {
+
     estado.classList.add(
       `chat-estado-${tipo}`
     );
+
   }
 
 }
@@ -4185,17 +4750,26 @@ function actualizarEstadoChat(
 function desplazarChatAlFinal() {
 
   requestAnimationFrame(
+
     () => {
 
       const contenedor =
-        document.getElementById('chat-mensajes');
+        document.getElementById(
+          'chat-mensajes'
+        );
 
-      if (contenedor) {
+
+      if (
+        contenedor
+      ) {
+
         contenedor.scrollTop =
           contenedor.scrollHeight;
+
       }
 
     }
+
   );
 
 }
@@ -4208,17 +4782,25 @@ function desplazarChatAlFinal() {
 function pausarAudiosLeyendas() {
 
   document
-    .querySelectorAll('audio')
+    .querySelectorAll(
+      'audio'
+    )
     .forEach(
+
       audio => {
 
         try {
+
           audio.pause();
+
         } catch {
-          // nada
+
+          // Nada
+
         }
 
       }
+
     );
 
 }
@@ -4231,27 +4813,41 @@ function pausarAudiosLeyendas() {
 function actualizarDisponibilidadMicrofono() {
 
   const boton =
-    document.getElementById('btn-chat-microfono');
+    document.getElementById(
+      'btn-chat-microfono'
+    );
 
-  if (!boton) {
+
+  if (
+    !boton
+  ) {
+
     return;
+
   }
+
 
   const Reconocimiento =
+
     window.SpeechRecognition ||
+
     window.webkitSpeechRecognition;
 
+
   boton.disabled =
+
     !Reconocimiento ||
+
     chatEnviando;
 
-  if (!Reconocimiento) {
-    boton.title =
-      'El reconocimiento de voz no está disponible en este navegador.';
-  } else {
-    boton.title =
-      'Hablar por micrófono';
-  }
+
+  boton.title =
+
+    Reconocimiento
+
+      ? 'Hablar por micrófono'
+
+      : 'El reconocimiento de voz no está disponible en este navegador.';
 
 }
 
@@ -4266,18 +4862,30 @@ function usarMicrofonoChat() {
     !chatTipoActivo ||
     chatEnviando
   ) {
+
     return;
+
   }
 
+
   const Reconocimiento =
+
     window.SpeechRecognition ||
+
     window.webkitSpeechRecognition;
 
+
   const input =
-    document.getElementById('chat-input');
+    document.getElementById(
+      'chat-input'
+    );
+
 
   const boton =
-    document.getElementById('btn-chat-microfono');
+    document.getElementById(
+      'btn-chat-microfono'
+    );
+
 
   if (
     !Reconocimiento ||
@@ -4286,153 +4894,319 @@ function usarMicrofonoChat() {
   ) {
 
     actualizarEstadoChat(
+
       'El reconocimiento de voz no está disponible en este navegador.',
+
       'aviso'
+
     );
 
+
     return;
+
   }
 
-  if (reconocimientoChat) {
+
+  // ==========================================================
+  // SI YA ESTÁ ESCUCHANDO,
+  // APRETAR DE NUEVO LO DETIENE
+  // ==========================================================
+
+  if (
+    reconocimientoChat
+  ) {
 
     const mismoTipo =
-      reconocimientoChatTipo === chatTipoActivo;
+
+      reconocimientoChatTipo ===
+      chatTipoActivo;
+
 
     detenerMicrofonoChat();
 
-    if (mismoTipo) {
+
+    if (
+      mismoTipo
+    ) {
+
       return;
+
     }
 
   }
 
+
   const tipo =
     chatTipoActivo;
 
-  const idiomaChat =
-    idiomasChatActivos[tipo] || 'es';
+
+  const idiomaMicrofono =
+
+    idiomasMicrofonoChat[
+      tipo
+    ] ||
+
+    'es';
+
 
   const configIdioma =
-    idiomasChatInfo[idiomaChat] || idiomasChatInfo.es;
+
+    idiomasChatInfo[
+      idiomaMicrofono
+    ] ||
+
+    idiomasChatInfo.es;
+
 
   const reconocimiento =
     new Reconocimiento();
 
+
   reconocimiento.lang =
     configIdioma.voz;
+
 
   reconocimiento.interimResults =
     false;
 
+
   reconocimiento.continuous =
     false;
+
 
   reconocimiento.maxAlternatives =
     1;
 
+
   reconocimientoChat =
     reconocimiento;
+
 
   reconocimientoChatTipo =
     tipo;
 
+
+  // ==========================================================
+  // EMPEZAR
+  // ==========================================================
+
   reconocimiento.onstart =
     () => {
 
-      boton.classList.add('escuchando');
-      boton.textContent = '⏹️';
+
+      boton.classList.add(
+        'escuchando'
+      );
+
+
+      boton.textContent =
+        '⏹️';
+
 
       actualizarEstadoChat(
+
         `Escuchando en ${configIdioma.bandera} ${configIdioma.nombre}...`,
+
         'cargando'
+
       );
 
     };
+
+
+  // ==========================================================
+  // RESULTADO
+  // ==========================================================
 
   reconocimiento.onresult =
     evento => {
 
+
       const texto =
-        evento.results?.[0]?.[0]?.transcript;
 
-      if (texto) {
+        evento
+          .results?.[0]?.[0]
+          ?.transcript;
 
-        input.value =
-          texto;
 
-        input.focus();
+      if (
+        !texto
+      ) {
 
-        input.setSelectionRange(
-          input.value.length,
-          input.value.length
-        );
-
-        enviarPreguntaChat({
-          origen: 'voz',
-          idiomaForzado: idiomaChat,
-          autoHablar: true
-        });
+        return;
 
       }
 
+
+      input.value =
+        texto;
+
+
+      input.focus();
+
+
+      input.setSelectionRange(
+
+        input.value.length,
+
+        input.value.length
+
+      );
+
+
+      // ======================================================
+      // IMPORTANTE:
+      //
+      // 1. HABLA
+      // 2. SE TRANSCRIBE
+      // 3. SE ENVÍA SOLO
+      // 4. LA IA RESPONDE
+      // 5. LA RESPUESTA SE ESCUCHA AUTOMÁTICAMENTE
+      // ======================================================
+
+      enviarPreguntaChat({
+
+        origen:
+          'voz',
+
+        idiomaReconocimiento:
+          idiomaMicrofono,
+
+        autoHablar:
+          true
+
+      });
+
     };
+
+
+  // ==========================================================
+  // ERROR
+  // ==========================================================
 
   reconocimiento.onerror =
     evento => {
 
+
       let mensaje =
+
         'No pude escuchar la pregunta. Intenta nuevamente.';
 
+
       if (
-        evento.error === 'not-allowed' ||
-        evento.error === 'service-not-allowed'
+
+        evento.error ===
+          'not-allowed' ||
+
+        evento.error ===
+          'service-not-allowed'
+
       ) {
+
         mensaje =
+
           'Debes permitir el acceso al micrófono para utilizar esta función.';
+
       }
 
-      if (evento.error === 'no-speech') {
+
+      if (
+        evento.error ===
+        'no-speech'
+      ) {
+
         mensaje =
+
           'No detecté ninguna voz. Intenta hablar más cerca del micrófono.';
+
       }
+
 
       actualizarEstadoChat(
+
         mensaje,
+
         'error'
+
       );
 
     };
 
+
+  // ==========================================================
+  // FINALIZAR
+  // ==========================================================
+
   reconocimiento.onend =
     () => {
 
-      boton.classList.remove('escuchando');
-      boton.textContent = '🎙️';
 
-      if (reconocimientoChat === reconocimiento) {
-        reconocimientoChat = null;
-        reconocimientoChatTipo = null;
-      }
+      boton.classList.remove(
+        'escuchando'
+      );
 
-      const estado =
-        document.getElementById('chat-estado');
+
+      boton.textContent =
+        '🎙️';
+
 
       if (
-        estado?.classList.contains('chat-estado-cargando') &&
-        !chatEnviando
+        reconocimientoChat ===
+        reconocimiento
       ) {
-        actualizarEstadoChat('', '');
+
+        reconocimientoChat =
+          null;
+
+
+        reconocimientoChatTipo =
+          null;
+
+      }
+
+
+      const estado =
+        document.getElementById(
+          'chat-estado'
+        );
+
+
+      if (
+
+        estado
+          ?.classList
+          .contains(
+            'chat-estado-cargando'
+          ) &&
+
+        !chatEnviando
+
+      ) {
+
+        actualizarEstadoChat(
+          '',
+          ''
+        );
+
       }
 
     };
 
+
   try {
+
     reconocimiento.start();
+
   } catch (error) {
+
     console.warn(
+
       'No se pudo iniciar el micrófono:',
+
       error
+
     );
+
   }
 
 }
@@ -4444,28 +5218,49 @@ function usarMicrofonoChat() {
 
 function detenerMicrofonoChat() {
 
-  if (reconocimientoChat) {
+  if (
+    reconocimientoChat
+  ) {
 
     try {
+
       reconocimientoChat.stop();
+
     } catch {
-      // nada
+
+      // Nada
+
     }
 
   }
 
+
   reconocimientoChat =
     null;
+
 
   reconocimientoChatTipo =
     null;
 
-  const boton =
-    document.getElementById('btn-chat-microfono');
 
-  if (boton) {
-    boton.classList.remove('escuchando');
-    boton.textContent = '🎙️';
+  const boton =
+    document.getElementById(
+      'btn-chat-microfono'
+    );
+
+
+  if (
+    boton
+  ) {
+
+    boton.classList.remove(
+      'escuchando'
+    );
+
+
+    boton.textContent =
+      '🎙️';
+
   }
 
 }
@@ -4476,88 +5271,165 @@ function detenerMicrofonoChat() {
 // ============================================================
 
 function leerRespuestaChat(
+
   texto,
+
   idioma = 'es'
+
 ) {
 
-  if (!('speechSynthesis' in window)) {
+  if (
+    !(
+      'speechSynthesis'
+      in window
+    )
+  ) {
 
     actualizarEstadoChat(
+
       'La lectura en voz alta no está disponible en este navegador.',
+
       'aviso'
+
     );
 
+
     return;
+
   }
 
-  window.speechSynthesis.cancel();
+
+  // ==========================================================
+  // DETENER VOZ ANTERIOR
+  // ==========================================================
+
+  window
+    .speechSynthesis
+    .cancel();
+
 
   const configIdioma =
-    idiomasChatInfo[idioma] || idiomasChatInfo.es;
+
+    idiomasChatInfo[
+      idioma
+    ] ||
+
+    idiomasChatInfo.es;
+
 
   const utterance =
-    new SpeechSynthesisUtterance(texto);
+
+    new SpeechSynthesisUtterance(
+      texto
+    );
+
 
   utterance.lang =
     configIdioma.voz;
 
+
   utterance.rate =
     0.96;
+
 
   utterance.pitch =
     1;
 
+
+  // ==========================================================
+  // BUSCAR VOZ DEL IDIOMA
+  // ==========================================================
+
   const voces =
-    window.speechSynthesis.getVoices();
+
+    window
+      .speechSynthesis
+      .getVoices();
+
 
   const prefijo =
+
     utterance.lang
-      .split('-')[0]
+
+      .split(
+        '-'
+      )[0]
+
       .toLowerCase();
 
+
   const vozCompatible =
+
     voces.find(
+
       voz =>
-        String(voz.lang || '')
+
+        String(
+          voz.lang || ''
+        )
+
           .toLowerCase()
-          .startsWith(prefijo)
+
+          .startsWith(
+            prefijo
+          )
+
     );
 
-  if (vozCompatible) {
+
+  if (
+    vozCompatible
+  ) {
+
     utterance.voice =
       vozCompatible;
+
   }
 
-  window.speechSynthesis.speak(utterance);
+
+  window
+    .speechSynthesis
+    .speak(
+      utterance
+    );
 
 }
 
 
 // ============================================================
-// AL CAMBIAR DE LEYENDA
-// ============================================================
-
-botonesLeyenda.forEach(
-  boton => {
-
-    boton.addEventListener(
-      'click',
-      () => {
-
-        cerrarChat();
-        ocultarBotonChatFlotante();
-        chatTipoActivo = null;
-
-      }
-    );
-
-  }
-);
-
-
-// ============================================================
-// CREAR INTERFAZ AL CARGAR
+// CREAR CHAT AL CARGAR LA PÁGINA
 // ============================================================
 
 crearInterfazChat();
+
+
 actualizarDisponibilidadMicrofono();
+
+
+// ============================================================
+// SALIR DE LA WEB
+// ============================================================
+
+window.addEventListener(
+
+  'beforeunload',
+
+  () => {
+
+    try {
+
+      escenaAR
+        ?.systems[
+          'mindar-image-system'
+        ]
+        ?.stop();
+
+    } catch {
+
+      // Nada
+
+    }
+
+  }
+
+);
