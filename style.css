@@ -3069,3 +3069,334 @@ body {
 
 }
 
+
+/* =========================================================
+   AJUSTES CAMBAMITOS · COMPACTACIÓN + NUEVO MENÚ DE LEYENDAS
+   Estas reglas se agregan al final para no tocar main.js.
+   ========================================================= */
+
+/* Reduce el espacio entre la portada y NUESTRA ESENCIA. */
+.camba-esencia {
+  padding-top: clamp(42px, 5vw, 70px) !important;
+  padding-bottom: clamp(68px, 7vw, 104px) !important;
+}
+
+/* Reduce el gran vacío entre el encabezado de las cinco historias y las tarjetas. */
+.camba-leyendas-portada {
+  padding-top: clamp(58px, 6vw, 86px) !important;
+  padding-bottom: clamp(66px, 7vw, 104px) !important;
+}
+
+.camba-leyendas-portada .camba-encabezado-seccion {
+  margin-bottom: clamp(24px, 3vw, 38px) !important;
+}
+
+.camba-leyendas-portada .camba-encabezado-seccion p {
+  margin-top: 16px !important;
+}
+
+/* ---------------------------------------------------------
+   NUEVA EXPERIENCIA: SIN EL ANTIGUO HEADER NI SIDEBAR
+   --------------------------------------------------------- */
+
+.camba-experiencia-app {
+  width: 100%;
+  height: 100dvh;
+  min-height: 100dvh;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  background: var(--crema-100);
+  border-top: 1px solid rgba(222,193,106,0.30);
+  box-shadow: 0 -24px 70px rgba(5,46,35,0.10);
+  overflow: hidden;
+}
+
+.camba-selector-leyendas {
+  position: relative;
+  z-index: 20;
+  padding: 22px clamp(20px, 4vw, 64px) 18px;
+  background:
+    radial-gradient(circle at 14% 0%, rgba(201,163,60,0.10), transparent 28%),
+    linear-gradient(180deg, #fffdf8 0%, #f5efe2 100%);
+  border-bottom: 1px solid rgba(6,64,43,0.13);
+  box-shadow: 0 8px 28px rgba(5,46,35,0.07);
+}
+
+.camba-selector-cabecera {
+  width: min(1180px, 100%);
+  margin: 0 auto 16px;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-template-areas:
+    "kicker kicker"
+    "title text";
+  align-items: end;
+  gap: 4px 34px;
+}
+
+.camba-selector-cabecera .camba-kicker {
+  grid-area: kicker;
+}
+
+.camba-selector-cabecera h2 {
+  grid-area: title;
+  margin: 0;
+  color: var(--verde-900);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(2rem, 3.4vw, 3.35rem);
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: -0.035em;
+}
+
+.camba-selector-cabecera p {
+  grid-area: text;
+  max-width: 620px;
+  margin: 0 0 3px;
+  color: var(--texto-500);
+  line-height: 1.55;
+}
+
+.camba-menu-leyendas {
+  width: min(1180px, 100%);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 12px;
+  overflow: visible;
+}
+
+.camba-btn-menu-compat {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  overflow: hidden !important;
+  clip: rect(0 0 0 0) !important;
+  clip-path: inset(50%) !important;
+  white-space: nowrap !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+/* Sobrescribe el estilo antiguo de .btn-leyenda sin cambiar la clase
+   que main.js necesita para encontrar los cinco botones. */
+.camba-menu-leyendas .btn-leyenda.camba-leyenda-icono {
+  width: 100%;
+  min-height: 118px;
+  padding: 16px 12px 14px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  border: 1px solid rgba(6,64,43,0.13);
+  border-radius: 20px;
+  background: rgba(255,255,255,0.82);
+  color: var(--verde-900);
+  text-align: center;
+  cursor: pointer;
+  box-shadow: 0 8px 20px rgba(5,46,35,0.055);
+  transition:
+    transform 0.28s cubic-bezier(.2,.75,.2,1),
+    border-color 0.28s ease,
+    background 0.28s ease,
+    box-shadow 0.28s ease;
+}
+
+.camba-menu-leyendas .btn-leyenda.camba-leyenda-icono:hover {
+  transform: translateY(-5px);
+  border-color: rgba(173,132,37,0.55);
+  background: #ffffff;
+  box-shadow: 0 16px 30px rgba(5,46,35,0.11);
+}
+
+.camba-menu-leyendas .btn-leyenda.camba-leyenda-icono.activo {
+  transform: translateY(-4px);
+  border-color: rgba(222,193,106,0.62);
+  background: linear-gradient(145deg, var(--verde-700), var(--verde-900));
+  color: #fff;
+  box-shadow: 0 15px 30px rgba(5,46,35,0.20);
+}
+
+.camba-icono-grande {
+  width: 52px;
+  height: 52px;
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  border-radius: 16px;
+  background: rgba(201,163,60,0.12);
+  border: 1px solid rgba(201,163,60,0.23);
+  font-size: 1.85rem;
+  line-height: 1;
+  transition: background 0.28s ease, transform 0.28s ease;
+}
+
+.camba-leyenda-icono:hover .camba-icono-grande {
+  transform: scale(1.06);
+}
+
+.camba-leyenda-icono.activo .camba-icono-grande {
+  background: rgba(255,255,255,0.12);
+  border-color: rgba(222,193,106,0.42);
+}
+
+.camba-icono-texto {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  opacity: 1 !important;
+  white-space: normal !important;
+}
+
+.camba-icono-texto strong {
+  color: inherit;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.1;
+}
+
+.camba-icono-texto small {
+  margin-top: 4px;
+  color: var(--texto-500);
+  font-size: 0.70rem;
+  line-height: 1.2;
+}
+
+.camba-leyenda-icono.activo .camba-icono-texto small {
+  color: rgba(255,255,255,0.68);
+}
+
+.camba-area-experiencia {
+  min-height: 0;
+  display: flex;
+  overflow: hidden;
+}
+
+.camba-experiencia-app .area-texto {
+  flex: 1;
+  min-width: 0;
+  margin-left: 0 !important;
+  padding: clamp(26px, 3.5vw, 46px) clamp(22px, 5vw, 76px) 60px;
+  overflow-y: auto;
+  background:
+    radial-gradient(circle at 92% 4%, rgba(201,163,60,0.07), transparent 28%),
+    var(--crema-100);
+}
+
+.camba-inicio-experiencia {
+  max-width: 1020px !important;
+}
+
+.camba-inicio-experiencia h2 {
+  margin-bottom: 14px;
+}
+
+.camba-inicio-linea {
+  width: 84px;
+  height: 1px;
+  margin: 24px 0;
+  background: var(--dorado-500);
+}
+
+.camba-inicio-ayuda {
+  max-width: 760px;
+  color: var(--texto-500);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.08rem;
+  line-height: 1.75;
+}
+
+@media screen and (max-width: 900px) {
+  .camba-selector-cabecera {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "kicker"
+      "title"
+      "text";
+    gap: 7px;
+  }
+
+  .camba-selector-cabecera p {
+    margin-top: 3px;
+  }
+
+  .camba-menu-leyendas {
+    grid-template-columns: repeat(5, 132px);
+    justify-content: start;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding: 2px 2px 8px;
+    scrollbar-width: thin;
+    scroll-snap-type: x proximity;
+  }
+
+  .camba-menu-leyendas .btn-leyenda.camba-leyenda-icono {
+    scroll-snap-align: start;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .camba-esencia {
+    padding-top: 36px !important;
+    padding-bottom: 62px !important;
+  }
+
+  .camba-leyendas-portada {
+    padding-top: 48px !important;
+    padding-bottom: 66px !important;
+  }
+
+  .camba-leyendas-portada .camba-encabezado-seccion {
+    margin-bottom: 20px !important;
+  }
+
+  .camba-selector-leyendas {
+    padding: 16px 14px 12px;
+  }
+
+  .camba-selector-cabecera {
+    margin-bottom: 12px;
+  }
+
+  .camba-selector-cabecera h2 {
+    font-size: 2.15rem;
+  }
+
+  .camba-selector-cabecera p {
+    font-size: 0.88rem;
+  }
+
+  .camba-menu-leyendas {
+    grid-template-columns: repeat(5, 112px);
+    gap: 9px;
+  }
+
+  .camba-menu-leyendas .btn-leyenda.camba-leyenda-icono {
+    min-height: 104px;
+    padding: 12px 8px;
+    border-radius: 17px;
+  }
+
+  .camba-icono-grande {
+    width: 44px;
+    height: 44px;
+    border-radius: 14px;
+    font-size: 1.55rem;
+  }
+
+  .camba-icono-texto strong {
+    font-size: 0.86rem;
+  }
+
+  .camba-icono-texto small {
+    display: none;
+  }
+
+  .camba-experiencia-app .area-texto {
+    margin-left: 0 !important;
+    padding: 24px 18px 50px;
+  }
+}
