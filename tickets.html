@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#063b2b">
+  <title>CAMBAMITOS · Comprar tickets</title>
+  <link rel="stylesheet" href="/tickets.css">
+</head>
+<body>
+  <header class="ticket-nav">
+    <a href="/" aria-label="Volver a CAMBAMITOS">
+      <img src="/logo.png" alt="CAMBAMITOS">
+    </a>
+    <a href="/">← Volver a la experiencia</a>
+  </header>
+
+  <section class="ticket-hero">
+    <div class="ticket-hero-inner">
+      <span class="ticket-kicker">PASE DIGITAL · CAMBAMITOS</span>
+      <h1>Compra tu entrada.<em>Desbloquea las leyendas.</em></h1>
+      <p>
+        El Pase CAMBAMITOS habilita las experiencias tecnológicas de las cinco leyendas:
+        realidad aumentada, audiolibros multilingües y conversación interactiva con los personajes.
+      </p>
+    </div>
+  </section>
+
+  <main class="ticket-main">
+    <section class="ticket-producto">
+      <div class="ticket-producto-top">
+        <div>
+          <span class="ticket-kicker">PASE INDIVIDUAL</span>
+          <h2>Experiencia completa</h2>
+        </div>
+        <div class="ticket-precio">20 Bs<small>precio de demostración</small></div>
+      </div>
+
+      <ul class="ticket-lista">
+        <li>Acceso a las cinco leyendas</li>
+        <li>Realidad aumentada y personajes 3D</li>
+        <li>Audiolibros en cuatro idiomas</li>
+        <li>Chat interactivo con cada personaje</li>
+        <li>Acceso durante 24 horas desde la activación</li>
+      </ul>
+
+      <div class="ticket-aviso-demo">
+        <strong>Fase 1:</strong> este botón simula la compra para probar el flujo de ticket, código y QR.
+        Todavía no realiza un cobro real.
+      </div>
+
+      <button id="ticket-comprar" class="ticket-comprar" type="button">
+        SIMULAR COMPRA Y GENERAR TICKET
+      </button>
+    </section>
+
+    <section class="ticket-resultado">
+      <div id="ticket-vacio" class="ticket-vacio">
+        <div class="ticket-vacio-icono">▦</div>
+        <h3>Tu ticket aparecerá aquí</h3>
+        <p>Después de la compra recibirás un código alfanumérico y su QR equivalente.</p>
+      </div>
+
+      <article id="ticket-pase" class="ticket-pase" hidden>
+        <div class="ticket-pase-cabecera">
+          <img src="/logo.png" alt="CAMBAMITOS">
+          <h3>Pase Cultural</h3>
+        </div>
+
+        <div id="ticket-qr" aria-label="Código QR del ticket"></div>
+
+        <div class="ticket-codigo-label">CÓDIGO DE ACCESO</div>
+        <div id="ticket-codigo" class="ticket-codigo">CMB-XXXX-XXXX-XXXX</div>
+
+        <p>
+          Escanea el QR desde un celular o escribe el código en la página principal.
+          El acceso se activa durante 24 horas en el dispositivo donde se valida.
+        </p>
+
+        <div class="ticket-acciones">
+          <button id="ticket-copiar" type="button">COPIAR CÓDIGO</button>
+          <a id="ticket-abrir" href="/">ACTIVAR TICKET</a>
+        </div>
+      </article>
+    </section>
+  </main>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <script type="module" src="/tickets.js"></script>
+</body>
+</html>
