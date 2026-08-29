@@ -2053,8 +2053,6 @@ body {
 
 /* =========================================================
    PORTADA CAMBAMITOS · DISEÑO EDITORIAL / CINEMATOGRÁFICO
-   Todas las clases están prefijadas con "camba-" para no
-   interferir con main.js, AR, chat ni el contenido dinámico.
    ========================================================= */
 
 html {
@@ -3104,6 +3102,7 @@ body {
   height: 100dvh;
   min-height: 100dvh;
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   grid-template-rows: auto minmax(0, 1fr);
   background: var(--crema-100);
   border-top: 1px solid rgba(222,193,106,0.30);
@@ -3114,6 +3113,8 @@ body {
 .camba-selector-leyendas {
   position: relative;
   z-index: 20;
+  min-width: 0;
+  width: 100%;
   padding: 22px clamp(20px, 4vw, 64px) 18px;
   background:
     radial-gradient(circle at 14% 0%, rgba(201,163,60,0.10), transparent 28%),
@@ -3329,8 +3330,13 @@ body {
     overflow-x: auto;
     overflow-y: hidden;
     padding: 2px 2px 8px;
-    scrollbar-width: thin;
-    scroll-snap-type: x proximity;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .camba-menu-leyendas::-webkit-scrollbar {
+    display: none;
   }
 
   .camba-menu-leyendas .btn-leyenda.camba-leyenda-icono {
