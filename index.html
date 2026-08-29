@@ -458,388 +458,136 @@
 
 
   <!-- =====================================================
-       WEB PRINCIPAL
+       EXPERIENCIA INTERACTIVA
+       Mantiene los IDs y clases que utiliza main.js:
+       #sidebar, #btn-menu, .btn-leyenda y #contenido-dinamico.
        ===================================================== -->
 
-  <div class="contenedor-principal" id="experiencia-cambamitos">
+  <div class="contenedor-principal camba-experiencia-app" id="experiencia-cambamitos">
 
+    <section class="camba-selector-leyendas" aria-label="Selecciona una leyenda">
 
-    <!-- ===================================================
-         CABECERA
-         =================================================== -->
-
-    <header class="seccion-superior">
-
-
-      <div class="panel-izquierdo">
-
-        <div class="contenedor-logo">
-
-          <img
-            src="/logo.png"
-            alt="Leyendas de Santa Cruz"
-            id="logo-principal"
-          >
-
-        </div>
-
+      <div class="camba-selector-cabecera">
+        <span class="camba-kicker">COMIENZA TU RECORRIDO</span>
+        <h2>Elige una leyenda</h2>
+        <p>Selecciona uno de los cinco personajes para iniciar su experiencia.</p>
       </div>
 
-
-
-      <div class="panel-derecho-imagen">
-
-
-        <div class="overlay-hero"></div>
-
-
-        <div class="contenido-hero">
-
-
-          <span class="etiqueta-hero">
-
-            PATRIMONIO · CULTURA · TECNOLOGÍA
-
-          </span>
-
-
-          <h1>
-
-            Leyendas de
-
-            <strong>
-              Santa Cruz
-            </strong>
-
-          </h1>
-
-
-          <p>
-
-            Explora personajes y relatos que forman
-            parte de la memoria cultural del oriente
-            boliviano.
-
-          </p>
-
-
-        </div>
-
-
-      </div>
-
-
-    </header>
-
-
-
-    <!-- ===================================================
-         CONTENIDO INFERIOR
-         =================================================== -->
-
-    <main class="seccion-inferior">
-
-
-      <!-- SIDEBAR -->
-
-      <aside
-        class="sidebar-verde"
+      <nav
+        class="camba-menu-leyendas"
         id="sidebar"
+        aria-label="Leyendas de CAMBAMITOS"
       >
 
-
-        <div class="cabecera-sidebar">
-
-
-          <button
-            id="btn-menu"
-            type="button"
-            aria-label="Abrir o cerrar menú"
-          >
-
-            <span class="icono-menu">
-              ☰
-            </span>
-
-
-            <span class="texto-menu">
-              Leyendas
-            </span>
-
-          </button>
-
-
-        </div>
-
-
-
-        <nav id="menu-leyendas">
-
-
-          <!-- CARRETÓN -->
-
-          <button
-            class="btn-leyenda"
-            data-legend="carreton"
-            type="button"
-          >
-
-            <span class="icono-leyenda">
-              🛞
-            </span>
-
-            <span class="contenido-btn-menu">
-
-              <strong>
-                El Carretón
-              </strong>
-
-              <small>
-                De la Otra Vida
-              </small>
-
-            </span>
-
-          </button>
-
-
-
-          <!-- GUAJOJÓ -->
-
-          <button
-            class="btn-leyenda"
-            data-legend="guajojo"
-            type="button"
-          >
-
-            <span class="icono-leyenda">
-              🌙
-            </span>
-
-            <span class="contenido-btn-menu">
-
-              <strong>
-                El Guajojó
-              </strong>
-
-              <small>
-                El canto del bosque
-              </small>
-
-            </span>
-
-          </button>
-
-
-
-          <!-- DUENDE -->
-
-          <button
-            class="btn-leyenda"
-            data-legend="duende"
-            type="button"
-          >
-
-            <span class="icono-leyenda">
-              🌿
-            </span>
-
-            <span class="contenido-btn-menu">
-
-              <strong>
-                El Duende
-              </strong>
-
-              <small>
-                Misterios del monte
-              </small>
-
-            </span>
-
-          </button>
-
-
-
-          <!-- VIUDITA -->
-
-          <button
-            class="btn-leyenda"
-            data-legend="viudita"
-            type="button"
-          >
-
-            <span class="icono-leyenda">
-              🕯️
-            </span>
-
-            <span class="contenido-btn-menu">
-
-              <strong>
-                La Viudita
-              </strong>
-
-              <small>
-                Apariciones nocturnas
-              </small>
-
-            </span>
-
-          </button>
-
-
-
-          <!-- JICHI -->
-
-          <button
-            class="btn-leyenda"
-            data-legend="jichi"
-            type="button"
-          >
-
-            <span class="icono-leyenda">
-              💧
-            </span>
-
-            <span class="contenido-btn-menu">
-
-              <strong>
-                El Jichi
-              </strong>
-
-              <small>
-                Guardián de las aguas
-              </small>
-
-            </span>
-
-          </button>
-
-
-        </nav>
-
-
-
-        <div class="pie-sidebar">
-
-          <span class="simbolo-sidebar">
-            ✦
+        <!-- Se conserva para compatibilidad con main.js, pero no forma parte del diseño visual. -->
+        <button
+          id="btn-menu"
+          class="camba-btn-menu-compat"
+          type="button"
+          aria-hidden="true"
+          tabindex="-1"
+        ></button>
+
+        <button
+          class="btn-leyenda camba-leyenda-icono"
+          data-legend="carreton"
+          type="button"
+        >
+          <span class="camba-icono-grande">🛞</span>
+          <span class="camba-icono-texto">
+            <strong>El Carretón</strong>
+            <small>De la Otra Vida</small>
           </span>
+        </button>
 
-          <span class="texto-pie-sidebar">
-            Santa Cruz de la Sierra
+        <button
+          class="btn-leyenda camba-leyenda-icono"
+          data-legend="guajojo"
+          type="button"
+        >
+          <span class="camba-icono-grande">🌙</span>
+          <span class="camba-icono-texto">
+            <strong>El Guajojó</strong>
+            <small>El canto del bosque</small>
           </span>
+        </button>
 
-        </div>
+        <button
+          class="btn-leyenda camba-leyenda-icono"
+          data-legend="duende"
+          type="button"
+        >
+          <span class="camba-icono-grande">🌿</span>
+          <span class="camba-icono-texto">
+            <strong>El Duende</strong>
+            <small>Misterios del monte</small>
+          </span>
+        </button>
 
+        <button
+          class="btn-leyenda camba-leyenda-icono"
+          data-legend="viudita"
+          type="button"
+        >
+          <span class="camba-icono-grande">🕯️</span>
+          <span class="camba-icono-texto">
+            <strong>La Viudita</strong>
+            <small>Apariciones nocturnas</small>
+          </span>
+        </button>
 
-      </aside>
+        <button
+          class="btn-leyenda camba-leyenda-icono"
+          data-legend="jichi"
+          type="button"
+        >
+          <span class="camba-icono-grande">💧</span>
+          <span class="camba-icono-texto">
+            <strong>El Jichi</strong>
+            <small>Guardián de las aguas</small>
+          </span>
+        </button>
 
+      </nav>
 
+    </section>
 
-      <!-- CONTENIDO DINÁMICO -->
+    <main class="camba-area-experiencia">
 
       <section
         class="area-texto"
         id="contenido-dinamico"
       >
 
-
-        <div class="contenido-inicio">
-
+        <div class="contenido-inicio camba-inicio-experiencia">
 
           <span class="sobrelinea">
-
             EXPERIENCIA CULTURAL INTERACTIVA
-
           </span>
-
 
           <h2>
             Patio de los Abuelos
           </h2>
 
-
           <p class="descripcion-principal">
-
-            Bienvenido al núcleo de nuestras tradiciones.
-            Selecciona una leyenda, encuentra su imagen
-            mediante la cámara y descubre al personaje
-            en realidad aumentada.
-
+            Selecciona una de las cinco leyendas de arriba, encuentra su imagen
+            mediante la cámara y descubre al personaje en realidad aumentada.
           </p>
 
+          <div class="camba-inicio-linea"></div>
 
-
-          <div class="grid-caracteristicas">
-
-
-            <article class="tarjeta-caracteristica">
-
-              <div class="icono-caracteristica">
-                📖
-              </div>
-
-              <h3>
-                Leyendas
-              </h3>
-
-              <p>
-                Descubre relatos tradicionales de Santa Cruz.
-              </p>
-
-            </article>
-
-
-
-            <article class="tarjeta-caracteristica">
-
-              <div class="icono-caracteristica">
-                🔎
-              </div>
-
-              <h3>
-                Explora
-              </h3>
-
-              <p>
-                Encuentra las imágenes escondidas.
-              </p>
-
-            </article>
-
-
-
-            <article class="tarjeta-caracteristica">
-
-              <div class="icono-caracteristica">
-                📱
-              </div>
-
-              <h3>
-                Realidad aumentada
-              </h3>
-
-              <p>
-                Haz aparecer cada personaje en 3D.
-              </p>
-
-            </article>
-
-
-          </div>
-
+          <p class="camba-inicio-ayuda">
+            Cada recorrido integra historia, realidad aumentada, audiolibro multilingüe
+            y conversación interactiva con el personaje.
+          </p>
 
         </div>
 
-
       </section>
-
 
     </main>
 
-
   </div>
-
 
 
   <!-- =====================================================
